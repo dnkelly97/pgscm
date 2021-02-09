@@ -6,19 +6,19 @@ The Prospective Graduate Recruitment platform will serve as a resource manager f
 
 With current alternatives relying primarily on the use of Excel sheets it is important to come up with a more focused and user-friendly SaaS application whose primary purpose is to address this specific task. Making this tool stands to benefit the recuiter whose time can be spent more efficiently with an easier and more straight-forward interface to work with. This application would be a centralized and adaptable for use all across the University of Iowa in case many different departments needed to use it at the same time.
 
-### Screenshots
+### Visuals
+
+### Usage
 
 ### Tech / Frameworks Used
 
-### Features
-
 ### Installation
+
+### Features
 
 ### Code Example
 
 ### Tests
-
-### How to Use
 
 ### Credits
 
