@@ -11,10 +11,10 @@ With current alternatives relying primarily on the use of Excel sheets it is imp
 ### Usage
 
 ### Tech / Frameworks Used
-We are using Python 3.8, Django 3.1.5, and Pip 21, and PosgreSQL to implement the Prospective Graduate Student Contact Manager. 
+We are using Python 3.8, Django 3.1.5, and Pip 21, and PosgreSQL 13.2 to implement the Prospective Graduate Student Contact Manager. 
 
 ### Installation
-You can download and install pip and python from their websites, and once pip is installed you can install Django with: pip install Django==3.1.5
+You can download and install pip, PosgreSQL, and python from their websites, and once pip is installed you can install Django with: pip install Django==3.1.5
 
 ### Features
 
