@@ -19,7 +19,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
-
+DEBUG = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -42,7 +42,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'PGSCM.urls'
-
+SECRET_KEY = 'j04#7k2y*#1y%)54it3h1ve^2#iafyq-%^d$6sw1ceg58j-m!h'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -64,11 +64,16 @@ WSGI_APPLICATION = 'PGSCM.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
+# https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-DATABASES
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'temppassword',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 

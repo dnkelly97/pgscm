@@ -1,6 +1,6 @@
 from PGSCM.settings.common import *
 
-DEBUG = False
+DEBUG = True
 
 SECRET_KEY = ''
 
