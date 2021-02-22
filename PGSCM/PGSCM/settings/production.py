@@ -1,6 +1,6 @@
 from PGSCM.settings.common import *
 
-DEBUG = True
+DEBUG = False
 
 DATABASES = {
     'default': {
@@ -13,9 +13,8 @@ DATABASES = {
     }
 }
 
-SECRET_KEY = 'hjhj'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # TODO: The settings for production environment need to be configured. This includes but is not limited to
 #  setting the secret key and allowed hosts. For more informtion about deployment configurations see
