@@ -2,7 +2,18 @@ from PGSCM.settings.common import *
 
 DEBUG = True
 
-SECRET_KEY = ''
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'postgresProduction',
+        'USER': 'postgres',
+        'PASSWORD': 'temppassword',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
+    }
+}
+
+SECRET_KEY = 'hjhj'
 
 ALLOWED_HOSTS = []
 
