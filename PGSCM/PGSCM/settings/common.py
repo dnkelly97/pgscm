@@ -66,17 +66,6 @@ WSGI_APPLICATION = 'PGSCM.wsgi.application'
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 # https://docs.djangoproject.com/en/3.1/ref/settings/#std:setting-DATABASES
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgres',
-        'USER': 'postgres',
-        'PASSWORD': 'temppassword',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
