@@ -42,7 +42,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'PGSCM.urls'
-SECRET_KEY = 'j04#7k2y*#1y%)54it3h1ve^2#iafyq-%^d$6sw1ceg58j-m!h'
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
