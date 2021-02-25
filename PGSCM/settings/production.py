@@ -2,7 +2,7 @@ from PGSCM.settings.common import *
 import os
 
 DEBUG = False
-ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
+ALLOWED_HOSTS = ["pgscm.azurewebsites.net"]
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
