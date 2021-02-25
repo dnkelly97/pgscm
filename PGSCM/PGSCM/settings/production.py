@@ -2,22 +2,31 @@ from PGSCM.settings.common import *
 import os
 
 DEBUG = False
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'postgresProduction',
-        'USER': 'postgres',
-        'PASSWORD': os.environ['DB_PASSWORD'],
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-    }
-}
+ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']] if 'WEBSITE_HOSTNAME' in os.environ else []
 
 SECRET_KEY = os.environ['SECRET_KEY']
 
-ALLOWED_HOSTS = []
+MIDDLEWARE = [
+    'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',#White noise for static files
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
 
-# TODO: The settings for production environment need to be configured. This includes but is not limited to
-#  setting the secret key , DB password and allowed hosts. For more informtion about deployment configurations
-#  see https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+hostname = os.environ['DBHOST']
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ['DBNAME'],
+        'HOST': hostname + ".postgres.database.azure.com",
+        'USER': os.environ['DBUSER'] + "@" + hostname,
+        'PASSWORD': os.environ['DBPASS']
+    }
+}
