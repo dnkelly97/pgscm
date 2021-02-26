@@ -1,0 +1,5 @@
+$Env:DBHOST = "pgscm"
+$Env:DBUSER = "manager"
+$Env:DBNAME = "pgscmdb"
+$Env:DBPASS = "SEPcs5830!"
+$Env:SECRET_KEY = "uxv)51-225#+e=kw-o8r10ovsscy36fg*lq)(zp-t-u!%lm@dy"
