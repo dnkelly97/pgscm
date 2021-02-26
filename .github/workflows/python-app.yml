@@ -14,17 +14,40 @@ jobs:
 
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:12
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: temppassword
+          POSTGRES_DB: PostgresDevelopmentCI
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
     - uses: actions/checkout@v2
+    
     - name: Set up Python 3.8
       uses: actions/setup-python@v2
       with:
         python-version: 3.8
+        
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         pip install pytest pytest-bdd pytest-django
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+        
+    - name: Run migrations
+      run: |
+        cd ./PGSCM
+        python manage.py makemigrations
+      
     - name: Test with pytest
       run: |
         export PYTHONPATH=tests
