@@ -45,7 +45,6 @@ jobs:
         
     - name: Run migrations
       run: |
-        cd ./PGSCM
         python manage.py makemigrations
       
     - name: Test with pytest
