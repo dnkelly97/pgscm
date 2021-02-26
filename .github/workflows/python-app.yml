@@ -5,9 +5,9 @@ name: PGSCM Main CI Workflow
 
 on:
   push:
-    branches: [ postgres_ci_integration ]
+    branches: [ main ]
   pull_request:
-    branches: [ postgres_ci_integration ]
+    branches: [ main ]
 
 jobs:
   build:
