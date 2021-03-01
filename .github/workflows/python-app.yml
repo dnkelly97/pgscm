@@ -46,6 +46,9 @@ jobs:
     - name: Run migrations
       run: |
         python manage.py makemigrations
+
+    - name: Collect static
+      run: python manage.py collectstatic
       
     - name: Test with pytest
       run: |
