@@ -51,3 +51,10 @@ jobs:
       run: |
         export PYTHONPATH=tests
         pytest
+
+    - name: Upload artifact deployment
+        uses: actions/upload-artifact@v2
+        with:
+          name: python-app
+          path: |
+            .
