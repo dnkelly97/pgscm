@@ -1,3 +1,6 @@
+[![PGSCM Main CI Workflow](https://github.com/UIOWAjohnsonhj/003_SEP2021/actions/workflows/python-app.yml/badge.svg)](https://github.com/UIOWAjohnsonhj/003_SEP2021/actions/workflows/python-app.yml)
+
+
 ## Prospective Gradute Student Recruitment
 
 The Prospective Graduate Recruitment platform will serve as a resource manager for keeping track of prospective graduate students and their interactions with the college. This platform will receive and maintain information on each prospective student. This information will include things like the student's major(s), expected graduation date, GPA, GRE results, what college they attended as an undergraduate, research interests, what degree they are interested in, which other schools they are looking at, where they rank UofI on their list of interests, whether they've responded to emails, and whether they've visited UofI. 
