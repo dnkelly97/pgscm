@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
+from django.contrib.postgres.fields import ArrayField
 
 class Student(models.Model):
     #Initial criteria
@@ -21,7 +22,7 @@ class Student(models.Model):
         choices=YearInSchool.choices
     )
 
-    research_interests = models.ArrayField(
+    research_interests = ArrayField(
         models.CharField(max_length=55, blank=True)
     )
 
