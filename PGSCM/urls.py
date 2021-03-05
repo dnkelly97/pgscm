@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from PGSCM.pipeline import views as pipeline_views
+from pipeline import views as pipeline_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
