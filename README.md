@@ -13,7 +13,7 @@ With current alternatives relying primarily on the use of Excel sheets it is imp
 
 ### Usage
 
-### Tech / Frameworks Used
+### [Tech / Frameworks Used](https://github.com/UIOWAjohnsonhj/003_SEP2021/wiki/05_ToolsUsed)
 We are using Python 3.8, Django 3.1.5, and Pip 21, Azure, and PosgreSQL 13.2 to implement the Prospective Graduate Student Contact Manager. 
 
 ### [Installation](https://github.com/UIOWAjohnsonhj/003_SEP2021/wiki/02_UserManual)
