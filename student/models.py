@@ -23,12 +23,12 @@ class Student(models.Model):
     )
 
     research_interests = ArrayField(
-        models.CharField(max_length=55, blank=True)
+        models.CharField(max_length=55),blank=True,null=True
     )
 
-    degree = models.CharField(max_length=255)
-    university = models.CharField(max_length=255)
-    gpa = models.FloatField(default=0)
+    degree = models.CharField(max_length=255,blank=True,null=True)
+    university = models.CharField(max_length=255,blank=True,null=True)
+    gpa = models.FloatField(blank=True,null=True)
 
     #demographic info
     #https://usg.uiowa.edu/assets/Documents/Reports-Guides-and-Plans/UISG-2018-2019-Fall-Demographics-Report.pdf
@@ -59,8 +59,9 @@ class Student(models.Model):
         max_length=1,
         choices=Gender.choices
     )
-    country = CountryField(blank_label='(select country)')
-    us_citizenship = models.BooleanField(null=True)
-    first_generation = models.BooleanField(null=True)
-    military = models.BooleanField(null=True)
+
+    country = CountryField(blank_label='(select country)',null=True,blank=True)
+    us_citizenship = models.BooleanField(blank=True,null=True)
+    first_generation = models.BooleanField(blank=True,null=True)
+    military = models.BooleanField(blank=True,null=True)
     created_on = models.DateTimeField(auto_now_add=True)

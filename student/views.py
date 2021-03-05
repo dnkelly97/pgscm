@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from student.forms import CreateForm
 
 # Create your views here.
@@ -11,7 +11,7 @@ def createPage(response):
             # Create the user
             student = form.save()
 
-            response = redirect('create')
+            response = redirect('home')
             return response
         context = {'form': form}
         return render(response, 'create_student.html', context)
