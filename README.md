@@ -16,7 +16,7 @@ With current alternatives relying primarily on the use of Excel sheets it is imp
 ### Tech / Frameworks Used
 We are using Python 3.8, Django 3.1.5, and Pip 21, Azure, and PosgreSQL 13.2 to implement the Prospective Graduate Student Contact Manager. 
 
-### Installation
+### [Installation](https://github.com/UIOWAjohnsonhj/003_SEP2021/wiki/02_UserManual)
 You can download and install pip, PosgreSQL, and python from their websites, and once pip is installed you can install Django with: pip install Django==3.1.5
 
 ### Features
@@ -25,5 +25,5 @@ You can download and install pip, PosgreSQL, and python from their websites, and
 
 ### Tests
 
-### Credits
-
+### Link to Project
+https://pgscm.azurewebsites.net/
