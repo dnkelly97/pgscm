@@ -24,8 +24,7 @@ You can download and install pip, PosgreSQL, and python from their websites, and
 ### Code Example
 
 ### Tests
-[Here](https://github.com/UIOWAjohnsonhj/003_SEP2021/wiki/05_ToolsUsed) you can find information about what testing tools we used.
-[Here](https://github.com/UIOWAjohnsonhj/003_SEP2021/wiki/02_UserManual) you can find information about our Test Plan.
+[Here](https://github.com/UIOWAjohnsonhj/003_SEP2021/wiki/05_ToolsUsed) you can find information about what testing tools we used, and [here](https://github.com/UIOWAjohnsonhj/003_SEP2021/wiki/02_UserManual) you can find information about our Test Plan.
 
 ### Link to Project
 https://pgscm.azurewebsites.net/
