@@ -1,3 +1,11 @@
 <!--TODO: Inherit from base.html-->
 
 {% block title %}Create a Student{% endblock %}
+
+{% block content %}
+    <form method="POST" class="form-group">
+	{{ form.as_p }}
+    {{ extended_form.as_p }}
+	<button type="submit" id="id_submit" class="btn btn-success">Create</button>
+    </form>
+{% endblock %}
