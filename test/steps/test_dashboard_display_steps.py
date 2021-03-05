@@ -10,7 +10,7 @@ def test_dashboard_display():
 @pytest.fixture
 @given("I am on the dashboard")
 def dashboard_response(live_server, driver):
-    # driver.post(liveserver + '/login/')
+    # todo once login is done: driver.post(liveserver + '/login/')
     return driver.get(live_server + '/dashboard/')
 
 
