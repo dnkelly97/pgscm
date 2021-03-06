@@ -47,7 +47,7 @@ ROOT_URLCONF = 'PGSCM.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], #specifies that in addition to looking for an app-level templates directory, the Django template loader should also look for a project-level templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
