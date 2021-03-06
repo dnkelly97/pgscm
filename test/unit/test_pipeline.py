@@ -4,14 +4,6 @@ from django.urls import reverse
 from pytest_django.asserts import assertTemplateUsed
 
 
-@pytest.fixture
-def create_pipeline_1(db):
-    p = Pipeline()
-    p.name = "Test Pipeline 1"
-    p.save()
-
-
-@pytest.mark.client
 class TestDashboardView:
 
     def test_dashboard_view(self, client):
@@ -20,14 +12,13 @@ class TestDashboardView:
         assertTemplateUsed(response, 'dashboard.html')
 
 
-@pytest.mark.django_db()
 class TestPipelineModel:
 
-    def test_name_field(self, create_pipeline_1):
+    def test_name_field(self):
         assert hasattr(Pipeline, 'name')
 
 
 class TestSavedQueryModel:
 
     def test_name_field(self):
-        assert hasattr(Pipeline, 'name')
+        assert hasattr(SavedQuery, 'name')

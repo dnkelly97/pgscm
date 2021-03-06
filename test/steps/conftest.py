@@ -2,7 +2,7 @@ from selenium import webdriver
 import pytest
 from pipeline.models import Pipeline, SavedQuery
 from pytest_factoryboy import register
-from factories import PipelineFactory
+from factories import PipelineFactory, SavedQueryFactory
 
 
 @pytest.fixture()
@@ -13,6 +13,7 @@ def driver():
 
 
 register(PipelineFactory)
+register(SavedQueryFactory)
 
 
 # @pytest.fixture(scope="session")
