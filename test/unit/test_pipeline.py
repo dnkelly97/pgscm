@@ -1,5 +1,7 @@
 import pytest
 from pipeline.models import Pipeline, SavedQuery
+from django.urls import reverse
+from pytest_django.asserts import assertTemplateUsed
 
 
 @pytest.fixture
@@ -9,10 +11,13 @@ def create_pipeline_1(db):
     p.save()
 
 
+@pytest.mark.client
 class TestDashboardView:
 
-    def test_dashboard(self):
-        pass
+    def test_dashboard_view(self, client):
+        url = reverse('dashboard')
+        response = client.get(url)
+        assertTemplateUsed(response, 'dashboard.html')
 
 
 @pytest.mark.django_db()
