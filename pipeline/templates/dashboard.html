@@ -6,5 +6,11 @@
 </head>
 <body>
 Yooooooooo dashboard page
+{% for pipeline in pipelines %}
+    <li>{{ pipeline.name }}</li>
+{% endfor %}
+{% for query in saved_queries %}
+    <li>{{ query.name }}</li>
+{% endfor %}
 </body>
 </html>
