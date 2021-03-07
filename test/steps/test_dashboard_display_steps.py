@@ -6,7 +6,7 @@ from django.urls import reverse
 
 @pytest.mark.django_db
 @scenario("../feature/dashboard_display.feature", "I am on the dashboard page")
-def test_dashboard_display():
+def test_dashboard_display(live_server):
     pass
 
 
@@ -16,7 +16,6 @@ def dashboard_setup(live_server, driver, pipeline_factory, saved_query_factory):
         pipeline_factory()
         saved_query_factory()
     # todo once login is done: driver.post(liveserver + '/login/')
-    print(reverse('dashboard'))
     driver.get(live_server + reverse('dashboard'))
 
 
@@ -38,14 +37,14 @@ def assert_existent_saved_queries_displayed(driver):
 
 @then("I should see buttons for creating, deleting, and editing pipelines")
 def assert_pipeline_buttons(driver):
-    assert driver.find_by_id('create_pipeline_button')
-    assert driver.find_by_id('delete_pipeline_button')
-    assert driver.find_by_id('edit_pipeline_button')
+    assert driver.find_element_by_id('create_pipeline_button')
+    assert driver.find_element_by_id('delete_pipeline_button')
+    assert driver.find_element_by_id('edit_pipeline_button')
 
 
 @then("I should see buttons for creating, deleting, and editing saved queries")
 def assert_saved_query_buttons(driver):
-    assert driver.find_by_id('create_query_button')
-    assert driver.find_by_id('create_query_button')
-    assert driver.find_by_id('create_query_button')
+    assert driver.find_element_by_id('create_query_button')
+    assert driver.find_element_by_id('delete_query_button')
+    assert driver.find_element_by_id('edit_query_button')
 
