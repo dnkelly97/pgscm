@@ -8,7 +8,7 @@ SECRET_KEY = os.environ['SECRET_KEY']
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',#White noise for static files
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # White noise for static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -30,3 +30,12 @@ DATABASES = {
         'PASSWORD': os.environ['DBPASS']
     }
 }
+
+# these are for facilitating emails so users can reset their passwords
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_HOST_USER = os.environ.get('EMAIL_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASS')
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
