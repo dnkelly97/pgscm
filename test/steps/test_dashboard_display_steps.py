@@ -51,7 +51,7 @@ def assert_saved_query_buttons(driver):
 @then("each pipeline and query should have a checkbox to select it")
 def assert_queries_and_pipelines_have_checkboxes(driver):
     for pipeline in Pipeline.objects.all():
-        assert driver.find_element_by_id(pipeline.name + '_checkbox')
+        assert driver.find_element_by_id(pipeline.name + ' radio button')
     for query in SavedQuery.objects.all():
-        assert driver.find_element_by_id(query.name + '_checkbox')
+        assert driver.find_element_by_id(query.name + ' radio button')
 
