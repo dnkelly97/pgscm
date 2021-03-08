@@ -1,11 +1,11 @@
 # This workflow will install Python dependencies, run tests and lint with a single version of Python.
-# Once the build completes and all tests pass, the application will be deployed to azure.
+# This will not deploy to Azure. We will save Azure deployment for when the changes are officially merged into Main.
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
 
-name: PGSCM Workflow For Merges Into Main
+name: PGSCM Workflow For Pull Requests To Main
 
 on:
-  push:
+  pull_request:
     branches: [ main ]
 
 env:
@@ -56,39 +56,3 @@ jobs:
       run: |
         export PYTHONPATH=tests
         pytest
-
-    - name: Upload artifact deployment
-      uses: actions/upload-artifact@v2
-      with:
-        name: app
-        path: |
-          .
-
-  deploy:
-
-    #require build to pass tests to be able to deploy
-    needs: build
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/download-artifact@v2
-      with:
-        name: app
-        path: .
-
-    - name: Log in to Azure CLI
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_SERVICE_PRINCIPAL }}
-
-    - name: Disable static collection and set migration command on App Service
-      uses: Azure/appservice-settings@v1
-      with:
-        app-name: ${{ env.WEBAPP_NAME }}
-        app-settings-json: '[{ "name": "DISABLE_COLLECTSTATIC", "value": "true" }, { "name": "POST_BUILD_COMMAND",  "value": "python manage.py makemigrations && python manage.py migrate" }, { "name": "SCM_DO_BUILD_DURING_DEPLOYMENT", "value": "true" }, { "name": "DJANGO_ENV", "value": "production"}]'
-
-    - name: Deploy to App Service
-      uses: azure/webapps-deploy@v2
-      with:
-        app-name: ${{ env.WEBAPP_NAME}}
