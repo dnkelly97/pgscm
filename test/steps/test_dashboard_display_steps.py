@@ -48,3 +48,10 @@ def assert_saved_query_buttons(driver):
     assert driver.find_element_by_id('delete_query_button')
     assert driver.find_element_by_id('edit_query_button')
 
+@then("each pipeline and query should have a checkbox to select it")
+def assert_queries_and_pipelines_have_checkboxes(driver):
+    for pipeline in Pipeline.objects.all():
+        assert driver.find_element_by_id(pipeline.name + '_checkbox')
+    for query in SavedQuery.objects.all():
+        assert driver.find_element_by_id(query.name + '_checkbox')
+

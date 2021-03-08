@@ -9,3 +9,4 @@ Feature: Dashboard Displays Pipelines and Queries
         Then I should see existent saved queries
         Then I should see buttons for creating, deleting, and editing pipelines
         Then I should see buttons for creating, deleting, and editing saved queries
+        Then each pipeline and query should have a checkbox to select it
