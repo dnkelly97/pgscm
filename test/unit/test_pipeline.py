@@ -4,6 +4,7 @@ from django.urls import reverse
 from pytest_django.asserts import assertTemplateUsed
 
 
+@pytest.mark.django_db
 class TestDashboardView:
 
     def test_dashboard_view(self, client):
