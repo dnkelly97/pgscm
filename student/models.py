@@ -26,8 +26,8 @@ class Student(models.Model):
         models.CharField(max_length=55),blank=True,null=True
     )
 
-    degree = models.CharField(max_length=255,blank=True,null=True)
-    university = models.CharField(max_length=255,blank=True,null=True)
+    degree = models.CharField(max_length=255,blank=True)
+    university = models.CharField(max_length=255,blank=True)
     gpa = models.FloatField(blank=True,null=True)
 
     #demographic info

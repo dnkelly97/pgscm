@@ -11,7 +11,7 @@ def createPage(response):
             # Create the user
             student = form.save()
 
-            response = redirect('home')
+            response = redirect('student')
             return response
         context = {'form': form}
         return render(response, 'create_student.html', context)
@@ -20,5 +20,5 @@ def createPage(response):
     context = {'form': form}
     return render(response, 'create_student.html', context)
 
-def homePage(response):
+def student(response):
     return render(response, 'home.html')
