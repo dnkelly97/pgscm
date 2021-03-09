@@ -48,6 +48,7 @@ def assert_saved_query_buttons(browser):
     assert browser.find_element_by_id('delete_query_button')
     assert browser.find_element_by_id('edit_query_button')
 
+
 @then("each pipeline and query should have a checkbox to select it")
 def assert_queries_and_pipelines_have_checkboxes(browser):
     for pipeline in Pipeline.objects.all():
