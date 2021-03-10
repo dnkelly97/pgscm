@@ -5,6 +5,15 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 import pytest
 from django.urls import reverse
+from django.apps import apps
+from django.test import TestCase
+from login.apps import LoginConfig
+
+
+class ReportsConfigTest(TestCase):
+    def test_apps(self):
+        self.assertEqual(LoginConfig.name, 'login')
+        self.assertEqual(apps.get_app_config('login').name, 'login')
 
 
 class SimpleTest(TestCase):
@@ -49,7 +58,10 @@ class SimpleTest(TestCase):
         self.assertEqual(resp.status_code, 200)
 
     def test_home_view(self):
-        url = reverse("home")
-        resp = self.client.get(url)
-        self.assertEqual(resp.status_code, 302)
+        c = Client()
+
+
+
+
+
 
