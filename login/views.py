@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from .decorators import unauthenticated_user, admin_func
+from django.contrib.auth.models import Group
 
 
 # Create your views here.
@@ -39,21 +40,22 @@ def loginPage(request):
 
 @admin_func
 def registerPage(request):
-    if request.user.is_authenticated:
-        return redirect('home')
-    else:
-        form = CreateUserForm()
-        if request.method == 'POST':
-            form = CreateUserForm(request.POST)
-            if form.is_valid():
-                form.save()
-                user = form.cleaned_data.get('username')
-                messages.success(request, 'Account was created for ' + user)
+    form = CreateUserForm()
+    if request.method == 'POST':
+        form = CreateUserForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            username = form.cleaned_data['username']
 
-                return redirect('login')
+            group = Group.objects.get(name='administrator')
+            group.user_set.add(user)
 
-        context = {'form': form}
-        return render(request, 'login/register.html', context)
+            messages.success(request, 'Account was created for ' + username)
+
+            return redirect('home')
+
+    context = {'form': form}
+    return render(request, 'login/register.html', context)
 
 
 def logoutUser(request):
