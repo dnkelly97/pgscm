@@ -41,7 +41,7 @@ class SimpleTest(TestCase):
     def test_registerPage_view(self):
         url = reverse("register")
         resp = self.client.get(url)
-        self.assertEqual(resp.status_code, 200)
+        self.assertEqual(resp.status_code, 302)
 
     def test_resetPassword_view(self):
         url = reverse("reset_password")
