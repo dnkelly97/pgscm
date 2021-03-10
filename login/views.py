@@ -10,12 +10,9 @@ from .models import *
 from .forms import CreateUserForm
 
 
-
 @login_required(login_url='login')
 def home(request):
-    context = {}
-
-    return render(request, 'login/dashboard.html', context)
+    return render(request, 'login/dashboard.html', {})
 
 
 def loginPage(request):
@@ -23,17 +20,12 @@ def loginPage(request):
         return redirect('home')
     else:
         if request.method == 'POST':
-            username = request.POST.get('username')
-            password = request.POST.get('password')
-
-            user = authenticate(request, username=username, password=password)
-
+            user = authenticate(request, username=request.POST.get('username'), password=request.POST.get('password'))
             if user is not None:
                 login(request, user)
                 return redirect('home')
             else:
                 messages.info(request, 'Username OR password is incorrect')
-
         context = {}
         return render(request, 'login/login.html', context)
 
@@ -49,7 +41,6 @@ def registerPage(request):
                 form.save()
                 user = form.cleaned_data.get('username')
                 messages.success(request, 'Account was created for ' + user)
-
                 return redirect('login')
 
         context = {'form': form}
