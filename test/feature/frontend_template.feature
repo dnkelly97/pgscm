@@ -11,4 +11,3 @@ Feature: Frontend template that other pages inherit from
         Given I am on a page that inherits from the frontend template
         And I click the 'Dashboard' option from the navigation bar
         Then I should be redirected to the dashboard page
-
