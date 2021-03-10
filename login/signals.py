@@ -9,10 +9,6 @@ def administrator_account(sender, instance, created, **kwargs):
     if created:
         group = Group.objects.get(name='administrator')
         instance.groups.add(group)
-        Administrator.objects.create(
-            user=instance,
-            name=instance.username,
-        )
         print('Account created!')
 
 
