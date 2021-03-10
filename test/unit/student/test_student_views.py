@@ -31,7 +31,9 @@ def test_create_student(client):
 @pytest.mark.django_db
 @pytest.mark.parametrize(
    'email, first_name, last_name, school_year, ethnicity,gender, status_code', [
-       ("hello@gmail.com", 'first', 'last',Student.YearInSchool.UNKNOWN,Student.Ethnicity.UNKNOWN,Student.Gender.UNKNOWN, 200),
+       ("hello@gmail.com", 'first', 'last',Student.YearInSchool.UNKNOWN,
+        Student.Ethnicity.UNKNOWN,
+        Student.Gender.UNKNOWN, 200),
        ("hello1@gmail.com", 'first',"second",Student.YearInSchool.UNKNOWN,Student.Ethnicity.UNKNOWN,Student.Gender.UNKNOWN, 302)
    ]
 )

@@ -12,7 +12,7 @@ from django.urls import reverse
 )
 
 @pytest.mark.django_db
-@scenario("../../feature/create_student.feature", "I am on the create student page and I successfully create a student")
+@scenario("../../feature/student/create_student.feature", "I am on the create student page and I successfully create a student")
 def test_student_create_display(live_server,email,first_name,last_name):
     pass
 

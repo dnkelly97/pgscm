@@ -5,7 +5,7 @@ from django.urls import reverse
 
 
 @pytest.mark.django_db
-@scenario("../../feature/student_portal.feature", "I am on the student page and I want to create a student")
+@scenario("../../feature/student/student_portal.feature", "I am on the student page and I want to create a student")
 def test_student_display(live_server):
     pass
 

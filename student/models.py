@@ -16,10 +16,12 @@ class Student(models.Model):
         JUNIOR = 'JR', _('Junior')
         SENIOR = 'SR', _('Senior')
         GRADUATE = 'GR', _('Graduate')
+        UNKNOWN = 'UN', _('Unknown')
 
     school_year = models.CharField(
         max_length=2,
-        choices=YearInSchool.choices
+        choices=YearInSchool.choices,
+        default=YearInSchool.UNKNOWN
     )
 
     research_interests = ArrayField(
@@ -40,10 +42,12 @@ class Student(models.Model):
         NATIVE = 'N', _('Native American / Alaskan Native')
         OTHER = 'O', _('Prefer Not To Say')
         WHITE = 'W', _('White / Non Hispanic')
+        UNKNOWN = 'U', _('Unknown')
 
     ethnicity = models.CharField(
         max_length=1,
-        choices=Ethnicity.choices
+        choices=Ethnicity.choices,
+        default=Ethnicity.UNKNOWN
     )
 
     # School Related
@@ -54,10 +58,12 @@ class Student(models.Model):
         OTHER = 'O', _('Other')
         QUEER = 'Q', _('Queer')
         TRANSGENDER = 'T', _('Transgender')
+        UNKNOWN = 'U', _('Unknown')
 
     gender = models.CharField(
         max_length=1,
-        choices=Gender.choices
+        choices=Gender.choices,
+        default=Gender.UNKNOWN
     )
 
     country = CountryField(blank_label='(select country)',null=True,blank=True)
