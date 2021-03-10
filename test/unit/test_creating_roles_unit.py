@@ -39,3 +39,32 @@ class AdministratorView(TestCase):
         assert response.status_code == 302
 
 
+class AdminView(TestCase):
+    def setUp(self):
+        self.username = 'john'
+        self.password = 'johnpass123'
+        self.email = 'john@uiowa.edu'
+        self.client = Client()
+
+        self.user = User.objects.create_user(self.username, self.email, self.password)
+
+    def test_admin_dash(self):
+        self.user.is_superuser = True
+        self.user.save()
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse('dashboard'))
+        assert response.status_code == 200
+
+    def test_admin_register(self):
+        self.user.is_superuser = True
+        self.user.save()
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse('register'))
+        assert response.status_code == 200
+
+    def test_administrator_logged(self):
+        self.user.is_superuser = True
+        self.user.save()
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse('login'))
+        assert response.status_code == 302
