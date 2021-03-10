@@ -1,15 +1,9 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.forms import inlineformset_factory
-from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-# Create your views here.
-from .models import *
 from .forms import CreateUserForm
-
-
+# Create your views here.
 
 @login_required(login_url='login')
 def home(request):
@@ -17,7 +11,7 @@ def home(request):
 
     return render(request, 'login/dashboard.html', context)
 
-
+@unauthenticated_user
 def loginPage(request):
     if request.user.is_authenticated:
         return redirect('home')
@@ -38,6 +32,7 @@ def loginPage(request):
         return render(request, 'login/login.html', context)
 
 
+@admin_func
 def registerPage(request):
     if request.user.is_authenticated:
         return redirect('home')
