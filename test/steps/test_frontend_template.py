@@ -16,3 +16,20 @@ def go_to_dashboard(live_server, browser):
 @then("I should see a navigation bar")
 def assert_navbar(browser):
     assert browser.find_element_by_id('navbar')
+
+
+@scenario("../feature/frontend_template.feature", "I click 'Dashboard' on the navigation bar")
+def test_click_dashboard(live_server):
+    pass
+
+
+@given("I click the 'Dashboard' option from the navigation bar")
+def click_dashboard(browser):
+    browser.find_element_by_id('dashboard-nav-link').submit()
+
+
+@then("I should be redirected to the dashboard page")
+def assert_redirect_to_dashboard(live_server, browser):
+    expected_url = live_server + reverse('dashboard')
+    assert browser.current_url == expected_url
+
