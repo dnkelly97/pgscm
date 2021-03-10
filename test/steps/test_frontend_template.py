@@ -1,5 +1,8 @@
 from pytest_bdd import scenario, given, then, when
 from django.urls import reverse
+# from selenium.webdriver.support import expected_conditions as EC
+# from selenium.webdriver.common.by import By
+# from selenium.webdriver.support.ui import WebDriverWait
 
 
 @scenario("../feature/frontend_template.feature", "I can see the navigation bar")
@@ -25,11 +28,10 @@ def test_click_dashboard(live_server):
 
 @given("I click the 'Dashboard' option from the navigation bar")
 def click_dashboard(browser):
-    browser.find_element_by_id('dashboard-nav-link').submit()
+    browser.find_element_by_link_text("Dashboard").click()
 
 
 @then("I should be redirected to the dashboard page")
 def assert_redirect_to_dashboard(live_server, browser):
     expected_url = live_server + reverse('dashboard')
     assert browser.current_url == expected_url
-
