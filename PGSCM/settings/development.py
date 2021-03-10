@@ -17,7 +17,7 @@ DATABASES = {
     }
 }
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 # these are for facilitating emails so users can reset their passwords
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
