@@ -14,6 +14,9 @@ register(SavedQueryFactory)
 def browser():
     ops = webdriver.ChromeOptions()
     ops.add_argument('headless')
+    ops.add_argument('--no-sandbox')
+    ops.add_argument('--disable-gpu')
+    ops.add_argument('--window-size=1920,1080')
     driver = webdriver.Chrome(options=ops)
     driver.implicitly_wait(10)
     yield driver
