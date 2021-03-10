@@ -31,8 +31,8 @@ def loginPage(request):
         else:
             messages.info(request, 'Username/Password is incorrect')
 
-        context = {}
-        return render(request, 'login/login.html', context)
+    context = {}
+    return render(request, 'login/login.html', context)
 
 
 @admin_func
