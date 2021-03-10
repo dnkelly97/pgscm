@@ -57,8 +57,44 @@ class SimpleTest(TestCase):
         resp = self.client.get(url)
         self.assertEqual(resp.status_code, 200)
 
-    def test_home_view(self):
-        c = Client()
+
+class HomeView(TestCase):
+    def setUp(self):
+        self.username = 'john'
+        self.password = 'johnpass123'
+        self.email = 'john@uiowa.edu'
+        self.client = Client()
+
+        self.user = User.objects.create_user(self.username, self.email, self.password)
+
+    def test_dash(self):
+        self.user.is_superuser = True
+        self.user.save()
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse('home'))
+        assert response.status_code == 200
+
+    def test_loggedin(self):
+        self.user.is_staff = False
+        self.user.save()
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse('login'))
+        assert response.status_code == 302
+
+    def test_register(self):
+        self.user.is_staff = False
+        self.user.save()
+        self.client.login(username=self.username, password=self.password)
+        response = self.client.get(reverse('register'))
+        assert response.status_code == 302
+
+
+
+
+
+
+
+
 
 
 
