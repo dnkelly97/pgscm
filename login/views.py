@@ -42,12 +42,9 @@ def registerPage(request):
         form = CreateUserForm(request.POST)
         if form.is_valid():
             user = form.save()
-            username = form.cleaned_data['username']
 
             group = Group.objects.get(name='administrator')
             group.user_set.add(user)
-
-            messages.success(request, 'Account was created for ' + username)
 
             return redirect('home')
 
