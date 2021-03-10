@@ -4,8 +4,8 @@ from django.urls import reverse
 from django.contrib.auth.models import User
 from django.test import TestCase, Client
 
-path('register/', views.registerUser, name="register"),
-path('', views.dashboard, name="dashboard")
+path('register/', views.registerPage, name="register"),
+path('', views.home, name="home")
 
 
 class AdministratorView(TestCase):
@@ -21,7 +21,7 @@ class AdministratorView(TestCase):
         self.user.is_staff = False
         self.user.save()
         self.client.login(username=self.username, password=self.password)
-        response = self.client.get(reverse('dashboard'))
+        response = self.client.get(reverse('home'))
         assert response.status_code == 200
 
     def test_administrator_register(self):
@@ -52,7 +52,7 @@ class AdminView(TestCase):
         self.user.is_superuser = True
         self.user.save()
         self.client.login(username=self.username, password=self.password)
-        response = self.client.get(reverse('dashboard'))
+        response = self.client.get(reverse('home'))
         assert response.status_code == 200
 
     def test_admin_register(self):
