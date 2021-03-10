@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pipeline.apps.PipelineConfig',
-    'login',
+    'login.apps.LoginConfig',
 ]
 
 MIDDLEWARE = [
