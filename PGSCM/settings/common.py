@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'pipeline.apps.PipelineConfig',
+    'login',
     'student.apps.StudentConfig',
 ]
 
@@ -49,7 +50,7 @@ ROOT_URLCONF = 'PGSCM.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')], #specifies that in addition to looking for an app-level templates directory, the Django template loader should also look for a project-level templates directory
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
