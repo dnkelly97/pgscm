@@ -21,6 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('dashboard/', pipeline_views.dashboard, name="dashboard"),
     path('', include('login.urls')),
-    path('dashboard/', pipeline_views.dashboard, name="dashboard"),
     path('student/', include('student.urls'))
 ]
