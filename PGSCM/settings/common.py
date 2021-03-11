@@ -32,7 +32,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'pipeline.apps.PipelineConfig',
     'login',
-
+    'student.apps.StudentConfig',
 ]
 
 MIDDLEWARE = [
