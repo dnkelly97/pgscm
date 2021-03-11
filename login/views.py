@@ -43,6 +43,7 @@ def registerPage(request):
         if form.is_valid():
             user = form.save()
 
+            group = Group.objects.get_or_create(name='administrator')
             group = Group.objects.get(name='administrator')
             group.user_set.add(user)
 
