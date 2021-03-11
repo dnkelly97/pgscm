@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from pipeline import views as pipeline_views
+from django.urls import include, path
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('dashboard/', pipeline_views.dashboard, name="dashboard")
+    path('dashboard/', pipeline_views.dashboard, name="dashboard"),
+    path('student/', include('student.urls'))
 ]
