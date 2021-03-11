@@ -1,0 +1,44 @@
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+	<div class="col">
+		<div class="card card-body">
+
+			<form method="get">
+				{{student_filter.form}}
+
+		    <button class="btn btn-primary" type="submit">Search</button>
+		  </form>
+
+		</div>
+	</div>
+
+</div>
+
+<div class="row">
+	<div class="col-md">
+		<div class="card card-body">
+            <table class="table table-sm">
+                <tr>
+					<th>First Name</th>
+					<th>Last Name</th>
+					<th>Email</th>
+					<th>Country</th>
+				</tr>
+
+                {% for student in students %}
+                <tr>
+                    <td>{{student.first_name}}</td>
+                    <td>{{student.last_name}}</td>
+                    <td>{{student.email}}</td>
+                    <td>{{student.country}}</td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+	</div>
+</div>
+
+{% endblock %}
