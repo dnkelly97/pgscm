@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from .forms import CreateUserForm
 from .decorators import unauthenticated_user, admin_func
 from django.contrib.auth.models import Group
+from student.models import Student
+from student.filters import StudentFilter
 
 
 # Create your views here.
@@ -12,7 +14,11 @@ from django.contrib.auth.models import Group
 
 @login_required(login_url='login')
 def home(request):
-    context = {}
+    students = Student.objects.all()
+    student_filter = StudentFilter(request.GET, queryset=students)
+    students = student_filter.qs
+
+    context = {'students': students, 'student_filter': student_filter}
 
     return render(request, 'login/dashboard.html', context)
 
@@ -55,3 +61,5 @@ def registerPage(request):
 def logoutUser(request):
     logout(request)
     return redirect('login')
+
+
