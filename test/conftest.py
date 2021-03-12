@@ -2,7 +2,9 @@ import pytest
 from selenium import webdriver
 from pytest_factoryboy import register
 from factories import PipelineFactory, SavedQueryFactory
-
+from django.contrib.auth.models import User
+from django.urls import reverse
+from selenium.webdriver.common.keys import Keys
 
 register(PipelineFactory)
 register(SavedQueryFactory)
@@ -21,3 +23,25 @@ def browser():
     driver.implicitly_wait(10)
     yield driver
     driver.quit()
+
+
+@pytest.fixture
+def logged_in_browser(browser, live_server):
+    user = User.objects.create_user('administrator', 'administrator@uiowa.edu', 'admin123456')
+    user.is_superuser = False
+    user.save()
+    browser.get(live_server + reverse('login'))
+    browser.find_element_by_id('id_username').send_keys('administrator')
+    browser.find_element_by_id('id_password').send_keys('admin123456', Keys.RETURN)
+    yield browser
+
+
+@pytest.fixture
+def admin_logged_in_browser(browser, live_server):
+    user = User.objects.create_user('administrator', 'administrator@uiowa.edu', 'admin123456')
+    user.is_superuser = True
+    user.save()
+    browser.get(live_server + reverse('login'))
+    browser.find_element_by_id('id_username').send_keys('administrator')
+    browser.find_element_by_id('id_password').send_keys('admin123456', Keys.RETURN)
+    yield browser

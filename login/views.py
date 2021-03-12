@@ -10,13 +10,6 @@ from django.contrib.auth.models import Group
 # Create your views here.
 
 
-@login_required(login_url='login')
-def home(request):
-    context = {}
-
-    return render(request, 'login/dashboard.html', context)
-
-
 @unauthenticated_user
 def loginPage(request):
     if request.method == 'POST':
@@ -27,7 +20,7 @@ def loginPage(request):
 
         if user is not None:
             login(request, user)
-            return redirect('home')
+            return redirect('dashboard')
         else:
             messages.info(request, 'Username/Password is incorrect')
 
@@ -47,7 +40,7 @@ def registerPage(request):
             group = Group.objects.get(name='administrator')
             group.user_set.add(user)
 
-            return redirect('home')
+            return redirect('dashboard')
 
     context = {'form': form}
     return render(request, 'login/register.html', context)
