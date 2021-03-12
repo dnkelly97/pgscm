@@ -14,34 +14,34 @@ def linked_urls():
 
 
 @scenario("../feature/frontend_template.feature", "I can see the navigation bar")
-def test_navbar_present(live_server):
+def test_navbar_present(logged_in_browser):
     pass
 
 
 @given("I am on a page that inherits from the frontend template")
-def go_to_dashboard(live_server, browser):
+def go_to_dashboard(live_server, logged_in_browser):
     url = live_server + reverse('dashboard')
-    browser.get(url)
+    logged_in_browser.get(url)
 
 
 @then("I should see a navigation bar")
-def assert_navbar(browser):
-    assert browser.find_element_by_id('navbar')
+def assert_navbar(logged_in_browser):
+    assert logged_in_browser.find_element_by_id('navbar')
 
 
 @scenario("../feature/frontend_template.feature",
           "I click <page> on the navigation bar",
           example_converters=dict(page=str))
-def test_click_navbar_link(live_server):
+def test_click_navbar_link(logged_in_browser):
     pass
 
 
 @given("I click the <page> option from the navigation bar")
-def click_link(browser, page):
-    browser.find_element_by_link_text(page).click()
+def click_link(logged_in_browser, page):
+    logged_in_browser.find_element_by_link_text(page).click()
 
 
 @then("I should be redirected to the <page> page")
-def assert_redirect_to_correct_page(live_server, browser, page, linked_urls):
+def assert_redirect_to_correct_page(live_server, logged_in_browser, page, linked_urls):
     expected_url = live_server + linked_urls[page]
-    assert browser.current_url == expected_url
+    assert logged_in_browser.current_url == expected_url
