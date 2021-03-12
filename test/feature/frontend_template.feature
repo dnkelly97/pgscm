@@ -7,7 +7,13 @@ Feature: Frontend template that other pages inherit from
         Given I am on a page that inherits from the frontend template
         Then I should see a navigation bar
 
-    Scenario: I click 'Dashboard' on the navigation bar
+    Scenario Outline: I click <page> on the navigation bar
         Given I am on a page that inherits from the frontend template
-        And I click the 'Dashboard' option from the navigation bar
-        Then I should be redirected to the dashboard page
+        And I click the <page> option from the navigation bar
+        Then I should be redirected to the <page> page
+
+        Examples:
+        | page |
+        |Dashboard|
+        |Student Portal|
+        |Logout|
