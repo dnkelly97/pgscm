@@ -8,6 +8,7 @@
 <div class="row">
 	<div class="col-md-4">
 		<div class="card card-body">
+            {%  block content1 %}
             <h5 class="card-header">Query Students</h5><br>
 			<form method="get">
                 <div class="input-group mb-3">
@@ -76,8 +77,9 @@
                     </div>
                     {{student_filter.form.military}}
                 </div>
-		    <button id="id_submit_filter" class="btn btn-primary" type="submit">Search</button>
-		  </form>
+		        <button id="id_submit_filter" class="btn btn-primary" type="submit">Search</button>
+		    </form>
+            {% endblock %}
 
 		</div>
 	</div>
@@ -87,7 +89,7 @@
             <h4 class="card-header">Students
                 <small class="float-sm-right">
                     <form action="{% url 'create' %}">
-                        <button id="id_submit_filter" class="btn btn-primary" type="submit">Create Students</button>
+                        <button id="create_student_button" class="btn btn-primary" type="submit">Create Students</button>
                     </form>
                 </small>
             </h4>
