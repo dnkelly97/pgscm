@@ -27,7 +27,7 @@ def dashboard_location(live_server, browser):
     student.save()
     student2 = Student.objects.create(email='hello12@gmail.com', first_name='Joey', last_name='Morrow')
     student2.save()
-    browser.get(live_server + '/')
+    browser.get(live_server + '/student')
 
 
 @then("I should see the students currently in the system")
@@ -44,12 +44,12 @@ def test_student_query(live_server):
 
 @given("I have some attributes to sort students by")
 def setup_attributes(live_server, browser):
-    browser.get(live_server + '/')
+    browser.get(live_server + '/student')
 
 
 @when("I go to the queried 'dashboard'")
 def queried_dashboard(browser):
-    browser.find_element_by_id('id_first_name').send_keys('Joe')
+    browser.find_element_by_id('id_name').send_keys('Joe')
     browser.find_element_by_id('id_submit_filter').click()
 
 

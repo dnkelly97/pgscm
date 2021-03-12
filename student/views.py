@@ -9,6 +9,7 @@ from .filters import StudentFilter
 # Create your views here.
 @login_required(login_url='login')
 def createPage(response):
+    students = Student.objects.all()
     if response.method == 'POST':
         form = CreateForm(response.POST)
 
@@ -22,7 +23,7 @@ def createPage(response):
         return render(response, 'create_student.html', context)
 
     form = CreateForm
-    context = {'form': form}
+    context = {'form': form, 'students':students}
     return render(response, 'create_student.html', context)
 
 
