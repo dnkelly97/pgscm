@@ -1,15 +1,15 @@
 Feature:
-  As a developer
-  So that I can control what different users can do
-  I want to differentiate between an admin who can add users and an administrator who can simply just use the application
+  As an administrator
+  So that I securely enter into the program
+  I want to be able to login into the application
 
-  Scenario: Access Create User Page as Admin
-    Given I am an Admin
-    When I want to access the 'register' page
-    Then I get redirected to 'register' page
-
-  Scenario: Access Create User Page as Administrator
+  Scenario: Login into the application as an Administrator
     Given I am an Administrator
-    When I want to access the 'register' page
-    Then I get redirected back to 'dashboard' page
+    When I want to login into the application with correct information
+    Then I get access to 'dashboard'
+
+  Scenario: Login into the application with wrong credentials
+    Given I am an Administrator
+    When I want to login into the application with incorrect information
+    Then I stay on the login page
 

@@ -3,28 +3,8 @@ from pytest_bdd import scenario, given, when, then
 from selenium.webdriver.common.keys import Keys
 
 
-@given("I am an Admin")
-def admin_access(live_server, browser):
-    browser.get(live_server + '/')
-    user = User.objects.create_user('admin', 'admin@uiowa.edu', 'admin123456')
-    user.is_superuser = True
-    user.save()
-    browser.find_element_by_id('id_username').send_keys('admin')
-    browser.find_element_by_id('id_password').send_keys('admin123456', Keys.RETURN)
-
-
-@when("I want to access the 'register' page")
-def connect_register(live_server, browser):
-    browser.get(live_server + '/register')
-
-
-@then("I get redirected to 'register' page")
-def redirect_register(browser):
-    assert browser.find_element_by_id('id_register_form')
-
-
-@scenario('../feature/authentication.feature', 'Access Create User Page as Administrator')
-def test_user_roles_administrator(live_server):
+@scenario('../feature/authentication.feature', 'Login into the application as an Administrator')
+def test_authentication_success(live_server):
     pass
 
 
@@ -34,23 +14,36 @@ def administrator_access(live_server, browser):
     user = User.objects.create_user('administrator', 'administrator@uiowa.edu', 'admin123456')
     user.is_superuser = False
     user.save()
+
+
+@when("I want to login into the application with correct information")
+def login_with_correct_credentials(browser):
     browser.find_element_by_id('id_username').send_keys('administrator')
     browser.find_element_by_id('id_password').send_keys('admin123456', Keys.RETURN)
 
 
-@given("I am not an Administrator")
+@then("I get access to 'dashboard'")
+def redirect_dashboard(browser):
+    assert browser.find_element_by_id('id_dashboard')
+
+
+@scenario('../feature/authentication.feature', 'Login into the application with wrong credentials')
+def test_authentication_fail(live_server):
+    pass
+
+
+@given("I am an Administrator")
 def administrator_access(live_server, browser):
     browser.get(live_server + '/')
     user = User.objects.create_user('administrator', 'administrator@uiowa.edu', 'admin123456')
     user.is_superuser = False
     user.save()
+
+
+@when("I want to login into the application with incorrect information")
+def login_with_incorrect_credentials(browser):
     browser.find_element_by_id('id_username').send_keys('adminwhoops')
     browser.find_element_by_id('id_password').send_keys('admin123456', Keys.RETURN)
-
-
-@then("I get redirected back to 'dashboard' page")
-def redirect_dashboard(browser):
-    assert browser.find_element_by_id('id_dashboard')
 
 
 @then("I stay on the login page")
