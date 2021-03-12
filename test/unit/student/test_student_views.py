@@ -29,7 +29,7 @@ class StudentView(TestCase):
         assert response.status_code == 200
 
     @pytest.mark.django_db
-    def test_create_student_submit_valid(self):
+    def test_create_student_submit_invalid(self):
         values = {"email": "hello@gmail.com", "first_name": 'first', "last_name": 'last', "school_year": Student.YearInSchool.UNKNOWN,
                   "ethnicity": Student.Ethnicity.UNKNOWN, "gender": Student.Gender.UNKNOWN}
         self.student = Student.objects.create(email="hello1@gmail.com", first_name="first", last_name="second")
@@ -47,7 +47,7 @@ class StudentView(TestCase):
         assert response.status_code == 302
 
     @pytest.mark.django_db
-    def test_create_student_submit_invalid(self):
+    def test_create_student_submit_valid(self):
         values = {"email": "hello1@gmail.com", "first_name": 'first', "last_name": 'second',
                   "school_year": Student.YearInSchool.UNKNOWN,
                   "ethnicity": Student.Ethnicity.UNKNOWN, "gender": Student.Gender.UNKNOWN}
