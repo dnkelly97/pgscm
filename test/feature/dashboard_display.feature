@@ -4,7 +4,8 @@ Feature: Dashboard Displays Pipelines and Queries
     I want to have a dashboard page displaying that information
 
     Scenario: I am on the dashboard page
-        Given I am on the dashboard
+        Given I am a user that is logged in
+        And I am on the dashboard
         Then I should see existent pipelines
         Then I should see existent saved queries
         Then I should see buttons for creating, deleting, and editing pipelines
