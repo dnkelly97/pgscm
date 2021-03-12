@@ -17,3 +17,4 @@ Feature: Frontend template that other pages inherit from
         |Dashboard|
         |Student Portal|
         |Logout|
+
