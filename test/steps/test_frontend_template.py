@@ -14,7 +14,7 @@ def linked_urls():
 
 
 @scenario("../feature/frontend_template.feature", "I can see the navigation bar")
-def test_navbar(live_server):
+def test_navbar_present(live_server):
     pass
 
 
