@@ -71,7 +71,7 @@ class HomeView(TestCase):
         self.user.is_superuser = True
         self.user.save()
         self.client.login(username=self.username, password=self.password)
-        response = self.client.get(reverse('home'))
+        response = self.client.get(reverse('dashboard'))
         assert response.status_code == 200
 
     def test_loggedin(self):
