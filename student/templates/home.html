@@ -1,5 +1,8 @@
-{% block title %}Student Portal{% endblock %}
+{% extends "base.html" %}
+{% block title %}Student Portal{% endblock title %}
+{% block content %}
 
 <button type="button">
     <a href="{% url 'create' %}" id="create_student_button">Create Student</a>
 </button>
+{% endblock content %}
