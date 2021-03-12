@@ -14,11 +14,7 @@ from student.filters import StudentFilter
 
 @login_required(login_url='login')
 def home(request):
-    students = Student.objects.all()
-    student_filter = StudentFilter(request.GET, queryset=students)
-    students = student_filter.qs
-
-    context = {'students': students, 'student_filter': student_filter}
+    context = {}
 
     return render(request, 'login/dashboard.html', context)
 

@@ -27,14 +27,11 @@ def createPage(response):
 
 
 @login_required(login_url='login')
-def student(response):
-    return render(response, 'home.html')
-
-
-@login_required(login_url='login')
-def studentList(request):
+def student(request):
     students = Student.objects.all()
+    student_filter = StudentFilter(request.GET, queryset=students)
+    students = student_filter.qs
 
-    context = {'students': students}
+    context = {'students': students, 'student_filter': student_filter}
+    return render(request, 'home.html', context)
 
-    return render(request, 'student_list.html', context)
