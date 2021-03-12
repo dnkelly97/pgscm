@@ -19,7 +19,8 @@ from pipeline import views as pipeline_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', pipeline_views.dashboard, name="dashboard_default"),
     path('dashboard/', pipeline_views.dashboard, name="dashboard"),
     path('', include('login.urls')),
-    path('student/', include('student.urls'))
+    path('student/', include('student.urls')),
 ]
