@@ -1,10 +1,91 @@
-{% extends "base.html" %}
+{% extends "home.html" %}
+
+{% load static %}
 
 {% block title %}Create a Student{% endblock %}
 
-{% block content %}
+{% block content1 %}
+    <h5 class="card-header">Create Student</h5><br>
     <form method="POST" class="form-group" id="create_student_form">
-	{{ form.as_p }}
-	<button type="submit" id="create_student_submit_button" class="btn btn-success">Create</button>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.first_name.label}}</span>
+            </div>
+            {{form.first_name}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.last_name.label}}</span>
+            </div>
+            {{form.last_name}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.email.label}}</span>
+            </div>
+            {{form.email}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.school_year.label}}</span>
+            </div>
+            {{form.school_year}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.degree.label}}</span>
+            </div>
+            {{form.degree}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.university.label}}</span>
+            </div>
+            {{form.university}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.gpa.label}}</span>
+            </div>
+            {{form.gpa}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.ethnicity.label}}</span>
+            </div>
+            {{form.ethnicity}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.gender.label}}</span>
+            </div>
+            {{form.gender}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.country.label}}</span>
+            </div>
+            {{form.country}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.us_citizenship.label}}</span>
+            </div>
+            {{form.us_citizenship}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.first_generation.label}}</span>
+            </div>
+            {{form.first_generation}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.military.label}}</span>
+            </div>
+            {{form.military}}
+        </div>
+        <button id="create_student_submit_button" class="btn btn-primary" type="submit">Create</button>
     </form>
+
 {% endblock %}
