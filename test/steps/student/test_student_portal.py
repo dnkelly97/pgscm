@@ -1,11 +1,9 @@
 from pytest_bdd import scenario, given, when, then
-import pytest
 from django.contrib.auth.models import User
 from selenium.webdriver.common.keys import Keys
 from django.urls import reverse
 
 
-@pytest.mark.django_db
 @scenario("../../feature/student/student_portal.feature", "I am on the student page and I want to create a student")
 def test_student_display(live_server):
     pass
@@ -13,7 +11,7 @@ def test_student_display(live_server):
 
 @given("I am on the student portal")
 def student_setup(live_server, browser):
-    browser.get(live_server)
+    browser.get(live_server + '/')
     user = User.objects.create_user('administrator', 'administrator@uiowa.edu', 'admin123456')
     user.is_superuser = False
     user.save()

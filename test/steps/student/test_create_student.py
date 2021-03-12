@@ -11,7 +11,6 @@ from django.urls import reverse
         ('test@gmail.com', 'test_first', 'test_last')
     ]
 )
-@pytest.mark.django_db
 @scenario("../../feature/student/create_student.feature",
           "I am on the create student page and I successfully create a student")
 def test_student_create_display(live_server, email, first_name, last_name):
@@ -20,7 +19,7 @@ def test_student_create_display(live_server, email, first_name, last_name):
 
 @given("I am on the create student page")
 def student_create_setup(live_server, browser):
-    browser.get(live_server)
+    browser.get(live_server + '/')
     user = User.objects.create_user('administrator', 'administrator@uiowa.edu', 'admin123456')
     user.is_superuser = False
     user.save()
