@@ -24,10 +24,17 @@
       <li class="nav-item active">
         <a class="nav-link" href="{% url 'dashboard' %}" id="dashboard-nav-link">Dashboard</a>
       </li>
+      <li class="nav-item active">
+        <a class="nav-link" href="{% url 'student' %}" id="student-nav-link">Students</a>
+      </li>
+      <li class="nav-item active">
+        <a class="nav-link" id="query-nav-link">Query</a>
+      </li>
+
     </ul>
   </div>
 
-  <span class="hello-msg">Logout</span>
+  <span ><a  class="hello-msg" href="{% url 'logout' %}">Logout</a></span>
   <!--span class="hello-msg">Hello, {#{request.user}#}</span-->
   <!--span><a  class="hello-msg" href="{#% url 'logout' %#}">Logout</a></span-->
 
