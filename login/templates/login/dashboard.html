@@ -12,7 +12,9 @@
 <body>
 	{%  include 'login/navbar.html' %}
 	<div id="id_dashboard" class="container-fluid">
-		{% include 'student_list.html' %}
+        {% block content %}
+
+        {% endblock %}
     </div>
 	<hr>
 
