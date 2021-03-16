@@ -5,5 +5,5 @@ from pipeline.models import Pipeline
 class CreateForm(ModelForm):
     class Meta:
         model = Pipeline
-        fields = ['name',
-                 ]
+        fields = ['name', 'num_stages',
+                  ]
