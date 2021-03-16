@@ -23,4 +23,5 @@ urlpatterns = [
     path('dashboard/', pipeline_views.dashboard, name="dashboard"),
     path('', include('login.urls')),
     path('student/', include('student.urls')),
+    path('pipeline/', include('pipeline.urls')),
 ]
