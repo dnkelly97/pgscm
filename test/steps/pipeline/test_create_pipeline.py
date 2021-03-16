@@ -25,7 +25,7 @@ def pipeline_create_setup(live_server, browser):
     user.save()
     browser.find_element_by_id('id_username').send_keys('administrator')
     browser.find_element_by_id('id_password').send_keys('admin123456', Keys.RETURN)
-    browser.get(live_server + reverse('create'))
+    browser.get(live_server + reverse('create_pipeline'))
 
 
 @when("I fill out a name: <name>")

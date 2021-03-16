@@ -5,5 +5,5 @@ from pipeline.views import createPage
 
 
 urlpatterns = [
-    path('create/', csrf_exempt(createPage), name='create'),
+    path('create/', csrf_exempt(createPage), name='create_pipeline'),
 ]
