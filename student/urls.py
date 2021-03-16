@@ -6,4 +6,5 @@ from . import views
 urlpatterns = [
     path('', views.student, name='student'),
     path('create/', csrf_exempt(createPage), name='create'),
+    path('delete_student/<str:key>', views.deleteStudent, name='delete_student')
 ]

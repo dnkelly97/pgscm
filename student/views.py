@@ -36,3 +36,14 @@ def student(request):
     context = {'students': students, 'student_filter': student_filter}
     return render(request, 'home.html', context)
 
+
+@login_required(login_url='login')
+def deleteStudent(request, key):
+    student = Student.objects.get(id=key)
+    if request.method == "POST":
+        student.delete()
+        return redirect('student')
+
+    context = {'student': student}
+    return render(request, 'delete.html', context)
+
