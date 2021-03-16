@@ -109,6 +109,7 @@
                     <td>{{student.email}}</td>
                     <td>{{student.country}}</td>
                     <td>{{student.university}}</td>
+                    <td><a class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a></td>
                 </tr>
                 {% endfor %}
             </table>
