@@ -27,6 +27,11 @@
       <li class="nav-item active">
         <a class="nav-link" href="{% url 'student' %}" id="student-nav-link">Student Portal</a>
       </li>
+      {% if request.user.is_superuser %}
+        <li class="nav-item active">
+            <a class="nav-link" href="{% url 'register' %}" id="student-nav-link">Register User</a>
+        </li>
+      {% endif %}
     </ul>
   </div>
 
