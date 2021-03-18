@@ -13,7 +13,7 @@ def test_delete_student(live_server):
 
 
 @given("I am logged in and on the student page")
-def delete_student_setup(live_server, browser):
+def student_setup(live_server, browser):
     browser.get(live_server + '/')
     user = User.objects.create_user('administrator', 'administrator@uiowa.edu', 'admin123456')
     user.is_superuser = False
