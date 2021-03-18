@@ -47,5 +47,5 @@ def confirm_update(browser):
 
 
 @then("I should see the updated student on the student portal")
-def student_deleted(browser):
+def student_updated(browser):
     assert "test_first_change" in browser.page_source
