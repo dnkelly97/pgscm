@@ -6,4 +6,5 @@ from . import views
 urlpatterns = [
     path('', views.student, name='student'),
     path('create/', csrf_exempt(createPage), name='create'),
+    path('ajax_save_query/', views.ajax_save_query, name='save_query'),
 ]
