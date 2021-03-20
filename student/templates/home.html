@@ -137,7 +137,8 @@
         </button>
       </div>
       <div class="modal-body" id="modal-body">
-        <div id="save_query_result"></div>
+        <div class="alert alert-success" id="save_success_message" style="display: none;"></div>
+        <div class="alert alert-danger" id="save_failure_message" style="display: none;"></div>
         <div id="save_query_popup_form">
           <form>
               <div class="form-group">
@@ -167,7 +168,8 @@
 $(document).ready(function() {
         $("#id_save_query").on('click', function(event) {
             event.preventDefault();
-            $('#save_query_result').empty();
+            document.getElementById('save_failure_message').style.display = 'none';
+            document.getElementById('save_success_message').style.display = 'none';
             document.getElementById("save_query_popup_form").style.display = 'block';
             document.getElementById('modal_save_query').style.display = 'block';
             $('#save_query_model').modal();
@@ -182,13 +184,19 @@ $(document).ready(function() {
                     type: 'post',
                     url: $(this).attr('action'),
                     success: function(response) {
-                        console.log(response);
-                        $('#save_query_result').html(response['message']);
+                        //console.log(response);
                         if(response['success'] == true){
                             $('#modal_query_name').val('');
                             $('#modal_query_description').val('');
+                            $('#save_success_message').html(response['message']);
+                            document.getElementById('save_failure_message').style.display = 'none';
+                            document.getElementById('save_success_message').style.display = 'block';
                             document.getElementById('save_query_popup_form').style.display = 'none';
                             document.getElementById('modal_save_query').style.display = 'none';
+                        }
+                        else{
+                            $('#save_failure_message').html(response['message']);
+                            document.getElementById('save_failure_message').style.display = 'block';
                         }
                     },
                     error: function (request, status, error) {
