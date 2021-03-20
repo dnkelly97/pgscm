@@ -55,6 +55,7 @@ def ajax_save_query(request):
     saved_query_form = SavedQueryForm(saved_query_dict)
     # breakpoint()
     if saved_query_form.is_valid():
+        saved_query_form.save()
         success = True
         message = "Query successfully saved!"
     else:
