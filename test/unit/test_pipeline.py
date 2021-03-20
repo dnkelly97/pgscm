@@ -33,3 +33,5 @@ class TestSavedQueryModel:
 
     def test_name_field(self):
         assert hasattr(SavedQuery, 'query_name')
+        assert hasattr(SavedQuery, 'description')
+        assert hasattr(SavedQuery, 'query')
