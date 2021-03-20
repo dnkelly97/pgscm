@@ -198,34 +198,6 @@ $(document).ready(function() {
         });
 });
 </script>
-<!--
-<script type="text/javascript">
-    console.log("what");
-    $(document).ready(function() {
-        $("#id_save_query").on('click', function(event) {
-           event.preventDefault();
-           console.log($('#query-form').serialize());
-           $.ajax({ data: $('#query-form').serialize(),
-                    type: 'post',
-                    url: $(this).attr('action'),
-                    success: function(response) {
-                         console.log(response);
-                         if(response['success']) {
-                             $("#feedbackmessage").html("<div class='alert alert-success'>Succesfully sent feedback, thank you!</div>");
-                             $("#id_save_query").addClass("hidden");
-                         }
-                         if(response['error']) {
-                             $("#feedback-message").html("<div class='alert alert-danger'>" +
-                                   response['error']['comment'] +"</div>");
-                         }
-                    },
-                    error: function (request, status, error) {
-                         console.log(request.responseText);
-                    }
-           });
-       });
-    })
-</script>
--->
+
 {% endblock javascript %}
 
