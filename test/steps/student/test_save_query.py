@@ -122,10 +122,3 @@ def close_popup(logged_in_browser):
 @then("no alert should be displayed")
 def assert_no_alert(logged_in_browser):
     assert logged_in_browser.find_element_by_id("save_success_message").get_attribute("style") == "display: none;"
-
-
-# Scenario: Close the popup then reopen the popup
-#     Given a popup is displaying an alert
-#     When I close the popup
-#     And reopen the popup
-#     Then no alert should be displayed
