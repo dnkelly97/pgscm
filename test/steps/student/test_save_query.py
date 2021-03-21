@@ -65,7 +65,7 @@ def assert_alert_message(logged_in_browser, message):
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert"))
         )
     else:
-        WebDriverWait(logged_in_browser, 30).until(
+        WebDriverWait(logged_in_browser, 20).until(
             EC.visibility_of_element_located((By.CSS_SELECTOR, ".alert-danger"))
         )
     assert message in logged_in_browser.page_source
@@ -83,12 +83,30 @@ def assert_alert_color(logged_in_browser, color):
         assert logged_in_browser.find_element_by_id('save_failure_message').get_attribute('class') == 'alert alert-danger'
 
 
+@pytest.mark.django_db
+@scenario("../../feature/student/save_query.feature", "Successful save makes form and button vanish")
+def test_successful_save_popup_view(logged_in_browser):
+    pass
 
-# Scenario Outline: Click 'Save Query' button on the popup
-#         Given I fill out the query name with <name>
-#         When I click the 'Save Query' button
-#         Then I should see an alert in the popup saying <message>
-#         And the alert should be <color>
 
-# |    | Save Failed - Invalid query name.   | red |
-#         | Query 0 | Save Failed - A query with this name already exists. | red |
+@given("I save a query successfully")
+def save_a_query(live_server, logged_in_browser):
+    logged_in_browser.get(live_server + reverse('student'))
+    logged_in_browser.find_element_by_id('id_save_query').click()
+    logged_in_browser.find_element_by_id('modal_query_name').send_keys("my test query")
+    logged_in_browser.find_element_by_id('modal_save_query').click()
+
+@then("I should not see any fields or the save query button in the popup anymore")
+def assert_form_and_button_hidden(logged_in_browser):
+    WebDriverWait(logged_in_browser, 20).until(
+        EC.invisibility_of_element_located((By.ID, "modal_save_query"))
+    )
+    assert logged_in_browser.find_element_by_id("save_query_popup_form").get_attribute("style") == "display: none;"
+    # assert logged_in_browser.find_element_by_id("modal_save_query").get_attribute("style") == "display: none;"
+
+
+# Scenario: Close the popup then reopen the popup
+#     Given a popup is displaying an alert
+#     When I close the popup
+#     And reopen the popup
+#     Then no alert should be displayed

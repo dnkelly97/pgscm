@@ -25,3 +25,13 @@ Feature: Save a query
         | my queryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy   |   Save Failed - Query names must be less than 60 characters in length.    |  red  |
         |    | Save Failed - Invalid query name.   | red |
         | Query 0 | Save Failed - A query with this name already exists. | red |
+
+    Scenario: Successful save makes form and button vanish
+        Given I save a query successfully
+        Then I should not see any fields or the save query button in the popup anymore
+
+    Scenario: Close the popup then reopen the popup
+        Given a popup is displaying an alert
+        When I close the popup
+        And reopen the popup
+        Then no alert should be displayed
