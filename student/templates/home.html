@@ -97,6 +97,7 @@
 
     <div class="col-md-8">
         <div class="card card-body">
+            {%  block content2 %}
             <h4 class="card-header">Students
                 <small class="float-sm-right">
                     <form action="{% url 'create' %}">
@@ -120,9 +121,12 @@
                     <td>{{student.email}}</td>
                     <td>{{student.country}}</td>
                     <td>{{student.university}}</td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a></td>
+                    <td><a class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a></td>
                 </tr>
                 {% endfor %}
             </table>
+            {% endblock %}
         </div>
     </div>
 </div>

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block title %}Create a Pipeline{% endblock %}
+
+{% block content %}
+    <h5 class="card-header">Create Pipeline</h5><br>
+    <form method="POST" class="form-group" id="create_pipeline_form">
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.name.label}}</span>
+            </div>
+            {{form.name}}
+        </div>
+        <button id="create_pipeline_submit_button" class="btn btn-primary" type="submit">Create</button>
+    </form>
+
+{% endblock %}

@@ -68,3 +68,31 @@ def ajax_save_query(request):
     # breakpoint()
     response = {'success': success, 'message': message}
     return JsonResponse(response)
+
+
+@login_required(login_url='login')
+def deleteStudent(request, key):
+    student = Student.objects.get(id=key)
+    if request.method == "POST":
+        student.delete()
+        return redirect('student')
+
+    context = {'student': student}
+    return render(request, 'delete.html', context)
+
+
+@login_required(login_url='login')
+def updateStudent(request, key):
+    students = Student.objects.all()
+    student = Student.objects.get(id=key)
+    form = CreateForm(instance=student)
+
+    if request.method == 'POST':
+        form = CreateForm(request.POST, instance=student)
+        if form.is_valid():
+            form.save()
+            return redirect('student')
+
+    context = {'form': form, 'students': students, 'student': student}
+    return render(request, 'update_student.html', context)
+
