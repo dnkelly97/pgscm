@@ -14,7 +14,7 @@ def query_combined(queryset, name, value):
 
 
 class StudentFilter(django_filters.FilterSet):
-    name = CharFilter(method=query_combined, label="Name / Email")
+    name = CharFilter(method=query_combined, label="Search by name/email")
     research_interests = CharFilter(method=query_interest, label="Research of Interest")
 
     class Meta:
