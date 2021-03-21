@@ -116,8 +116,7 @@
                     <td>{{student.email}}</td>
                     <td>{{student.country}}</td>
                     <td>{{student.university}}</td>
-                    <td><a class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a></td>
-                    <td><a class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a></td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'student_profile' student.id %}">View</a></td>
                 </tr>
                 {% endfor %}
             </table>
