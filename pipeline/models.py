@@ -1,5 +1,6 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils.translation import gettext_lazy as _
 
 
 # Create your models here.
@@ -40,4 +41,15 @@ class Stage(models.Model):
             MinValueValidator(0)
         ]
     )
-    advancement_condition = models.CharField(max_length=100)
+
+    class ConditionsForAdvancement(models.TextChoices):
+        NONE = 'None', _('None')
+        EMAIL_READ = 'ER', _('Email Read')
+        FORM_RECEIVED = 'FR', _('Form Received')
+
+    advancement_condition = models.CharField(
+        max_length=100,
+        choices=ConditionsForAdvancement.choices,
+        default=ConditionsForAdvancement.NONE
+    )
+
