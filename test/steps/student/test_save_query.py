@@ -24,6 +24,7 @@ def fill_out_query_on_student_page(live_server, logged_in_browser):
     logged_in_browser.get(live_server + reverse('student'))
 
 
+@when("reopen the popup")
 @given("I click the save query button")
 def click_save_query(logged_in_browser):
     logged_in_browser.find_element_by_id('id_save_query').click()
@@ -83,12 +84,12 @@ def assert_alert_color(logged_in_browser, color):
         assert logged_in_browser.find_element_by_id('save_failure_message').get_attribute('class') == 'alert alert-danger'
 
 
-@pytest.mark.django_db
 @scenario("../../feature/student/save_query.feature", "Successful save makes form and button vanish")
 def test_successful_save_popup_view(logged_in_browser):
     pass
 
 
+@given("a popup is displaying an alert")
 @given("I save a query successfully")
 def save_a_query(live_server, logged_in_browser):
     logged_in_browser.get(live_server + reverse('student'))
@@ -102,7 +103,25 @@ def assert_form_and_button_hidden(logged_in_browser):
         EC.invisibility_of_element_located((By.ID, "modal_save_query"))
     )
     assert logged_in_browser.find_element_by_id("save_query_popup_form").get_attribute("style") == "display: none;"
-    # assert logged_in_browser.find_element_by_id("modal_save_query").get_attribute("style") == "display: none;"
+
+
+@pytest.mark.django_db
+@scenario("../../feature/student/save_query.feature", "Close the popup then reopen the popup")
+def test_alerts_cleared_after_popup_close(logged_in_browser):
+    pass
+
+
+@when("I close the popup")
+def close_popup(logged_in_browser):
+    WebDriverWait(logged_in_browser, 20).until(
+        EC.visibility_of_element_located((By.ID, "save_success_message"))
+    )
+    logged_in_browser.find_element_by_id('close_button').click()
+
+
+@then("no alert should be displayed")
+def assert_no_alert(logged_in_browser):
+    assert logged_in_browser.find_element_by_id("save_success_message").get_attribute("style") == "display: none;"
 
 
 # Scenario: Close the popup then reopen the popup
