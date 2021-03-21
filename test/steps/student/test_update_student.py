@@ -36,6 +36,7 @@ def create_student(live_server, browser):
 def click_to_update(live_server, browser):
     assert browser.find_element_by_id('create_student_button')
     assert "test_first" in browser.page_source
+    browser.find_element_by_link_text("View").click()
     browser.find_element_by_link_text("Update").click()
 
 
