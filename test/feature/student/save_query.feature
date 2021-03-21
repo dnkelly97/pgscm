@@ -4,6 +4,9 @@ Feature: Save a query
     So that I can reuse queries later, such as to source pipelines
     I want to be able to save queries I write
 
+    Background:
+        Given there is a saved query in the database with name 'Query 0'
+
     Scenario: Open save query popup
         Given I am on the student page
         And I click the save query button
@@ -18,7 +21,7 @@ Feature: Save a query
 
         Examples:
         |name|message|color|
-        |    |       |     |
-        |    |       |     |
-        |    |       |     |
-        |    |       |     |
+        | my query | Query successfully saved! | green |
+        | my queryyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy   |   Save Failed - Query names must be less than 60 characters in length.    |  red  |
+        |    | Save Failed - Invalid query name.   | red |
+        | Query 0 | Save Failed - A query with this name already exists. | red |
