@@ -5,7 +5,7 @@ $(document).ready(function() {
             document.getElementById('save_success_message').style.display = 'none';
             document.getElementById("save_query_popup_form").style.display = 'block';
             document.getElementById('modal_save_query').style.display = 'block';
-            $('#save_query_model').modal();
+            $('#save_query_modal').modal();
         });
 });
 
