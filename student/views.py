@@ -64,7 +64,6 @@ def ajax_save_query(request):
             SavedQuery.objects.get(query_name=query_name)
             message = "Save Failed - A query with this name already exists."
         except SavedQuery.DoesNotExist:
-            print('yeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeet')
             if len(query_name) > 60:
                 message = "Save Failed - Query names must be less than 60 characters in length."
             else:
