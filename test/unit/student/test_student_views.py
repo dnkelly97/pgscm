@@ -70,7 +70,6 @@ class StudentView(TestCase):
         assert response.status_code == 200
 
 
-
 @pytest.fixture
 def user():
     username = 'bob'
@@ -80,12 +79,6 @@ def user():
     user.save()
     return user
 
-@pytest.fixture
-def saved_query():
-    SavedQueryFactory.create()
-#     query = {'query_name': 'Query 0', 'description': '', 'query': {'name': [''], 'school_year': [''], 'degree': [''], 'university': [''], 'gpa': [''], 'ethnicity': [''], 'gender': [''], 'country': [''], 'us_citizenship': ['unknown'], 'first_generation': ['unknown'], 'military': ['unknown']}}
-#     sq = SavedQueryForm(query)
-#     sq.save()
 
 @pytest.mark.django_db
 @pytest.mark.parametrize("post_dict,expected_response",
