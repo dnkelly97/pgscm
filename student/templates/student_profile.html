@@ -14,15 +14,21 @@
         <tr>
             <td>{{student.first_name}}</td>
             <td>{{student.last_name}}</td>
-            <td><a class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a></td>
+            <td><a class="btn btn-sm btn-info" href="{% url 'student_profile' student.id %}">View</a></td>
         </tr>
         {% endfor %}
     </table>
 {% endblock %}
 
 {% block content2 %}
-    <h5 class="card-header">{{ student.first_name }} {{ student.last_name }}'s profile</h5><br>
+    <h5 class="card-header">{{ student.first_name }} {{ student.last_name }}'s profile
+        <small class="float-sm-right">
+            <a class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a>
+            <a class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a>
+        </small>
+    </h5><br>
     Name: {{ student.first_name }} {{ student.last_name }} <br>
-    University: {{ student.university }}
-    Country: {{ student. }}
+    University: {{ student.university }} <br>
+    Country: {{ student.country }} <br>
+
 {% endblock %}
