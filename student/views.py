@@ -62,3 +62,12 @@ def updateStudent(request, key):
 
     context = {'form': form, 'students': students, 'student': student}
     return render(request, 'update_student.html', context)
+
+
+@login_required(login_url='login')
+def studentProfile(request, key):
+    students = Student.objects.all()
+    student = Student.objects.get(id=key)
+
+    context = {'students': students, 'student': student}
+    return render(request, 'student_profile.html', context)
