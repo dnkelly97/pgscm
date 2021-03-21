@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.student, name='student'),
     path('create/', csrf_exempt(createPage), name='create'),
     path('delete_student/<str:key>', views.deleteStudent, name='delete_student'),
-    path('update_student/<str:key>', views.updateStudent, name='update_student')
+    path('update_student/<str:key>', views.updateStudent, name='update_student'),
+    path('student_prfile/<str:key>', views.studentProfile, name='student_profile')
 ]
