@@ -35,12 +35,9 @@ def createPage(response):
 
 @login_required(login_url='login')
 def student(request):
-    # breakpoint()
     students = Student.objects.all()
-    tmpd = {'name': ['mo'], 'school_year': [''], 'degree': [''], 'university': [''], 'gpa': [''], 'ethnicity': [''], 'gender': [''], 'country': [''], 'us_citizenship': ['unknown'], 'first_generation': ['unknown'], 'military': ['unknown']}
     student_filter = StudentFilter(request.GET, queryset=students)
     students = student_filter.qs
-    # breakpoint()
     context = {'students': students, 'student_filter': student_filter, 'save_query_form': SavedQueryForm()}
     return render(request, 'home.html', context)
 
