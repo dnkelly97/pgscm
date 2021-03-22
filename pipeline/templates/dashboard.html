@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}
 PGSCM Dashboard
 {% endblock title %}
@@ -16,3 +18,7 @@ PGSCM Dashboard
         </div>
     </div>
 {% endblock content%}
+
+{% block javascript %}
+<script src="{% static 'js/pipeline/delete.js' %}"></script>
+{% endblock javascript %}
