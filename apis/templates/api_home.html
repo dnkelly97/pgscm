@@ -16,7 +16,7 @@
             <table class="table table-sm">
                 <tr>
                     <th>Name</th>
-                    <th>Key</th>
+                    <th>Prefix</th>
                     <th>Email</th>
                     <th>Date</th>
                     <th>Active</th>
@@ -24,7 +24,7 @@
                 {% for key in keys %}
                 <tr>
                     <td>{{key.name}}</td>
-                    <td>{{key.hashed_key }}</td>
+                    <td>{{key.prefix }}</td>
                     <td>{{key.email}}</td>
                     <td>{{key.created }}</td>
                     <td>{{key.revoked }}</td>
