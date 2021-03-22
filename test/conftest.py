@@ -56,3 +56,10 @@ def logged_in_client(client):
     client.login(username=username, password=password)
     return client
 
+
+@pytest.fixture
+def user(db):
+    username = 'bob'
+    password = 'bobpass123'
+    email = 'bob@uiowa.edu'
+    return User.objects.create_user(username, email, password)
