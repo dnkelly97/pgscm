@@ -27,7 +27,13 @@
                     <td>{{key.prefix }}</td>
                     <td>{{key.email}}</td>
                     <td>{{key.created }}</td>
-                    <td>{{key.revoked }}</td>
+                    <td>
+                        {% if key.revoked %}
+                            False
+                        {%  else %}
+                            True
+                        {% endif %}
+                    </td>
                 </tr>
                 {% endfor %}
             </table>
