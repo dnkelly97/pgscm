@@ -6,21 +6,19 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 
 
-@pytest.mark.django_db
-class TestDashboardView(TestCase):
+class TestPipelineViews:
 
-    def setUp(self):
-        self.username = 'bob'
-        self.password = 'bobpass123'
-        self.email = 'bob@uiowa.edu'
-        self.client = Client()
-        self.user = User.objects.create_user(self.username, self.email, self.password)
-
-    def test_dashboard_view(self):
+    @pytest.mark.django_db
+    def test_dashboard_view(self, logged_in_client):
         url = reverse('dashboard')
-        self.client.login(username=self.username, password=self.password)
-        response = self.client.get(url)
+        response = logged_in_client.get(url)
         assertTemplateUsed(response, 'dashboard.html')
+
+    def test_delete_pipeline_view(self):
+        pass
+
+    def test_delete_saved_query_view(self):
+        pass
 
 
 class TestPipelineModel:
