@@ -1,3 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .models import *
 
-# Create your views here.
+def apis(request):
+    keys = APIKey.objects.order_by('-created')
+    context = {'keys': keys}
+    return render(request, 'api_home.html', context)
