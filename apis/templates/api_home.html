@@ -5,13 +5,13 @@
 <br>
     <div class="col-md-8">
         <div class="card card-body">
-            {%  block content2 %}
+            {% block content1 %}
             <h4 class="card-header">API Keys
-{#                <small class="float-sm-right">#}
-{#                    <form action="{% url 'create' %}">#}
-{#                        <button id="create_api_button" class="btn btn-primary" type="submit">Create API Key</button>#}
-{#                    </form>#}
-{#                </small>#}
+                <small class="float-sm-right">
+                    <form action="{% url 'create_api' %}">
+                        <button id="create_api_button" class="btn btn-primary" type="submit">Create API Key</button>
+                    </form>
+                </small>
             </h4>
             <table class="table table-sm">
                 <tr>
