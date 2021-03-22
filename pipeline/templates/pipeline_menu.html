@@ -1,0 +1,22 @@
+<div class="card h-100">
+    <div class="card-body">
+        <h5 class="card-title">Pipelines</h5>
+        <div class="container overflow-auto" style="max-height: 200px;">
+            {% for pipeline in pipelines %}
+            <div class="row">
+                <div class="col-11">
+                    <p>{{ pipeline.name }}</p>
+                </div>
+                <div class="col-1">
+                    <input class="form-check-input" type="radio" name="radioNoLabel" id="{{pipeline.name}} radio button">
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+    <form action="{% url 'create_pipeline' %}">
+        <button id="create_pipeline_button" class="btn btn-primary" type="submit">Create Pipelines</button>
+    </form>
+<button type="button" class="btn btn-primary" id="edit_pipeline_button" style="margin-top: 1%;">Edit Pipeline</button>
+<button type="button" class="btn btn-primary" id="delete_pipeline_button" style="margin-top: 1%;">Delete Pipeline</button>
