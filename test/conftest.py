@@ -48,7 +48,7 @@ def admin_logged_in_browser(browser, live_server):
 
 
 @pytest.fixture
-def logged_in_client(client):
+def logged_in_client(client, user):
     username = 'bob'
     password = 'bobpass123'
     email = 'bob@uiowa.edu'
@@ -59,7 +59,7 @@ def logged_in_client(client):
 
 @pytest.fixture
 def user(db):
-    username = 'bob'
-    password = 'bobpass123'
-    email = 'bob@uiowa.edu'
+    username = 'tom'
+    password = 'tompass123'
+    email = 'tom@uiowa.edu'
     return User.objects.create_user(username, email, password)
