@@ -1,9 +1,11 @@
 import pytest
-from pipeline.models import Pipeline, SavedQuery
 from django.urls import reverse
+from pipeline.views import *
 from pytest_django.asserts import assertTemplateUsed
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
+from factories import SavedQueryFactory
+from pipeline.models import Pipeline, SavedQuery
 
 
 class TestPipelineViews:
@@ -14,11 +16,32 @@ class TestPipelineViews:
         response = logged_in_client.get(url)
         assertTemplateUsed(response, 'dashboard.html')
 
-    def test_delete_pipeline_view(self):
-        pass
+    def test_delete_pipeline_view(self, rf):
+        assert False
 
-    def test_delete_saved_query_view(self):
-        pass
+    def test_delete_saved_query_view(self, rf, user):
+        saved_query = SavedQueryFactory.create()
+        request = rf.get('/pipeline/delete_query')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'selected_query': 'test_query_0'}
+        response = delete_query(request)
+        try:
+            SavedQuery.objects.get(query_name=saved_query.query_name)
+            assert False
+        except SavedQuery.DoesNotExist:
+            assert True
+
+
+
+# def test_details(rf, admin):
+#     request = rf.get('/customer/details')
+#     # Remember that when using RequestFactory, the request does not pass
+#     # through middleware. If your view expects fields such as request.user
+#     # to be set, you need to set them explicitly.
+#     # The following line sets request.user to an admin user.
+#     request.user = admin
+#     response = my_view(request)
+#     assert response.status_code == 200
 
 
 class TestPipelineModel:
