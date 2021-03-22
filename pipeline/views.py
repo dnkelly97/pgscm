@@ -3,7 +3,7 @@ from .models import Pipeline
 from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
 from pipeline.forms import CreateForm
-
+import pdb
 
 # Create your views here.
 @login_required(login_url='/login/')
@@ -25,5 +25,11 @@ def createPage(response):
         context = {'form': form}
         return render(response, 'create_pipeline.html', context)
     form = CreateForm
-    context = {'form': form, 'pipelines':pipelines}
+    context = {'form': form, 'pipelines': pipelines}
     return render(response, 'create_pipeline.html', context)
+
+
+@login_required(login_url='login')
+def delete_query(request):
+    breakpoint()
+    return {}
