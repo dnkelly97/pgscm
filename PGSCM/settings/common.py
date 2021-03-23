@@ -33,7 +33,6 @@ INSTALLED_APPS = [
     'pipeline.apps.PipelineConfig',
     'login.apps.LoginConfig',
     'student.apps.StudentConfig',
-    'bootstrap_modal_forms', #for JavaScript enhanced forms
 ]
 
 MIDDLEWARE = [
