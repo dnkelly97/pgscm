@@ -1,8 +1,8 @@
-from django.shortcuts import render, redirect
-from .models import Pipeline
+from django.shortcuts import render, redirect, reverse
+from .models import Pipeline, Stage
 from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
-from pipeline.forms import CreateForm
+from pipeline.forms import CreateForm, UpdateStageForm
 
 
 # Create your views here.
@@ -16,14 +16,35 @@ def dashboard(request):
 @login_required(login_url='login')
 def createPage(response):
     pipelines = Pipeline.objects.all()
+    pipeline_id = Pipeline.objects.all().order_by('id').last()
     if response.method == 'POST':
         form = CreateForm(response.POST)
         if form.is_valid():
             pipeline = form.save()
-            response = redirect('dashboard')
-            return response
-        context = {'form': form}
+            pipeline_id = pipeline.id
+            stages = Stage.objects.filter(pipeline=pipeline_id)
+            stageforms = []
+            for i in range(len(stages)):
+                stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
+                if stageforms[i].is_valid():
+                    stage = stageforms[i].save()
+                else:
+                    render(response, 'dashboard.html')
+            return render(response, 'define_stages.html', {"forms": stageforms, "formy": UpdateStageForm, "stages": stages})
+        context = {'form': form, 'pk': pipeline_id}
         return render(response, 'create_pipeline.html', context)
     form = CreateForm
-    context = {'form': form, 'pipelines':pipelines}
+    context = {'form': form, 'pipelines': pipelines, 'pk': pipeline_id}
     return render(response, 'create_pipeline.html', context)
+
+
+def stagedefinition(request, pk):
+    stages = Stage.objects.filter(pipeline=29) #this 29 needs to be changed to pk at some point
+    stageforms = []
+    for i in range(len(stages)):
+        stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
+        if stageforms[i].is_valid():
+            stage = stageforms[i].save()
+        else:
+            render(request, 'dashboard.html')
+    return render(request, 'define_stages.html', {"forms": stageforms, "formy": UpdateStageForm, "stages": stages})
