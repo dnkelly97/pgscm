@@ -20,9 +20,7 @@ def createPage(response):
         form = CreateForm(response.POST)
 
         if form.is_valid():
-            # Create the user
-            student = form.save()
-
+            form.save()
             response = redirect('student')
             return response
         context = {'form': form}

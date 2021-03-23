@@ -28,7 +28,7 @@ class StudentView(TestCase):
 
     @pytest.mark.django_db
     def test_create_student(self):
-        url = reverse('create')
+        url = reverse('create_student')
         response = self.client.get(url)
         assert response.status_code == 200
 
@@ -38,7 +38,7 @@ class StudentView(TestCase):
                   "ethnicity": Student.Ethnicity.UNKNOWN, "gender": Student.Gender.UNKNOWN}
         self.student = Student.objects.create(email="hello1@gmail.com", first_name="first", last_name="second")
         self.student.save()
-        url = reverse('create')
+        url = reverse('create_student')
         self.data = {
             'email': values["email"],
             'first_name': values["first_name"],
@@ -57,7 +57,7 @@ class StudentView(TestCase):
                   "ethnicity": Student.Ethnicity.UNKNOWN, "gender": Student.Gender.UNKNOWN}
         self.student = Student.objects.create(email="hello1@gmail.com", first_name="first", last_name="second")
         self.student.save()
-        url = reverse('create')
+        url = reverse('create_student')
         self.data = {
             'email': values["email"],
             'first_name': values["first_name"],

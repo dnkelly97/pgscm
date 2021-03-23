@@ -38,6 +38,12 @@
                 </div>
                 <div class="input-group mb-3">
                     <div class="input-group-append">
+                        <span class="input-group-text">{{student_filter.form.research_interests.label}}</span>
+                    </div>
+                    {{student_filter.form.research_interests}}
+                </div>
+                <div class="input-group mb-3">
+                    <div class="input-group-append">
                         <span class="input-group-text">{{student_filter.form.gpa.label}}</span>
                     </div>
                     {{student_filter.form.gpa}}
@@ -100,7 +106,7 @@
             {%  block content2 %}
             <h4 class="card-header">Students
                 <small class="float-sm-right">
-                    <form action="{% url 'create' %}">
+                    <form action="{% url 'create_student' %}">
                         <button id="create_student_button" class="btn btn-primary" type="submit">Create Students</button>
                     </form>
                 </small>
