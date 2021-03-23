@@ -34,6 +34,8 @@ INSTALLED_APPS = [
     'login.apps.LoginConfig',
     'student.apps.StudentConfig',
     'rest_framework',
+    'rest_framework_api_key',
+    'apis.apps.ApisConfig',
 ]
 
 MIDDLEWARE = [
@@ -48,7 +50,7 @@ MIDDLEWARE = [
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        "apis.permissions.HasAPIKey",
     ]
 }
 

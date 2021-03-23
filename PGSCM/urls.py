@@ -24,4 +24,5 @@ urlpatterns = [
     path('', include('login.urls')),
     path('student/', include('student.urls')),
     path('pipeline/', include('pipeline.urls')),
+    path('apis/', include('apis.urls')),
 ]
