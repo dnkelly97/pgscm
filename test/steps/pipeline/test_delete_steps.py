@@ -13,8 +13,8 @@ def saved_query():
 
 
 @pytest.mark.django_db
-@scenario("../../feature/pipeline/delete_query.feature", "Delete a query")
-def test_delete_query(logged_in_browser, saved_query):
+@scenario("../../feature/pipeline/delete_query.feature", "Delete a query (dashboard)")
+def test_delete_query_dashboard(logged_in_browser, saved_query):
     pass
 
 
@@ -28,12 +28,47 @@ def select_query(logged_in_browser, saved_query):
     logged_in_browser.find_element_by_id(saved_query.query_name + " radio button").click()
 
 
-@when("I click the Delete Query button")
+@when("I click the dashboard Delete Query button")
 def delete_query(logged_in_browser):
     logged_in_browser.find_element_by_id("delete_query_button").click()
 
 
+@then("a popup should appear asking me to confirm")
+def assert_popup_appears(logged_in_browser):
+    assert logged_in_browser.find_element_by_id("delete_modal").get_attribute('style') == 'display: block;'
+
+
+#     Scenario: Delete a query (popup)
+#         Given I am on the dashboard page and the confirm delete popup is visible
+#         When I click the Delete Query button
+#         Then I should see a confirmation message
+#         And I should not see the query listed I selected listed anymore
+
+@pytest.mark.django_db
+@scenario("../../feature/pipeline/delete_query.feature", "Delete a query (dashboard)")
+def test_delete_query_popup(logged_in_browser, saved_query):
+    pass
+
+
+@given("I am on the dashboard page and the confirm delete popup is visible")
+def show_popup(live_server, logged_in_browser, saved_query):
+    logged_in_browser.get(live_server + reverse('dashboard'))
+    logged_in_browser.find_element_by_id(saved_query.query_name + " radio button").click()
+    logged_in_browser.find_element_by_id("delete_query_button").click()
+
+
+@when("I click the popup Delete Query button")
+def click_delete_query(logged_in_browser):
+    logged_in_browser.find_element_by_id("final_delete_button").click()
+
+
+@then("I should see a confirmation message")
+def assert_confirmation_message(logged_in_browser):
+    WebDriverWait(logged_in_browser, 20).until(
+        EC.presence_of_element_located((By.ID, "confirmation_message")))
+
+
 @then("I should not see the query listed anymore")
 def assert_query_not_listed(logged_in_browser, saved_query):
-    WebDriverWait(logged_in_browser, 20).until(
-        EC.invisibility_of_element_located((By.ID, saved_query.query_name + " radio button")))
+    pass
+
