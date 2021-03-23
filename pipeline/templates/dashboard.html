@@ -14,9 +14,11 @@ PGSCM Dashboard
                     <div class="card-body">
                         <h5 class="card-title">Pipelines</h5>
                         <div class="container overflow-auto" style="max-height: 150px;">
-                            <div id="pipeline_menu">
-                                {% include 'pipeline_menu.html' %}
-                            </div>
+                            <form id="select_pipeline_form">
+                                <div id="pipeline_menu">
+                                    {% include 'pipeline_menu.html' %}
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -55,7 +57,7 @@ PGSCM Dashboard
                 </div>
                 <div class="modal-body" id="confirm_delete_message"></div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="final_delete_button" action="{% url 'delete_query' %}" style="background-color: #d11a2a;">Delete</button>
+                    <button type="button" class="btn btn-primary" id="final_delete_button" style="background-color: #d11a2a;">Delete</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_popup">Cancel</button>
                 </div>
             </div>
