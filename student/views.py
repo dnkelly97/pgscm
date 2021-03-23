@@ -4,6 +4,7 @@ from .models import *
 from login.decorators import unauthenticated_user, admin_func
 from django.contrib.auth.decorators import login_required
 from .filters import StudentFilter
+from django.core.files.storage import FileSystemStorage
 
 
 # Create your views here.
@@ -23,7 +24,7 @@ def createPage(response):
         return render(response, 'create_student.html', context)
 
     form = CreateForm
-    context = {'form': form, 'students':students}
+    context = {'form': form, 'students': students}
     return render(response, 'create_student.html', context)
 
 
