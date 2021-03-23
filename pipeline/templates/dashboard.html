@@ -10,10 +10,40 @@ PGSCM Dashboard
     <div class="container" style="margin-top: 2%;">
         <div class="row">
             <div class="col-6">
-                {% include 'pipeline_menu.html' %}
+                <div id="pipeline_menu">
+                    {% include 'pipeline_menu.html' %}
+                </div>
+                <form action="{% url 'create_pipeline' %}">
+                    <button id="create_pipeline_button" class="btn btn-primary" type="submit">Create Pipelines</button>
+                </form>
+                <button type="button" class="btn btn-primary" id="edit_pipeline_button" style="margin-top: 1%;">Edit Pipeline</button>
+                <button type="button" class="btn btn-primary" id="delete_pipeline_button" style="margin-top: 1%;">Delete Pipeline</button>
             </div>
-            <div class="col-6" id="saved_query_menu">
-                {% include 'saved_query_menu.html' %}
+            <div class="col-6">
+                <div id="saved_query_menu">
+                    {% include 'saved_query_menu.html' %}
+                </div>
+                <a href="{% url 'student' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_query_button">New Saved Query</a>
+                <button type="button" class="btn btn-primary" id="edit_query_button" style="margin-top: 1%;">Edit Saved Query</button>
+                <button type="button" class="btn btn-primary" id="delete_query_button" style="margin-top: 1%;">Delete Saved Query</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="delete_modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="confirm_delete_message"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="final_delete_button" action="{% url 'delete_query' %}" style="background-color: #d11a2a;">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_popup">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
