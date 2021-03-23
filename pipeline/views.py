@@ -51,7 +51,7 @@ def delete_pipeline(request):
         context = {'pipelines': Pipeline.objects.all()}
         partial = render_to_string('pipeline_menu.html', context)
         success = True
-    except SavedQuery.DoesNotExist:
+    except Pipeline.DoesNotExist:
         partial = None
         success = False
     return JsonResponse({'success': success, 'html': partial})

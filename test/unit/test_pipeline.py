@@ -32,6 +32,15 @@ class TestPipelineViews:
         response_dict = json.loads(response.content)
         assert response_dict['html'] == render_to_string('saved_query_menu.html')
 
+    def test_delete_nonexistent_query(self, rf, user):
+        request = rf.get('/pipeline/delete_query')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'selected_query': 'nonexistent_query'}
+        response = delete_query(request)
+        response_dict = json.loads(response.content)
+        assert not response_dict['success']
+        assert not response_dict['html']
+
     def test_delete_pipeline_view(self, rf, user):
         pipeline = PipelineFactory.create()
         request = rf.get('/pipeline/delete_pipeline')
@@ -45,6 +54,15 @@ class TestPipelineViews:
             assert True
         response_dict = json.loads(response.content)
         assert response_dict['html'] == render_to_string('pipeline_menu.html')
+
+    def test_delete_nonexistent_pipeline(self, rf, user):
+        request = rf.get('/pipeline/delete_pipeline')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'selected_pipeline': 'nonexistent_pipeline'}
+        response = delete_pipeline(request)
+        response_dict = json.loads(response.content)
+        assert not response_dict['success']
+        assert not response_dict['html']
 
 
 class TestPipelineModel:
