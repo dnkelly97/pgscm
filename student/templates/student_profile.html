@@ -3,32 +3,96 @@
 {% load static %}
 
 {%  block content1 %}
-    <h5 class="card-header">Students</h5><br>
-    <table class="table table-sm">
-        <tr>
-            <th>First Name</th>
-            <th>Last Name</th>
-        </tr>
+    <div class="card">
+        <h5 class="card-header">Students</h5><br>
+        <table class="table table-sm">
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th></th>
+            </tr>
 
-        {% for student in students %}
-        <tr>
-            <td>{{student.first_name}}</td>
-            <td>{{student.last_name}}</td>
-            <td><a class="btn btn-sm btn-info" href="{% url 'student_profile' student.id %}">View</a></td>
-        </tr>
-        {% endfor %}
-    </table>
+            {% for student in students %}
+            <tr>
+                <td>{{student.first_name}}</td>
+                <td>{{student.last_name}}</td>
+                <td><a class="btn btn-sm btn-info" href="{% url 'student_profile' student.id %}">View</a></td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
 {% endblock %}
 
 {% block content2 %}
-    <h5 class="card-header">{{ student.first_name }} {{ student.last_name }}'s profile
-        <small class="float-sm-right">
-            <a class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a>
-            <a class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a>
-        </small>
-    </h5><br>
-    Name: {{ student.first_name }} {{ student.last_name }} <br>
-    University: {{ student.university }} <br>
-    Country: {{ student.country }} <br>
+    <div class="card">
+        <h5 class="card-header">{{ student.first_name }} {{ student.last_name }}'s profile
+            <small class="float-sm-right">
+                <a class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a>
+                <a class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a>
+            </small>
+        </h5><br>
+        <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-3 d-flex align-items-stretch">
+                            <div class="card card-body align-items-center">
+                                {% if student.profile_image %}
+                                    <img class="rounded-circle" width="300" src="{{student.profile_image.url}}" >
+                                {% else %}
+                                    <img class="rounded-circle" width="300" src="{% static 'images/default_profile.png' %}">
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="card card-body">
+                                <h6 class="card-title">Demographics</h6><br>
+                                <p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }} </p>
+                                <p><strong>Email:</strong> {{ student.email }} </p>
+                                <p><strong>University:</strong> {{ student.university }} </p>
+                                <p><strong>Country:</strong> {{ student.country.name }} </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6 d-flex align-items-stretch">
+                            <div class="card card-body">
+                                <h6 class="card-title">Academics Information</h6><br>
+                                <p><strong>Year in School:</strong> {{ student.school_year }} </p>
+                                <p><strong>Degree:</strong> {{ student.degree }} </p>
+                                <div class="input-group-append">
+                                    <p><strong>Research Interest:</strong> {% for i in student.research_interests %} &nbsp; <span class="badge badge badge-pill  badge-info"> {{ i }} </span> {% endfor %} </p>
+                                </div>
+                                <p><strong>Major:</strong>  {{ student.major }} </p>
+                                <p><strong>GPA:</strong>  {{ student.gpa }} </p>
+                            </div>
+                        </div>
+                        <br>
+                        <div class="col-md-6 d-flex align-items-stretch">
+                            <div class="card card-body">
+                                <h6 class="card-title">Scholarship Potential</h6><br>
+                                <p><strong>First Generation:</strong> {{ student.first_generation }} </p>
+                                <p><strong>US Citizen:</strong> {{ student.us_citizenship }} </p>
+                                <p><strong>Military:</strong>  {{ student.military }} </p>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                </div>
+            </div>
+            <div class="col-md-4 ">
+                <div class="card card-body">
+                    {% if student.documents %}
+                        <p><a href="{{ student.documents.url }}">{{ student.documents.url }}</a></p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
 
 {% endblock %}
