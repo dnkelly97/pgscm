@@ -39,17 +39,17 @@ PGSCM Dashboard
                             {% for query in saved_queries %}
                             <div class="row">
                                 <div class="col-11">
-                                    <p>{{ query.name }}</p>
+                                    <p>{{ query.query_name }}</p>
                                 </div>
                                 <div class="col-1">
-                                    <input class="form-check-input" type="radio" name="radioNoLabel" id="{{query.name}} radio button">
+                                    <input class="form-check-input" type="radio" name="radioNoLabel" id="{{query.query_name}} radio button">
                                 </div>
                             </div>
                             {% endfor %}
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-primary" id="create_query_button" style="margin-top: 1%;">New Saved Query</button>
+                <a href="{% url 'student' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_query_button">New Saved Query</a>
                 <button type="button" class="btn btn-primary" id="edit_query_button" style="margin-top: 1%;">Edit Saved Query</button>
                 <button type="button" class="btn btn-primary" id="delete_query_button" style="margin-top: 1%;">Delete Saved Query</button>
             </div>

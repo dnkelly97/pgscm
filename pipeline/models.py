@@ -1,9 +1,10 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 
-
 # Create your models here.
+
 
 class Pipeline(models.Model):
     name = models.CharField(max_length=60, unique=True)
@@ -24,7 +25,15 @@ class Pipeline(models.Model):
 
 
 class SavedQuery(models.Model):
-    name = models.CharField(max_length=60, unique=True)
+    query_name = models.CharField(max_length=60, unique=True)
+    description = models.TextField(blank=True, null=True)
+    query = models.JSONField(null=True)
+
+
+class SavedQueryForm(ModelForm):
+    class Meta:
+        model = SavedQuery
+        fields = ['query_name', 'description', 'query']
 
 
 class Stage(models.Model):
