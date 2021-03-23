@@ -38,12 +38,6 @@ def assert_popup_appears(logged_in_browser):
     assert logged_in_browser.find_element_by_id("delete_modal").get_attribute('style') == 'display: block;'
 
 
-#     Scenario: Delete a query (popup)
-#         Given I am on the dashboard page and the confirm delete popup is visible
-#         When I click the Delete Query button
-#         Then I should see a confirmation message
-#         And I should not see the query listed I selected listed anymore
-
 @pytest.mark.django_db
 @scenario("../../feature/pipeline/delete_query.feature", "Delete a query (dashboard)")
 def test_delete_query_popup(logged_in_browser, saved_query):
