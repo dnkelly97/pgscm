@@ -26,4 +26,5 @@ urlpatterns = [
     path('', include('login.urls')),
     path('student/', include('student.urls')),
     path('pipeline/', include('pipeline.urls')),
+    path('apis/', include('apis.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

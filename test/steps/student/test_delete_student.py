@@ -25,7 +25,7 @@ def student_setup(live_server, browser):
 
 @when("I create a student that I plan on removing")
 def create_student(live_server, browser):
-    browser.get(live_server + reverse('create'))
+    browser.get(live_server + reverse('create_student'))
     browser.find_element_by_id('id_email').send_keys('test@test.com')
     browser.find_element_by_id('id_first_name').send_keys('test_first')
     browser.find_element_by_id('id_last_name').send_keys('test_last')

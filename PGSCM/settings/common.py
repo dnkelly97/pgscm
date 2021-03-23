@@ -33,6 +33,9 @@ INSTALLED_APPS = [
     'pipeline.apps.PipelineConfig',
     'login.apps.LoginConfig',
     'student.apps.StudentConfig',
+    'rest_framework',
+    'rest_framework_api_key',
+    'apis.apps.ApisConfig',
 ]
 
 MIDDLEWARE = [
@@ -44,6 +47,12 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        "apis.permissions.HasAPIKey",
+    ]
+}
 
 ROOT_URLCONF = 'PGSCM.urls'
 
