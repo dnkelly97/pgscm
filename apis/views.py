@@ -15,7 +15,9 @@ def createAPI(response):
         form = CreateForm(response.POST)
 
         if form.is_valid():
-            form.save()
+            obj = form.save(commit=False)
+            APIKey.objects.assign_key(obj)
+            obj.save()
             response = redirect('api')
             return response
         context = {'form': form}
