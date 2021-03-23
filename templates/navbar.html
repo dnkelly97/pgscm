@@ -10,7 +10,7 @@
   img {
   display: block;
   max-width: 70px;
-  max-height: 70px%;
+  max-height: 70px;
   }
 </style>
 
@@ -27,13 +27,22 @@
       <li class="nav-item active">
         <a class="nav-link" href="{% url 'student' %}" id="student-nav-link">Student Portal</a>
       </li>
-      {% if request.user.is_superuser %}
-        <li class="nav-item active">
-            <a class="nav-link" href="{% url 'register' %}" id="id_register_link">Register User</a>
-        </li>
-      {% endif %}
     </ul>
   </div>
+    <span>
+        {% if request.user.is_superuser %}
+        <div class="dropdown show">
+            <a class="btn btn-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Admin
+            </a>
+
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="nav-link" href="{% url 'register' %}" id="id_register_link">Register User</a>
+            </div>
+        </div>
+        {% endif %}
+    </span>
+    &nbsp; &nbsp; &nbsp;
 
   <span ><a  class="hello-msg" href="{% url 'logout' %}">Logout</a></span>
   <!--span class="hello-msg">Hello, {#{request.user}#}</span-->
