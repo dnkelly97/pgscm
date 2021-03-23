@@ -9,6 +9,8 @@ class Student(models.Model):
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    documents = models.FileField(upload_to='documents/', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='images/', null=True, blank=True)
 
     # School Related
     class YearInSchool(models.TextChoices):
