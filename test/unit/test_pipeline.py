@@ -6,6 +6,8 @@ from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from factories import SavedQueryFactory
 from pipeline.models import Pipeline, SavedQuery
+from django.template.loader import render_to_string
+import json
 
 
 class TestPipelineViews:
@@ -30,6 +32,8 @@ class TestPipelineViews:
             assert False
         except SavedQuery.DoesNotExist:
             assert True
+        response_dict = json.loads(response.content)
+        assert response_dict['html'] == render_to_string('saved_query_menu.html')
 
 
 class TestPipelineModel:

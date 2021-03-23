@@ -2,6 +2,9 @@ import pytest
 from pytest_bdd import given, when, then, scenario
 from django.urls import reverse
 from factories import SavedQueryFactory
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 
 @pytest.fixture
@@ -32,4 +35,5 @@ def delete_query(logged_in_browser):
 
 @then("I should not see the query listed anymore")
 def assert_query_not_listed(logged_in_browser, saved_query):
-    assert saved_query.query_name not in logged_in_browser.page_source
+    WebDriverWait(logged_in_browser, 20).until(
+        EC.invisibility_of_element_located((By.ID, saved_query.query_name + " radio button")))

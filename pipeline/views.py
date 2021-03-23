@@ -3,6 +3,8 @@ from .models import Pipeline
 from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
 from pipeline.forms import CreateForm
+from django.template.loader import render_to_string
+from django.http import JsonResponse
 import pdb
 
 # Create your views here.
@@ -31,5 +33,12 @@ def createPage(response):
 
 @login_required(login_url='login')
 def delete_query(request):
-    breakpoint()
-    return {}
+    try:
+        SavedQuery.objects.get(query_name=request.POST['selected_query']).delete()
+        context = {'saved_queries': SavedQuery.objects.all()}
+        partial = render_to_string('saved_query_menu.html', context)
+        success = True
+    except SavedQuery.DoesNotExist:
+        partial = None
+        success = False
+    return JsonResponse({'success': success, 'html': partial})

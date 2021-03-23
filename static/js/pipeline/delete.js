@@ -6,7 +6,10 @@ $(document).ready(function() {
                     type: 'post',
                     url: $(this).attr('action'),
                     success: function(response) {
-
+                        console.log(response['html']);
+                        if(response['success']){
+                            $('#saved_query_menu').html(response['html']);
+                        }
                     },
                     error: function (request, status, error) {
                          console.log(request.responseText);
