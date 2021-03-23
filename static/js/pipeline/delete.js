@@ -35,7 +35,7 @@ $(document).ready(function() {
                             $('#confirm_delete_message').html("<div class='alert alert-success'>Successfully deleted.</div>");
                         }
                         else{
-                            //this case should be impossible
+                            //this case should be impossible unless caching is involved
                             document.getElementById('final_delete_button').style.display = 'none';
                             $('#confirm_delete_message').html("<div class='alert alert-danger'>There was an error - item not deleted.</div>");
                         }

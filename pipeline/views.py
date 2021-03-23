@@ -42,3 +42,16 @@ def delete_query(request):
         partial = None
         success = False
     return JsonResponse({'success': success, 'html': partial})
+
+
+@login_required(login_url='login')
+def delete_pipeline(request):
+    try:
+        Pipeline.objects.get(name=request.POST['selected_pipeline']).delete()
+        context = {'pipelines': Pipeline.objects.all()}
+        partial = render_to_string('pipeline_menu.html', context)
+        success = True
+    except SavedQuery.DoesNotExist:
+        partial = None
+        success = False
+    return JsonResponse({'success': success, 'html': partial})

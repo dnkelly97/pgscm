@@ -4,7 +4,7 @@ from pipeline.views import *
 from pytest_django.asserts import assertTemplateUsed
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
-from factories import SavedQueryFactory
+from factories import SavedQueryFactory, PipelineFactory
 from pipeline.models import Pipeline, SavedQuery
 from django.template.loader import render_to_string
 import json
@@ -17,9 +17,6 @@ class TestPipelineViews:
         url = reverse('dashboard')
         response = logged_in_client.get(url)
         assertTemplateUsed(response, 'dashboard.html')
-
-    def test_delete_pipeline_view(self, rf):
-        assert False
 
     def test_delete_saved_query_view(self, rf, user):
         saved_query = SavedQueryFactory.create()
@@ -34,6 +31,20 @@ class TestPipelineViews:
             assert True
         response_dict = json.loads(response.content)
         assert response_dict['html'] == render_to_string('saved_query_menu.html')
+
+    def test_delete_pipeline_view(self, rf, user):
+        pipeline = PipelineFactory.create()
+        request = rf.get('/pipeline/delete_pipeline')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'selected_pipeline': pipeline.name}
+        response = delete_pipeline(request)
+        try:
+            Pipeline.objects.get(name=pipeline.name)
+            assert False
+        except Pipeline.DoesNotExist:
+            assert True
+        response_dict = json.loads(response.content)
+        assert response_dict['html'] == render_to_string('pipeline_menu.html')
 
 
 class TestPipelineModel:
