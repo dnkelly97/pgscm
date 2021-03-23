@@ -18,28 +18,37 @@ def createPage(response):
     pipelines = Pipeline.objects.all()
     pipeline_id = Pipeline.objects.all().order_by('id').last()
     if response.method == 'POST':
-        form = CreateForm(response.POST)
-        if form.is_valid():
-            pipeline = form.save()
-            pipeline_id = pipeline.id
-            stages = Stage.objects.filter(pipeline=pipeline_id)
-            stageforms = []
-            for i in range(len(stages)):
-                stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
-                if stageforms[i].is_valid():
-                    stage = stageforms[i].save()
-                else:
-                    render(response, 'dashboard.html')
-            return render(response, 'define_stages.html', {"forms": stageforms, "formy": UpdateStageForm, "stages": stages})
-        context = {'form': form, 'pk': pipeline_id}
-        return render(response, 'create_pipeline.html', context)
+        if 'create_pipeline_submit' in response.POST:
+            form = CreateForm(response.POST)
+            if form.is_valid():
+                pipeline = form.save()
+                pipeline_id = pipeline.id
+                stages = Stage.objects.filter(pipeline=pipeline_id)
+                stageforms = []
+                for i in range(len(stages)):
+                    stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
+                    if stageforms[i].is_valid():
+                        stage = stageforms[i].save()
+                    else:
+                        render(response, 'dashboard.html')
+                return render(response, 'define_stages.html', {"forms": stageforms, "formy": UpdateStageForm, "stages": stages})
+            context = {'form': form, 'pk': pipeline_id}
+            return render(response, 'create_pipeline.html', context)
+        # if 'define_stages_submit' in response.POST:
+            # form = UpdateStageForm(response.POST)
+            # if form.is_valid():
+            #     stage = form.save()
+            # if not form.is_valid():
+            #     render(response, 'dashboard.html')
+
+
     form = CreateForm
     context = {'form': form, 'pipelines': pipelines, 'pk': pipeline_id}
     return render(response, 'create_pipeline.html', context)
 
 
 def stagedefinition(request, pk):
-    stages = Stage.objects.filter(pipeline=29) #this 29 needs to be changed to pk at some point
+    stages = Stage.objects.filter(pipeline=29)  # this 29 needs to be changed to pk at some point
     stageforms = []
     for i in range(len(stages)):
         stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
