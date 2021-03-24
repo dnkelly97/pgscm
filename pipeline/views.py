@@ -4,6 +4,7 @@ from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
 from pipeline.forms import CreateForm
 from django.template.loader import render_to_string
+from django.template import RequestContext
 from django.http import JsonResponse
 import pdb
 
@@ -36,6 +37,8 @@ def delete_query(request):
     try:
         SavedQuery.objects.get(query_name=request.POST['selected_query']).delete()
         context = {'saved_queries': SavedQuery.objects.all()}
+        # breakpoint()
+        # context.update(RequestContext(request))
         partial = render_to_string('saved_query_menu.html', context)
         success = True
     except SavedQuery.DoesNotExist:
@@ -46,10 +49,11 @@ def delete_query(request):
 
 @login_required(login_url='login')
 def delete_pipeline(request):
+    # breakpoint()
     try:
         Pipeline.objects.get(name=request.POST['selected_pipeline']).delete()
         context = {'pipelines': Pipeline.objects.all()}
-        partial = render_to_string('pipeline_menu.html', context)
+        partial = render_to_string('pipeline_menu.html', context, request)
         success = True
     except Pipeline.DoesNotExist:
         partial = None

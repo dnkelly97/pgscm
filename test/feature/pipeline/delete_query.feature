@@ -13,4 +13,4 @@ Feature: Delete Query
         Given I am on the dashboard page and the confirm delete popup is visible
         When I click the popup Delete button
         Then I should see a confirmation message
-        And I should not see the query listed I selected listed anymore
+        And I should not see the query I selected listed anymore
