@@ -1,6 +1,5 @@
 from django.forms import ModelForm
 from pipeline.models import Pipeline, Stage
-from bootstrap_modal_forms.forms import BSModalModelForm
 from django.forms import ModelForm
 
 
