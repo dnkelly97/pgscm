@@ -84,25 +84,13 @@ def define_stages(request, pipeline_id):
 
 
 
-def ajax_create_pipeline(request):
-    form = CreateForm(request.POST)
-    if form.is_valid():
-        pipeline = form.save()
-        stages = Stage.objects.filter(pipeline=pipeline.id)
-        stageforms = []
-        for i in range(len(stages)):
-            stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
-        # returns modal with correct number of stages
-    pass
-
-
-def stagedefinition(request, pk):
-    stages = Stage.objects.filter(pipeline=29)  # this 29 needs to be changed to pk at some point
-    stageforms = []
-    for i in range(len(stages)):
-        stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
-        if stageforms[i].is_valid():
-            stage = stageforms[i].save()
-        else:
-            render(request, 'dashboard.html')
-    return render(request, 'define_stages.html', {"forms": stageforms, "formy": UpdateStageForm, "stages": stages})
+# def stagedefinition(request, pk):
+#     stages = Stage.objects.filter(pipeline=29)  # this 29 needs to be changed to pk at some point
+#     stageforms = []
+#     for i in range(len(stages)):
+#         stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
+#         if stageforms[i].is_valid():
+#             stage = stageforms[i].save()
+#         else:
+#             render(request, 'dashboard.html')
+#     return render(request, 'define_stages.html', {"forms": stageforms, "formy": UpdateStageForm, "stages": stages})
