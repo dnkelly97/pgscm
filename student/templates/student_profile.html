@@ -1,14 +1,14 @@
+<style>
+    .cover {
+        object-fit: cover;
+        width: 100%;
+        height: 12vw;
+    }
+</style>
+
 {% extends "home.html" %}
 
 {% load static %}
-
-<style>
-    .image {
-    width: 12rem;
-    height: 40vh;
-    object-fit: cover;
-}
-</style>
 
 {%  block content1 %}
     <div class="card">
@@ -45,13 +45,14 @@
                     <div class="container-fluid">
                         <div class="col-md-14">
                            <div class="card flex-row flex-wrap">
-                                <div class="card-header border-0 align-items-center" style="width: 12rem;">
-                                    <br>
-                                    {% if student.profile_image %}
-                                        <img class='image' src="{{ student.profile_image.url }}" width="150px">
-                                    {% else %}
-                                        <img class='image' src="{% static 'images/default_profile.png' %}" width="150px">
-                                    {% endif %}
+                                <div class="card-header border-0 p-0 align-items-center" style="width: 12rem;">
+                                    <div class="view overlay zoom">
+                                        {% if student.profile_image %}
+                                            <img class="cover" src="{{ student.profile_image.url }}" >
+                                        {% else %}
+                                            <img class="cover" src="{% static 'images/default_profile.png' %}">
+                                        {% endif %}
+                                    </div>
                                 </div>
                                 <div class="card-block px-6">
                                     <br>
@@ -85,9 +86,27 @@
                             <div class="col-md-6 d-flex align-items-stretch">
                                 <div class="card card-body">
                                     <h6 class="card-title">Scholarship Potential</h6><br>
-                                    <p><strong>First Generation:</strong> {% if student.first_generation %} YES {% else %} NO {% endif %} </p>
-                                    <p><strong>US Citizen:</strong> {% if student.us_citizenship %} YES {% else %} NO {% endif %} </p>
-                                    <p><strong>Military:</strong>  {% if student.military %} YES {% else %} NO {% endif %} </p>
+                                    <p><strong>First Generation:</strong>
+                                        {% if student.first_generation %}
+                                            <span class="badge badge-success"> YES </span>
+                                        {% else %}
+                                            <span class="badge badge-danger"> NO </span>
+                                        {% endif %}
+                                    </p>
+                                    <p><strong>US Citizen:</strong>
+                                        {% if student.us_citizenship %}
+                                            <span class="badge badge-success"> YES </span>
+                                        {% else %}
+                                            <span class="badge badge-danger"> NO </span>
+                                        {% endif %}
+                                    </p>
+                                    <p><strong>Military:</strong>
+                                        {% if student.military %}
+                                            <span class="badge badge-success"> YES </span>
+                                        {% else %}
+                                            <span class="badge badge-danger"> NO </span>
+                                        {% endif %}
+                                    </p>
                                 </div>
                             </div>
                         </div>
