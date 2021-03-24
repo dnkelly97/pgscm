@@ -3,6 +3,8 @@ from .models import Pipeline, Stage
 from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
 from pipeline.forms import CreateForm, UpdateStageForm
+from django.http import JsonResponse
+from django.template.loader import render_to_string
 import pdb
 
 
@@ -40,9 +42,46 @@ def createPage(response):
                 render(response, 'dashboard.html')
 
 
+@login_required(login_url='login')
 def build_pipeline_page(request):
     context = {'form': CreateForm}
     return render(request, 'create_pipeline.html', context)
+
+
+@login_required(login_url='login')
+def ajax_create_pipeline(request):
+    form = CreateForm(request.POST)
+    if form.is_valid():
+        success = True
+        pipeline = form.save()
+        stages = Stage.objects.filter(pipeline=pipeline.id)
+        stageforms = []
+        for i in range(len(stages)):
+            stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
+        partial = render_to_string('define_stages.html', {'forms': stageforms})
+    else:
+        partial = None
+        success = False
+    return JsonResponse({'success': success, 'html': partial, 'pipeline_id': pipeline.id})
+
+
+
+@login_required(login_url='login')
+def define_stages(request, pipeline_id):
+    stages = Stage.objects.filter(pipeline=pipeline_id)
+   # breakpoint()
+
+    post_values = request.POST.copy()
+ #it needs this shit earlier than it gets here (when the form is sent)
+    post_values['pipeline'] = pipeline_id
+    form = UpdateStageForm(post_values)#took away instance
+    if form.is_valid():
+        success = True
+        stage = form.save()
+    else:
+        success = False
+    return redirect(reverse('dashboard'))
+
 
 
 def ajax_create_pipeline(request):
