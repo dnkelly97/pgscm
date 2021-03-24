@@ -6,7 +6,7 @@
 
 {% block content1 %}
     <h5 class="card-header">Create Student</h5><br>
-    <form method="POST" class="form-group" id="create_student_form">
+    <form method="POST" class="form-group" id="create_student_form" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="input-group mb-3">
             <div class="input-group-append">
