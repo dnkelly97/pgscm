@@ -1,6 +1,7 @@
 from django.db import models
 from django.forms import ModelForm
 
+
 # Create your models here.
 
 class Pipeline(models.Model):
@@ -17,6 +18,3 @@ class SavedQueryForm(ModelForm):
     class Meta:
         model = SavedQuery
         fields = ['query_name', 'description', 'query']
-
-
-
