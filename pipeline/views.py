@@ -3,6 +3,7 @@ from .models import Pipeline, Stage
 from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
 from pipeline.forms import CreateForm, UpdateStageForm
+import pdb
 
 
 # Create your views here.
@@ -39,9 +40,21 @@ def createPage(response):
                 render(response, 'dashboard.html')
 
 
-def create_pipeline_page(request):
+def build_pipeline_page(request):
     context = {'form': CreateForm}
     return render(request, 'create_pipeline.html', context)
+
+
+def ajax_create_pipeline(request):
+    form = CreateForm(request.POST)
+    if form.is_valid():
+        pipeline = form.save()
+        stages = Stage.objects.filter(pipeline=pipeline.id)
+        stageforms = []
+        for i in range(len(stages)):
+            stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
+        # returns modal with correct number of stages
+    pass
 
 
 def stagedefinition(request, pk):

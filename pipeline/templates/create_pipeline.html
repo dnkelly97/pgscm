@@ -7,6 +7,7 @@
 {% block content %}
     <h5 class="card-header">Create Pipeline</h5><br>
     <form method="POST" class="form-group" id="create_pipeline_form">
+        {% csrf_token %}
         <div class="input-group mb-3">
             <div class="input-group-append">
                 <span class="input-group-text">{{form.name.label}}</span>
@@ -67,4 +68,8 @@
 </div>
   </body>
 </html>
+{% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/pipeline/create_pipeline.js' %}"></script>
 {% endblock %}
