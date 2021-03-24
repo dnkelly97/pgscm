@@ -18,12 +18,29 @@ from django.core.files.storage import FileSystemStorage
 def createPage(response):
     students = Student.objects.all()
     if response.method == 'POST':
-        form = CreateForm(response.POST)
+        form = CreateForm(response.POST, response.FILES)
 
         if form.is_valid():
+
             form.save()
-            response = redirect('student')
-            return response
+
+            uploaded_image = response.FILES['profile_image'] if 'profile_image' in response.FILES else None
+            uploaded_file = response.FILES['resume'] if 'resume' in response.FILES else None
+            uploaded_file_1 = response.FILES['transcript'] if 'transcript' in response.FILES else None
+
+            fs = FileSystemStorage()
+            if uploaded_image:
+                image = fs.save(uploaded_image.name, uploaded_image)
+                fs.url(image)
+            if uploaded_file:
+                resume = fs.save(uploaded_file.name, uploaded_file)
+                fs.url(resume)
+            if uploaded_file_1:
+                transcript = fs.save(uploaded_file_1.name, uploaded_file_1)
+                fs.url(transcript)
+
+            return redirect('student')
+
         context = {'form': form}
         return render(response, 'create_student.html', context)
 
