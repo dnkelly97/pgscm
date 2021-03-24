@@ -22,7 +22,7 @@
 
 {% block content2 %}
     <h5 class="card-header">Update {{ student.first_name }}'s profile</h5><br>
-    <form method="POST" class="form-group" id="update_student_form">
+    <form method="POST" class="form-group" id="update_student_form" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="input-group mb-3">
             <div class="input-group-append">
@@ -107,6 +107,24 @@
                 <span class="input-group-text">{{form.military.label}}</span>
             </div>
             {{form.military}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Image Upload (Optional)</span>
+            </div><br>
+            {{form.profile_image}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Resume Upload</span>
+            </div><br>
+            {{form.resume}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Transcript Upload</span>
+            </div><br>
+            {{form.transcript}}
         </div>
         <button id="update_student_submit_button" class="btn btn-primary" type="submit">Update</button>
     </form>
