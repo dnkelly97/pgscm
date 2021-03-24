@@ -1,13 +1,26 @@
 
 <div class="modal-body">
+    {{ forms }}
+    {{ stages }}
     {% for form in forms %}
         <hr/>
         <br>
-         {% for field in form %}
-            <br>
-                <p> {{ field }} </p>
-            <br>
-         {% endfor %}
+        <br>
+
+        <div>
+            <label for="{{ form.name.id_for_label }}"> Name: </label>
+                <p> {{ form.name }} </p>
+        </div>
+        <br>
+        <div>
+            <label for="{{ form.time_window.id_for_label }}"> Name: </label>
+                <p> {{ form.time_window }} </p>
+        </div>
+        <br>
+        <div>
+            <label for="{{ form.advancement_condition.id_for_label }}"> Advancement Condition: </label>
+                <p> {{ form.advancement_condition }} </p>
+        </div>
     {% endfor %}
 </div>
 <div class="modal-footer">
