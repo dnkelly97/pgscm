@@ -1,6 +1,7 @@
 from django.forms import ModelForm
 from pipeline.models import Pipeline, Stage
 from bootstrap_modal_forms.forms import BSModalModelForm
+from django.forms import ModelForm
 
 
 class CreateForm(ModelForm):
@@ -10,7 +11,7 @@ class CreateForm(ModelForm):
                   ]
 
 
-class UpdateStageForm(BSModalModelForm):
+class UpdateStageForm(ModelForm):
     class Meta:
         model = Stage
         fields = ['name', 'time_window', 'advancement_condition']
