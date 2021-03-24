@@ -2,6 +2,14 @@
 
 {% load static %}
 
+<style>
+    .image {
+    width: 12rem;
+    height: 40vh;
+    object-fit: cover;
+}
+</style>
+
 {%  block content1 %}
     <div class="card">
         <h5 class="card-header">Students</h5><br>
@@ -32,66 +40,71 @@
             </small>
         </h5><br>
         <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-8">
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-3 d-flex align-items-stretch">
-                            <div class="card card-body align-items-center">
-                                {% if student.profile_image %}
-                                    <img class="rounded-circle" width="300" src="{{student.profile_image.url}}" >
-                                {% else %}
-                                    <img class="rounded-circle" width="300" src="{% static 'images/default_profile.png' %}">
-                                {% endif %}
-                            </div>
-                        </div>
-                        <div class="col-md-9">
-                            <div class="card card-body">
-                                <h6 class="card-title">Demographics</h6><br>
-                                <p><strong>Name:</strong> {{ student.first_name }} {{ student.last_name }} </p>
-                                <p><strong>Email:</strong> {{ student.email }} </p>
-                                <p><strong>University:</strong> {{ student.university }} </p>
-                                <p><strong>Country:</strong> {{ student.country.name }} </p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <br>
-                <div class="container-fluid">
-                    <div class="row">
-                        <div class="col-md-6 d-flex align-items-stretch">
-                            <div class="card card-body">
-                                <h6 class="card-title">Academics Information</h6><br>
-                                <p><strong>Year in School:</strong> {{ student.school_year }} </p>
-                                <p><strong>Degree:</strong> {{ student.degree }} </p>
-                                <div class="input-group-append">
-                                    <p><strong>Research Interest:</strong> {% for i in student.research_interests %} &nbsp; <span class="badge badge badge-pill  badge-info"> {{ i }} </span> {% endfor %} </p>
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="container-fluid">
+                        <div class="col-md-14">
+                           <div class="card flex-row flex-wrap">
+                                <div class="card-header border-0 align-items-center" style="width: 12rem;">
+                                    <br>
+                                    {% if student.profile_image %}
+                                        <img class='image' src="{{ student.profile_image.url }}" width="150px">
+                                    {% else %}
+                                        <img class='image' src="{% static 'images/default_profile.png' %}" width="150px">
+                                    {% endif %}
                                 </div>
-                                <p><strong>Major:</strong>  {{ student.major }} </p>
-                                <p><strong>GPA:</strong>  {{ student.gpa }} </p>
-                            </div>
-                        </div>
-                        <br>
-                        <div class="col-md-6 d-flex align-items-stretch">
-                            <div class="card card-body">
-                                <h6 class="card-title">Scholarship Potential</h6><br>
-                                <p><strong>First Generation:</strong> {{ student.first_generation }} </p>
-                                <p><strong>US Citizen:</strong> {{ student.us_citizenship }} </p>
-                                <p><strong>Military:</strong>  {{ student.military }} </p>
-                            </div>
+                                <div class="card-block px-6">
+                                    <br>
+                                    <h5 class="card-title">&nbsp;&nbsp; About</h5>
+                                    <p class="card-text">
+                                        <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;Name:</strong> {{ student.first_name }} {{ student.last_name }} </p>
+                                        <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;Email:</strong> {{ student.email }} </p>
+                                        <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;University:</strong> {{ student.university }} </p>
+                                        <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;Country:</strong> {{ student.country.name }} </p>
+                                    </p>
+                                </div>
+                                <div class="w-100"></div>
+                           </div>
                         </div>
                     </div>
                     <br>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-md-6 d-flex align-items-stretch">
+                                <div class="card card-body">
+                                    <h6 class="card-title">Academics Information</h6><br>
+                                    <p><strong>Year in School:</strong> {{ student.school_year }} </p>
+                                    <p><strong>Degree:</strong> {{ student.degree }} </p>
+                                    <div class="input-group-append">
+                                        <p><strong>Research Interest:</strong> {% for i in student.research_interests %} &nbsp; <span class="badge badge badge-pill  badge-info"> {{ i }} </span> {% endfor %} </p>
+                                    </div>
+                                    <p><strong>GPA:</strong>  {{ student.gpa }} </p>
+                                </div>
+                            </div>
+                            <br>
+                            <div class="col-md-6 d-flex align-items-stretch">
+                                <div class="card card-body">
+                                    <h6 class="card-title">Scholarship Potential</h6><br>
+                                    <p><strong>First Generation:</strong> {% if student.first_generation %} YES {% else %} NO {% endif %} </p>
+                                    <p><strong>US Citizen:</strong> {% if student.us_citizenship %} YES {% else %} NO {% endif %} </p>
+                                    <p><strong>Military:</strong>  {% if student.military %} YES {% else %} NO {% endif %} </p>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                    </div>
+                </div>
+                <div class="col-md-4 ">
+                    <div class="card card-body">
+                        <h6 class="card-title">Documents</h6><br>
+                        <p><strong>Resume:</strong>{% if student.resume %} <a href="{{ student.resume.url }}"> Click Here</a>{% endif %}</p>
+                        <p><strong>Transcript:</strong>{% if student.transcript %} <a href="{{ student.transcript.url }}"> Click Here</a>{% endif %}</p>
+                    </div><br>
+                    <div class="card card-body">
+                        <h6 class="card-title">Communication Log</h6><br>
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 ">
-                <div class="card card-body">
-                    {% if student.documents %}
-                        <p><a href="{{ student.documents.url }}">{{ student.documents.url }}</a></p>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
         </div>
     </div>
 
