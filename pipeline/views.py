@@ -27,19 +27,16 @@ def createPage(response):
                 stageforms = []
                 for i in range(len(stages)):
                     stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
-                    if stageforms[i].is_valid():
-                        stage = stageforms[i].save()
-                    else:
-                        render(response, 'dashboard.html')
-                return render(response, 'define_stages.html', {"forms": stageforms, "formy": UpdateStageForm, "stages": stages})
+                return render(response, 'define_stages.html', {"forms": stageforms, "stages": stages})
             context = {'form': form, 'pk': pipeline_id}
             return render(response, 'create_pipeline.html', context)
-        # if 'define_stages_submit' in response.POST:
-            # form = UpdateStageForm(response.POST)
-            # if form.is_valid():
-            #     stage = form.save()
-            # if not form.is_valid():
-            #     render(response, 'dashboard.html')
+
+        else:
+            form = UpdateStageForm(response.POST)
+            if form.is_valid():
+                stage = form.save()
+            if not form.is_valid():
+                render(response, 'dashboard.html')
 
 
     form = CreateForm
