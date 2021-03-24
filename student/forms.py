@@ -17,4 +17,7 @@ class CreateForm(ModelForm):
                   'country',
                   'us_citizenship',
                   'first_generation',
-                  'military']
+                  'military',
+                  'resume',
+                  'transcript',
+                  'profile_image']
