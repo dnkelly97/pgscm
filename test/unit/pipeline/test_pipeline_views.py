@@ -17,8 +17,8 @@ class PipelineView(TestCase):
         self.client.login(username=self.username, password=self.password)
 
     @pytest.mark.django_db
-    def test_create_pipeline(self):
-        url = reverse('create_pipeline')
+    def test_build_pipeline(self):
+        url = reverse('build_pipeline')
         response = self.client.get(url)
         assert response.status_code == 200
 
