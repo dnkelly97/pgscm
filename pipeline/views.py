@@ -60,7 +60,7 @@ def ajax_create_pipeline(request):
         stageforms = []
         #for i in range(len(stages)):
 
-        for i in range(len(stages)):
+       for i in range(len(stages)):
             instance = stages.filter(stage_number=i).first()
 
             stageforms.append(UpdateStageForm(instance=instance))
@@ -74,16 +74,15 @@ def ajax_create_pipeline(request):
     return JsonResponse({'success': success, 'html': partial, 'pipeline_id': pipeline.id})
 
 
-
 @login_required(login_url='login')
 def define_stages(request, pipeline_id):
     stages = Stage.objects.filter(pipeline=pipeline_id)
     success = True
     for i in range(len(stages)):
         breakpoint()
-        fields = {'name': request.POST['name'][i],
+        fields = {'name': request.POST['name'],
                   'stage_number': i+1,
-                  'time_window': request.POST['time_window'][i],
+                  'time_window': request.POST['time_window'],
                   'advancement_condition': request.POST['advancement_condition'],
                   'pipeline': pipeline_id}
         form = UpdateStageForm(fields, instance=stages[i])
@@ -92,15 +91,13 @@ def define_stages(request, pipeline_id):
         else:
             breakpoint()
             success = False
-    breakpoint()
+   # breakpoint()
     # post_values = request.POST.copy()
     # post_values['stage_number'] = 1
     # post_values['pipeline'] = pipeline_id
     # form = UpdateStageForm(post_values)
     #
     return redirect(reverse('dashboard'))
-
-
 
 # def stagedefinition(request, pk):
 #     stages = Stage.objects.filter(pipeline=29)  # this 29 needs to be changed to pk at some point
