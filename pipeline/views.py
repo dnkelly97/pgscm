@@ -79,12 +79,13 @@ def ajax_create_pipeline(request):
 def define_stages(request, pipeline_id):
     stages = Stage.objects.filter(pipeline=pipeline_id)
     success = True
+    post = dict(request.POST)
     for i in range(len(stages)):
-        breakpoint()
-        fields = {'name': request.POST['name'][i],
+        # breakpoint()
+        fields = {'name': post['name'][i],
                   'stage_number': i+1,
-                  'time_window': request.POST['time_window'][i],
-                  'advancement_condition': request.POST['advancement_condition'],
+                  'time_window': post['time_window'][i],
+                  'advancement_condition': post['advancement_condition'][i],
                   'pipeline': pipeline_id}
         form = UpdateStageForm(fields, instance=stages[i])
         if form.is_valid():
@@ -92,7 +93,7 @@ def define_stages(request, pipeline_id):
         else:
             breakpoint()
             success = False
-    breakpoint()
+    # breakpoint()
     # post_values = request.POST.copy()
     # post_values['stage_number'] = 1
     # post_values['pipeline'] = pipeline_id
