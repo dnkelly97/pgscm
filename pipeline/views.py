@@ -39,9 +39,9 @@ def createPage(response):
                 render(response, 'dashboard.html')
 
 
-    form = CreateForm
-    context = {'form': form, 'pipelines': pipelines, 'pk': pipeline_id}
-    return render(response, 'create_pipeline.html', context)
+def create_pipeline_page(request):
+    context = {'form': CreateForm}
+    return render(request, 'create_pipeline.html', context)
 
 
 def stagedefinition(request, pk):

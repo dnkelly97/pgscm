@@ -1,10 +1,10 @@
 from django.urls import path
 from django.views.decorators.csrf import csrf_exempt
 from . import views
-from pipeline.views import createPage
+from pipeline.views import create_pipeline_page
 
 
 urlpatterns = [
-    path('create/', csrf_exempt(createPage), name='create_pipeline'),
+    path('create/', create_pipeline_page, name='create_pipeline'),
     path('define_stages/<str:pk>/', views.stagedefinition),
 ]
