@@ -14,4 +14,4 @@ class CreateForm(ModelForm):
 class UpdateStageForm(ModelForm):
     class Meta:
         model = Stage
-        fields = ['name', 'time_window', 'advancement_condition']
+        fields = ['name', 'stage_number', 'time_window', 'advancement_condition', 'pipeline']

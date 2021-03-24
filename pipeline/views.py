@@ -51,14 +51,23 @@ def build_pipeline_page(request):
 @login_required(login_url='login')
 def ajax_create_pipeline(request):
     form = CreateForm(request.POST)
+    pipeline = Pipeline.objects.all().order_by('id').last()
     if form.is_valid():
+       # breakpoint()
         success = True
         pipeline = form.save()
         stages = Stage.objects.filter(pipeline=pipeline.id)
         stageforms = []
+        #for i in range(len(stages)):
+
         for i in range(len(stages)):
-            stageforms.append(UpdateStageForm(instance=stages.filter(stage_number=i).first()))
-        partial = render_to_string('define_stages.html', {'forms': stageforms})
+            instance = stages.filter(stage_number=i).first()
+
+            stageforms.append(UpdateStageForm(instance=instance))
+
+
+
+        partial = render_to_string('define_stages.html', {'forms': stageforms, 'stages': stages})
     else:
         partial = None
         success = False
@@ -69,17 +78,26 @@ def ajax_create_pipeline(request):
 @login_required(login_url='login')
 def define_stages(request, pipeline_id):
     stages = Stage.objects.filter(pipeline=pipeline_id)
-   # breakpoint()
-
-    post_values = request.POST.copy()
- #it needs this shit earlier than it gets here (when the form is sent)
-    post_values['pipeline'] = pipeline_id
-    form = UpdateStageForm(post_values)#took away instance
-    if form.is_valid():
-        success = True
-        stage = form.save()
-    else:
-        success = False
+    success = True
+    for i in range(len(stages)):
+        breakpoint()
+        fields = {'name': request.POST['name'][i],
+                  'stage_number': i+1,
+                  'time_window': request.POST['time_window'][i],
+                  'advancement_condition': request.POST['advancement_condition'],
+                  'pipeline': pipeline_id}
+        form = UpdateStageForm(fields, instance=stages[i])
+        if form.is_valid():
+            stage = form.save()
+        else:
+            breakpoint()
+            success = False
+    breakpoint()
+    # post_values = request.POST.copy()
+    # post_values['stage_number'] = 1
+    # post_values['pipeline'] = pipeline_id
+    # form = UpdateStageForm(post_values)
+    #
     return redirect(reverse('dashboard'))
 
 
