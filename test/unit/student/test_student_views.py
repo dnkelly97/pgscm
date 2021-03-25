@@ -2,7 +2,7 @@ import pytest
 from student.models import Student
 from django.test import TestCase, Client, RequestFactory
 from django.contrib.auth.models import User
-from student.views import ajax_save_query
+from student.views import ajax_save_query, run_saved_query
 import json
 from django.urls import reverse
 from factories import SavedQueryFactory
@@ -99,4 +99,26 @@ def test_ajax_save_query(user, post_dict, expected_response):
     if expected_response['success']:
         SavedQuery.objects.get(query_name=post_dict['query_name'])
     assert json.loads(response.content) == expected_response
+
+
+@pytest.mark.django_db
+def test_run_saved_query(rf, user):
+    query1 = SavedQueryFactory.build()
+    query1.query_name = 'test_query'
+    query1.query['name'] = 'mo'
+    query1.save()
+
+    # student1 = {"email": "hello@gmail.com", "first_name": 'tim', "last_name": 'last',
+    #           "school_year": Student.YearInSchool.UNKNOWN,
+    #           "ethnicity": Student.Ethnicity.UNKNOWN, "gender": Student.Gender.UNKNOWN}
+    student1 = Student.objects.create(email="hello1@gmail.com", first_name="Michael B. Jordan", last_name="second")
+    student2 = Student.objects.create(email="h@gmail.com", first_name="Monty", last_name="second")
+    student1.save()
+    student2.save()
+    request = rf.get('/student/run_query/test_query')
+    request.user = user
+    response = run_saved_query(request, query1.query_name)
+    assert 'Monty' in str(response.content)
+    assert 'Michael B. Jordan' not in str(response.content)
+
 
