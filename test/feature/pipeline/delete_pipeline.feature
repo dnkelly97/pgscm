@@ -18,6 +18,6 @@ Feature: Delete Pipeline
     Scenario: Delete multiple pipelines
         Given I am on the dashboard page and the confirm delete pipeline popup is visible
         When I click the popup Delete button
-        And I go to delete another dashboard from the popup
+        And I go to delete another pipeline from the dashboard
         And I click the popup Delete button again
         Then neither of the pipelines I deleted should be listed anymore

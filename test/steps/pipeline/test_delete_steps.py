@@ -14,6 +14,11 @@ def saved_query():
 
 
 @pytest.fixture
+def saved_query_2():
+    return SavedQueryFactory.create()
+
+
+@pytest.fixture
 def pipeline():
     return PipelineFactory.create()
 
@@ -57,7 +62,7 @@ def test_delete_query_popup(logged_in_browser, saved_query):
     pass
 
 
-@given("I am on the dashboard page and the confirm delete popup is visible")
+@given("I am on the dashboard page and the confirm delete query popup is visible")
 def show_popup(live_server, logged_in_browser, saved_query):
     logged_in_browser.get(live_server + reverse('dashboard'))
     logged_in_browser.find_element_by_id(saved_query.query_name + " radio button").click()
@@ -83,6 +88,31 @@ def assert_query_not_listed(logged_in_browser, saved_query):
 
 
 #####################################################################################
+
+@pytest.mark.django_db
+@scenario("../../feature/pipeline/delete_query.feature", "Delete multiple queries")
+def test_multiple_query_delete(logged_in_browser, saved_query, saved_query_2):
+    pass
+
+
+@when("I go to delete another query from the dashboard")
+def close_popup_select_query_open_popup(logged_in_browser, saved_query_2):
+    WebDriverWait(logged_in_browser, 20).until(
+        EC.presence_of_element_located((By.ID, "confirm_delete_message")))
+    logged_in_browser.find_element_by_id('escape_popup').click()
+    logged_in_browser.find_element_by_id(saved_query_2.query_name + " radio button").click()
+    logged_in_browser.find_element_by_id("delete_query_button").click()
+
+
+@then("neither of the queries I deleted should be listed anymore")
+def assert_both_queries_unlisted(logged_in_browser, saved_query, saved_query_2):
+    WebDriverWait(logged_in_browser, 20).until(
+        EC.invisibility_of_element_located((By.ID, saved_query.query_name + " radio button")))
+    WebDriverWait(logged_in_browser, 20).until(
+        EC.invisibility_of_element_located((By.ID, saved_query_2.query_name + " radio button")))
+
+
+##########################################################################################################
 
 @pytest.mark.django_db
 @scenario("../../feature/pipeline/delete_pipeline.feature", "Delete a pipeline (dashboard)")
@@ -128,26 +158,17 @@ def assert_query_not_listed(logged_in_browser, pipeline):
 
 #############################################################################################
 
-# Scenario: Delete multiple pipelines
-#         //Given I am on the dashboard page and the confirm delete pipeline popup is visible
-#         //When I click the popup Delete button
-#        // And I go to delete another dashboard from the popup
-#         //And I click the popup Delete button again
-#         Then neither of the pipelines I deleted should be listed anymore
-
 @pytest.mark.django_db
 @scenario("../../feature/pipeline/delete_pipeline.feature", "Delete multiple pipelines")
 def test_multiple_pipeline_delete(logged_in_browser, pipeline, pipeline_2):
     pass
 
 
-@when("I go to delete another dashboard from the popup")
+@when("I go to delete another pipeline from the dashboard")
 def close_popup_select_pipeline_open_popup(logged_in_browser, pipeline_2):
     WebDriverWait(logged_in_browser, 20).until(
         EC.presence_of_element_located((By.ID, "confirm_delete_message")))
     logged_in_browser.find_element_by_id('escape_popup').click()
-    # WebDriverWait(logged_in_browser, 20).until(
-    #     EC.invisibility_of_element((By.ID, "delete_modal")))
     logged_in_browser.find_element_by_id(pipeline_2.name + " radio button").click()
     logged_in_browser.find_element_by_id("delete_pipeline_button").click()
 
