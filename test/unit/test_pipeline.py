@@ -30,7 +30,7 @@ class TestPipelineViews:
         except SavedQuery.DoesNotExist:
             assert True
         response_dict = json.loads(response.content)
-        assert response_dict['html'] == render_to_string('saved_query_menu.html')
+        assert saved_query.query_name not in response_dict['html']
 
     def test_delete_nonexistent_query(self, rf, user):
         request = rf.get('/pipeline/delete_query')
@@ -53,7 +53,7 @@ class TestPipelineViews:
         except Pipeline.DoesNotExist:
             assert True
         response_dict = json.loads(response.content)
-        assert response_dict['html'] == render_to_string('pipeline_menu.html')
+        assert pipeline.name not in response_dict['html']
 
     def test_delete_nonexistent_pipeline(self, rf, user):
         request = rf.get('/pipeline/delete_pipeline')
