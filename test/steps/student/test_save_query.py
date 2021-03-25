@@ -14,6 +14,7 @@ def add_query_to_db():
     saved_query.query_name = 'Query 0'
     saved_query.save()
 
+
 @scenario("../../feature/student/save_query.feature", "Open save query popup")
 def test_open_save_query_popup(logged_in_browser):
     pass
