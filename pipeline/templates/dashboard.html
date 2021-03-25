@@ -39,9 +39,10 @@ PGSCM Dashboard
                         </div>
                     </div>
                 </div>
-                <a href="{% url 'student' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_query_button">New Saved Query</a>
-                <button type="button" class="btn btn-primary" id="edit_query_button" style="margin-top: 1%;">Edit Saved Query</button>
-                <button type="button" class="btn btn-primary" id="delete_query_button" style="margin-top: 1%;">Delete Saved Query</button>
+                <a href="{% url 'student' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_query_button">Save New Query</a>
+                <button type="button" class="btn btn-primary" id="edit_query_button" style="margin-top: 1%;">Edit Query</button>
+                <button type="button" class="btn btn-primary" id="delete_query_button" style="margin-top: 1%;">Delete Query</button>
+                <button type="button" class="btn btn-primary" id="run_saved_query_button" style="margin-top: 1%;">Run Query</button>
             </div>
         </div>
     </div>
@@ -67,4 +68,5 @@ PGSCM Dashboard
 
 {% block javascript %}
 <script src="{% static 'js/pipeline/delete.js' %}"></script>
+<script src="{% static 'js/student/run_saved_query.js' %}"></script>
 {% endblock javascript %}
