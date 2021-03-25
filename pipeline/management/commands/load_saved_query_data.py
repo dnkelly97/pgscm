@@ -17,6 +17,6 @@ class Command(BaseCommand):
         if SavedQuery.objects.exists():
             print(ALREADY_LOADED_ERROR_MESSAGE)
         else:
-            for i in range(3):
+            for i in range(12):
                 query = SavedQueryFactory.create()
-                print("Pipeline created:", query.name)
+                print("SavedQuery created:", query.query_name)
