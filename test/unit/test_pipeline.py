@@ -1,26 +1,68 @@
 import pytest
-from pipeline.models import Pipeline, SavedQuery
 from django.urls import reverse
+from pipeline.views import *
 from pytest_django.asserts import assertTemplateUsed
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
+from factories import SavedQueryFactory, PipelineFactory
+from pipeline.models import Pipeline, SavedQuery
+from django.template.loader import render_to_string
+import json
 
 
-@pytest.mark.django_db
-class TestDashboardView(TestCase):
+class TestPipelineViews:
 
-    def setUp(self):
-        self.username = 'bob'
-        self.password = 'bobpass123'
-        self.email = 'bob@uiowa.edu'
-        self.client = Client()
-        self.user = User.objects.create_user(self.username, self.email, self.password)
-
-    def test_dashboard_view(self):
+    @pytest.mark.django_db
+    def test_dashboard_view(self, logged_in_client):
         url = reverse('dashboard')
-        self.client.login(username=self.username, password=self.password)
-        response = self.client.get(url)
+        response = logged_in_client.get(url)
         assertTemplateUsed(response, 'dashboard.html')
+
+    def test_delete_saved_query_view(self, rf, user):
+        saved_query = SavedQueryFactory.create()
+        request = rf.get('/pipeline/delete_query')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'selected_query': saved_query.query_name}
+        response = delete_query(request)
+        try:
+            SavedQuery.objects.get(query_name=saved_query.query_name)
+            assert False
+        except SavedQuery.DoesNotExist:
+            assert True
+        response_dict = json.loads(response.content)
+        assert saved_query.query_name not in response_dict['html']
+
+    def test_delete_nonexistent_query(self, rf, user):
+        request = rf.get('/pipeline/delete_query')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'selected_query': 'nonexistent_query'}
+        response = delete_query(request)
+        response_dict = json.loads(response.content)
+        assert not response_dict['success']
+        assert not response_dict['html']
+
+    def test_delete_pipeline_view(self, rf, user):
+        pipeline = PipelineFactory.create()
+        request = rf.get('/pipeline/delete_pipeline')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'selected_pipeline': pipeline.name}
+        response = delete_pipeline(request)
+        try:
+            Pipeline.objects.get(name=pipeline.name)
+            assert False
+        except Pipeline.DoesNotExist:
+            assert True
+        response_dict = json.loads(response.content)
+        assert pipeline.name not in response_dict['html']
+
+    def test_delete_nonexistent_pipeline(self, rf, user):
+        request = rf.get('/pipeline/delete_pipeline')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'selected_pipeline': 'nonexistent_pipeline'}
+        response = delete_pipeline(request)
+        response_dict = json.loads(response.content)
+        assert not response_dict['success']
+        assert not response_dict['html']
 
 
 class TestPipelineModel:
