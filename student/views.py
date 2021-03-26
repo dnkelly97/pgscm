@@ -150,10 +150,10 @@ def studentProfile(request, key):
     if request.method == 'POST':
         message = request.POST['message']
 
-        send_mail('Contact Form',
-                  message,
-                  settings.EMAIL_HOST_USER,
-                  [student.email],
+        send_mail(subject='Update Request',
+                  message=message,
+                  from_email=settings.EMAIL_HOST_USER,
+                  recipient_list=[student.email],
                   fail_silently=False)
 
     context = {'students': students, 'student': student}
