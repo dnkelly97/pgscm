@@ -1,5 +1,7 @@
 {% extends "base.html" %}
 
+{% load static %}
+
 {% block title %}
 PGSCM Dashboard
 {% endblock title %}
@@ -12,22 +14,15 @@ PGSCM Dashboard
                     <div class="card-body">
                         <h5 class="card-title">Pipelines</h5>
                         <div class="container overflow-auto" style="max-height: 200px;">
-                            {% for pipeline in pipelines %}
-                            <div class="row">
-                                <div class="col-11">
-                                    <p>{{ pipeline.name }}</p>
+                            <form id="select_pipeline_form">
+                                <div id="pipeline_menu">
+                                    {% include 'pipeline_menu.html' %}
                                 </div>
-                                <div class="col-1">
-                                    <input class="form-check-input" type="radio" name="radioNoLabel" id="{{pipeline.name}} radio button">
-                                </div>
-                            </div>
-                            {% endfor %}
+                            </form>
                         </div>
                     </div>
                 </div>
-                    <form action="{% url 'build_pipeline' %}">
-                        <button id="create_pipeline_button" class="btn btn-primary" type="submit">Create Pipelines</button>
-                    </form>
+                <a href="{% url 'create_pipeline' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_pipeline_button">Create Pipeline</a>
                 <button type="button" class="btn btn-primary" id="edit_pipeline_button" style="margin-top: 1%;">Edit Pipeline</button>
                 <button type="button" class="btn btn-primary" id="delete_pipeline_button" style="margin-top: 1%;">Delete Pipeline</button>
             </div>
@@ -36,23 +31,42 @@ PGSCM Dashboard
                     <div class="card-body">
                         <h5 class="card-title">Saved Queries</h5>
                         <div class="container overflow-auto" style="max-height: 200px;">
-                            {% for query in saved_queries %}
-                            <div class="row">
-                                <div class="col-11">
-                                    <p>{{ query.query_name }}</p>
+                            <form id="select_query_form">
+                                <div id="saved_query_menu">
+                                    {% include 'saved_query_menu.html' %}
                                 </div>
-                                <div class="col-1">
-                                    <input class="form-check-input" type="radio" name="radioNoLabel" id="{{query.query_name}} radio button">
-                                </div>
-                            </div>
-                            {% endfor %}
+                            </form>
                         </div>
                     </div>
                 </div>
-                <a href="{% url 'student' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_query_button">New Saved Query</a>
-                <button type="button" class="btn btn-primary" id="edit_query_button" style="margin-top: 1%;">Edit Saved Query</button>
-                <button type="button" class="btn btn-primary" id="delete_query_button" style="margin-top: 1%;">Delete Saved Query</button>
+                <a href="{% url 'student' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_query_button">Save New Query</a>
+                <button type="button" class="btn btn-primary" id="edit_query_button" style="margin-top: 1%;">Edit Query</button>
+                <button type="button" class="btn btn-primary" id="delete_query_button" style="margin-top: 1%;">Delete Query</button>
+                <button type="button" class="btn btn-primary" id="run_saved_query_button" style="margin-top: 1%;">Run Query</button>
+            </div>
+        </div>
+    </div>
+
+        <div class="modal" tabindex="-1" role="dialog" id="delete_modal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirm Delete</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" id="confirm_delete_message"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="final_delete_button" style="background-color: #d11a2a;">Delete</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_popup">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
 {% endblock content%}
+
+{% block javascript %}
+<script src="{% static 'js/pipeline/delete.js' %}"></script>
+<script src="{% static 'js/student/run_saved_query.js' %}"></script>
+{% endblock javascript %}

@@ -19,6 +19,9 @@ DATABASES = {
 
 ALLOWED_HOSTS = ['*']
 
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images/')
+
 # these are for facilitating emails so users can reset their passwords
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = "smtp.gmail.com"

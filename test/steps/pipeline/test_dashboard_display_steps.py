@@ -7,7 +7,7 @@ from django.contrib.auth.models import User
 
 
 @pytest.mark.django_db
-@scenario("../feature/dashboard_display.feature", "I am on the dashboard page")
+@scenario("../../feature/pipeline/dashboard_display.feature", "I am on the dashboard page")
 def test_dashboard_display(live_server):
     pass
 
@@ -20,6 +20,7 @@ def login(live_server, browser):
     browser.get(live_server + reverse('login'))
     browser.find_element_by_id('id_username').send_keys('administrator')
     browser.find_element_by_id('id_password').send_keys('admin123456', Keys.RETURN)
+
 
 @given("I am on the dashboard")
 def dashboard_setup(live_server, browser, pipeline_factory, saved_query_factory):

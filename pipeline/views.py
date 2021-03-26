@@ -3,8 +3,9 @@ from .models import Pipeline, Stage
 from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
 from pipeline.forms import CreateForm, UpdateStageForm
-from django.http import JsonResponse
 from django.template.loader import render_to_string
+from django.template import RequestContext
+from django.http import JsonResponse
 import pdb
 
 # Create your views here.
@@ -53,3 +54,29 @@ def define_stages(request, pipeline_id):
         else:
             success = False
     return redirect(reverse('dashboard'))
+
+
+@login_required(login_url='login')
+def delete_query(request):
+    try:
+        SavedQuery.objects.get(query_name=request.POST['selected_query']).delete()
+        context = {'saved_queries': SavedQuery.objects.all()}
+        partial = render_to_string('saved_query_menu.html', context, request)
+        success = True
+    except SavedQuery.DoesNotExist:
+        partial = None
+        success = False
+    return JsonResponse({'success': success, 'html': partial})
+
+
+@login_required(login_url='login')
+def delete_pipeline(request):
+    try:
+        Pipeline.objects.get(name=request.POST['selected_pipeline']).delete()
+        context = {'pipelines': Pipeline.objects.all()}
+        partial = render_to_string('pipeline_menu.html', context, request)
+        success = True
+    except Pipeline.DoesNotExist:
+        partial = None
+        success = False
+    return JsonResponse({'success': success, 'html': partial})

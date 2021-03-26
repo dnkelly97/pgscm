@@ -1,0 +1,12 @@
+{% csrf_token %}
+{% for query in saved_queries %}
+<div class="row">
+    <div class="col-11">
+        <p>{{ query.query_name }}</p>
+    </div>
+    <div class="col-1">
+        <input class="form-check-input" type="radio" name="selected_query" value="{{query.query_name}}" id="{{query.query_name}} radio button">
+    </div>
+</div>
+{% endfor %}
+

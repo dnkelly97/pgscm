@@ -14,7 +14,7 @@
         <tr>
             <td>{{student.first_name}}</td>
             <td>{{student.last_name}}</td>
-            <td><a class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a></td>
+            <td><a class="btn btn-sm btn-info" href="{% url 'student_profile' student.id %}">View</a></td>
         </tr>
         {% endfor %}
     </table>
@@ -22,7 +22,7 @@
 
 {% block content2 %}
     <h5 class="card-header">Update {{ student.first_name }}'s profile</h5><br>
-    <form method="POST" class="form-group" id="update_student_form">
+    <form method="POST" class="form-group" id="update_student_form" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="input-group mb-3">
             <div class="input-group-append">
@@ -108,6 +108,24 @@
             </div>
             {{form.military}}
         </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Image Upload (Optional)</span>
+            </div>
+        </div>
+        {{form.profile_image}}<br><br>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Resume Upload</span>
+            </div>
+        </div>
+        {{form.resume}}<br><br>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Transcript Upload</span>
+            </div>
+        </div>
+        {{form.transcript}}<br><br>
         <button id="update_student_submit_button" class="btn btn-primary" type="submit">Update</button>
     </form>
 {% endblock %}

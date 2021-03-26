@@ -29,6 +29,9 @@ def create_student(live_server, browser):
     browser.find_element_by_id('id_email').send_keys('test@test.com')
     browser.find_element_by_id('id_first_name').send_keys('test_first')
     browser.find_element_by_id('id_last_name').send_keys('test_last')
+    browser.find_element_by_id('id_university').send_keys('test@uiowa.edu')
+    browser.find_element_by_id('id_degree').send_keys('engineering')
+    browser.find_element_by_id('id_research_interests').send_keys('imaging')
     browser.find_element_by_id('create_student_submit_button').click()
 
 
@@ -36,6 +39,7 @@ def create_student(live_server, browser):
 def click_to_update(live_server, browser):
     assert browser.find_element_by_id('create_student_button')
     assert "test_first" in browser.page_source
+    browser.find_element_by_link_text("View").click()
     browser.find_element_by_link_text("Update").click()
 
 
