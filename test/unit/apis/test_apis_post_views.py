@@ -58,3 +58,41 @@ def test_student_portal_no_api():
     response = client.post(reverse('create_student_json'),
                            data, format='json')
     assert response.status_code == 403
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+   'email, first_name, last_name, code', [
+       ('test@gmail.com', 'first', 'last', 400),
+       ('hello@gmail.com', 'first', '', 400),
+       ('hello@gmail.com', '', 'last', 400),
+       ('hello3', 'first', 'last', 400),
+       ('', 'first', 'last', 400)
+   ]
+)
+
+@pytest.mark.django_db
+def test_student_portal_invalid(email,first_name,last_name,code):
+    student = Student.objects.create(email="test@gmail.com", first_name="first", last_name="second")
+    student.save()
+    obj = APIKey(
+        name="tester",
+        email="tester@uiowa.edu",
+
+    )
+
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    data = {
+        'email': email,
+        'first_name': first_name,
+        'last_name': last_name
+    }
+
+    response = client.post(reverse('create_student_json'),
+                           data, format='json')
+
+    assert response.status_code == code
