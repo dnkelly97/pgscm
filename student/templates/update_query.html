@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+    <h5 class="card-header">Update {{ student.first_name }}'s profile</h5><br>
+    <form id="query-form" method="get">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{save_query_form.query_name.label}}</span>
+            </div>
+            {{save_query_form.query_name}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{save_query_form.description.label}}</span>
+            </div>
+            {{save_query_form.description}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.name.label}}</span>
+            </div>
+            {{student_filter.form.name}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.school_year.label}}</span>
+            </div>
+            {{student_filter.form.school_year}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.degree.label}}</span>
+            </div>
+            {{student_filter.form.degree}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.university.label}}</span>
+            </div>
+            {{student_filter.form.university}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.research_interests.label}}</span>
+            </div>
+            {{student_filter.form.research_interests}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.gpa.label}}</span>
+            </div>
+            {{student_filter.form.gpa}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.ethnicity.label}}</span>
+            </div>
+            {{student_filter.form.ethnicity}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.gender.label}}</span>
+            </div>
+            {{student_filter.form.gender}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.country.label}}</span>
+            </div>
+            {{student_filter.form.country}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.us_citizenship.label}}</span>
+            </div>
+            {{student_filter.form.us_citizenship}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.first_generation.label}}</span>
+            </div>
+            {{student_filter.form.first_generation}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{student_filter.form.military.label}}</span>
+            </div>
+            {{student_filter.form.military}}
+        </div>
+        <button id="update_query_button" class="btn btn-primary" type="submit">Update Query</button>
+    </form>
+{% endblock %}
