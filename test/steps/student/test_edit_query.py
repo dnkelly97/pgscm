@@ -99,4 +99,5 @@ def assert_save_failure_message(logged_in_browser):
 
 @then("the name of the query should not be updated")
 def assert_name_of_query_not_updated(logged_in_browser, saved_query):
+    assert saved_query.query_name in logged_in_browser.page_source
     assert SavedQuery.objects.get(query_name=saved_query.query_name)
