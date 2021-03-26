@@ -12,6 +12,13 @@
                 <h4 class="card-header"><b>Update Query:</b> '{{ query_name }}'</h4><br>
                 <form id="query-form" method="post">
                     {% csrf_token %}
+                    {% if messages %}
+                    <div class="alert alert-danger">
+                        {% for message in messages %}
+                            {{ message }}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                     <label for="id_query_name"><b>Query Name:</b></label>
                     <div class="input-group mb-3">
                         {{save_query_form.query_name}}
