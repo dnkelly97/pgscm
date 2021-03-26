@@ -46,11 +46,7 @@ def define_stages(request, pipeline_id):
     success = True
     post = dict(request.POST)
     for i in range(len(stages)):
-        fields = {'name': post['name'][i],
-                  'stage_number': i+1,
-                  'time_window': post['time_window'][i],
-                  'advancement_condition': post['advancement_condition'][i],
-                  'pipeline': pipeline_id}
+        fields = {'name': post['name'][i], 'stage_number': i+1, 'time_window': post['time_window'][i], 'advancement_condition': post['advancement_condition'][i], 'pipeline': pipeline_id}
         form = UpdateStageForm(fields, instance=stages[i])
         if form.is_valid():
             stage = form.save()
