@@ -120,12 +120,14 @@
                         <p><strong>Transcript:</strong>{% if student.transcript %} <a href="{{ student.transcript.url }}"> Click Here</a>{% endif %}</p>
                     </div><br>
                     <div class="card card-body">
-                        <h6 class="card-title">Communication Log</h6><br>
-                        <form method="post" action="{% url 'student_profile' student.id %}">
-                            {% csrf_token %}
-                            <textarea name="message" placeholder="Message..."></textarea><br><br>
-                            <button id="submit_student_email_button" class="btn btn-primary" type="submit">Send</button>
-                        </form>
+                        <h6 class="card-title">Communication Log
+                            <small class="float-sm-right">
+                                <form method="post" action="{% url 'student_profile' student.id %}">
+                                    {% csrf_token %}
+                                    <button id="submit_student_email_button" class="btn btn-sm btn-info" type="submit">Request Update</button>
+                                </form>
+                            </small>
+                        </h6>
                     </div>
                 </div>
             </div>
