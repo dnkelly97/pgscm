@@ -7,7 +7,6 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 import pdb
 
-
 # Create your views here.
 @login_required(login_url='/login/')
 def dashboard(request):
@@ -41,7 +40,6 @@ def ajax_create_pipeline(request):
     return JsonResponse({'success': success, 'html': partial, 'pipeline_id': pipeline.id})
 
 
-#need to test this function with bdd test
 @login_required(login_url='login')
 def define_stages(request, pipeline_id):
     stages = Stage.objects.filter(pipeline=pipeline_id)
