@@ -100,6 +100,8 @@ def close_popup_select_query_open_popup(logged_in_browser, saved_query_2):
     WebDriverWait(logged_in_browser, 20).until(
         EC.presence_of_element_located((By.ID, "confirm_delete_message")))
     logged_in_browser.find_element_by_id('escape_popup').click()
+    WebDriverWait(logged_in_browser, 10).until(
+        EC.invisibility_of_element_located((By.ID, "delete_modal")))
     logged_in_browser.find_element_by_id(saved_query_2.query_name + " radio button").click()
     logged_in_browser.find_element_by_id("delete_query_button").click()
 
