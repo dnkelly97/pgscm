@@ -70,12 +70,9 @@ def run_saved_query(request, query_name):
 
 @login_required(login_url='login')
 def ajax_save_query(request):
-    query_fields = request.POST.copy()
-    query_name = query_fields.pop('query_name')[0]
-    description = query_fields.pop('description')[0]
-    query_fields.pop('csrfmiddlewaretoken')
-    saved_query_dict = {'query_name': query_name, 'description': description, 'query': query_fields}
+    saved_query_dict = parse_save_query_request(request.POST)
     saved_query_form = SavedQueryForm(saved_query_dict)
+    query_name = saved_query_dict['query_name']
     # breakpoint()
     if saved_query_form.is_valid():
         saved_query_form.save()
@@ -96,10 +93,21 @@ def ajax_save_query(request):
     return JsonResponse(response)
 
 
+def parse_save_query_request(post):
+    query_fields = post.copy()
+    query_name = query_fields.pop('query_name')[0]
+    description = query_fields.pop('description')[0]
+    query_fields.pop('csrfmiddlewaretoken')
+    return {'query_name': query_name, 'description': description, 'query': query_fields}
+
+
 def update_query(request, query_name):
     saved_query = SavedQuery.objects.get(query_name=query_name)
     students = Student.objects.all()
     student_filter = StudentFilter(saved_query.query, queryset=students)
+    if request.method == 'POST':
+        breakpoint()
+
     context = {'student_filter': student_filter, 'save_query_form': SavedQueryForm(instance=saved_query), "query_name": query_name}
     return render(request, 'update_query.html', context)
 
