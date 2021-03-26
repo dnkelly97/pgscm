@@ -29,3 +29,19 @@ def test_student_portal_valid():
                            data, format='json')
     assert response.status_code == 201
     assert 1 == length+1
+
+@pytest.mark.django_db
+def test_student_portal_false_api():
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + '12345678.ascdfbcjashfksndascdfbcjashfksnd')
+
+    data = {
+        'email': 'test@gmail.com',
+        'first_name': 'first',
+        'last_name': 'last'
+    }
+
+    response = client.post(reverse('create_student_json'),
+                           data, format='json')
+    assert response.status_code == 403
+
