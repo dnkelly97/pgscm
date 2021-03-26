@@ -13,7 +13,7 @@ PGSCM Dashboard
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">Pipelines</h5>
-                        <div class="container overflow-auto" style="max-height: 150px;">
+                        <div class="container overflow-auto" style="max-height: 200px;">
                             <form id="select_pipeline_form">
                                 <div id="pipeline_menu">
                                     {% include 'pipeline_menu.html' %}
@@ -22,7 +22,7 @@ PGSCM Dashboard
                         </div>
                     </div>
                 </div>
-                <a href="{% url 'create_pipeline' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_pipeline_button">Create Pipeline</a>
+                <a href="{% url 'build_pipeline' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_pipeline_button">Create Pipeline</a>
                 <button type="button" class="btn btn-primary" id="edit_pipeline_button" style="margin-top: 1%;">Edit Pipeline</button>
                 <button type="button" class="btn btn-primary" id="delete_pipeline_button" style="margin-top: 1%;">Delete Pipeline</button>
             </div>
@@ -30,7 +30,7 @@ PGSCM Dashboard
                 <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">Saved Queries</h5>
-                        <div class="container overflow-auto" style="max-height: 150px;">
+                        <div class="container overflow-auto" style="max-height: 200px;">
                             <form id="select_query_form">
                                 <div id="saved_query_menu">
                                     {% include 'saved_query_menu.html' %}
@@ -47,7 +47,7 @@ PGSCM Dashboard
         </div>
     </div>
 
-    <div class="modal" tabindex="-1" role="dialog" id="delete_modal">
+        <div class="modal" tabindex="-1" role="dialog" id="delete_modal">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">

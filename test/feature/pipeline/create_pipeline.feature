@@ -6,5 +6,6 @@ Feature: Administrator Create Pipeline Form
     Scenario: I am on the create pipeline page and I successfully create a pipeline
         Given I am on the create pipeline page
         When I fill out a name: <name>
+        When I fill out number of stages: <num_stages>
         And I click the create pipeline submit button
         Then I should be on the dashboard
