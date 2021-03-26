@@ -11,6 +11,8 @@ from django.template.loader import render_to_string
 from pipeline.models import SavedQueryForm, SavedQuery
 import pdb
 from django.core.files.storage import FileSystemStorage
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 # Create your views here.
@@ -144,6 +146,15 @@ def updateStudent(request, key):
 def studentProfile(request, key):
     students = Student.objects.all()
     student = Student.objects.get(id=key)
+
+    if request.method == 'POST':
+        message = request.POST['message']
+
+        send_mail('Contact Form',
+                  message,
+                  settings.EMAIL_HOST_USER,
+                  [student.email],
+                  fail_silently=False)
 
     context = {'students': students, 'student': student}
     return render(request, 'student_profile.html', context)
