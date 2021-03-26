@@ -121,6 +121,11 @@
                     </div><br>
                     <div class="card card-body">
                         <h6 class="card-title">Communication Log</h6><br>
+                        <form method="post" action="{% url 'student_profile' student.id %}">
+                            {% csrf_token %}
+                            <textarea name="message" placeholder="Message..."></textarea>
+                            <input type="submit" />
+                        </form>
                     </div>
                 </div>
             </div>
