@@ -148,13 +148,19 @@ def studentProfile(request, key):
     student = Student.objects.get(id=key)
 
     if request.method == 'POST':
-        message = request.POST['message']
 
         send_mail(subject='Update Request',
-                  message=message,
+                  message="Please update your information within the UIOWA database by following this link ",
                   from_email=settings.EMAIL_HOST_USER,
                   recipient_list=[student.email],
                   fail_silently=False)
 
     context = {'students': students, 'student': student}
     return render(request, 'student_profile.html', context)
+
+
+@login_required(login_url='login')
+def sendEmail(request):
+    students = Student.objects.all()
+    context = {'students': students}
+    return render(request, 'send_email.html', context)
