@@ -11,6 +11,8 @@ from django.template.loader import render_to_string
 from pipeline.models import SavedQueryForm, SavedQuery
 import pdb
 from django.core.files.storage import FileSystemStorage
+from django.urls import reverse
+from django.contrib import messages
 
 
 # Create your views here.
@@ -106,9 +108,15 @@ def update_query(request, query_name):
     students = Student.objects.all()
     student_filter = StudentFilter(saved_query.query, queryset=students)
     if request.method == 'POST':
-        breakpoint()
-
-    context = {'student_filter': student_filter, 'save_query_form': SavedQueryForm(instance=saved_query), "query_name": query_name}
+        update_dict = parse_save_query_request(request.POST)
+        update_form = SavedQueryForm(update_dict, instance=saved_query)
+        if update_form.is_valid():
+            update_form.save()
+            return redirect(reverse('dashboard'))
+        else:
+            messages.error(request, 'Query could not be saved because one or more fields were invalid.')
+    context = {'student_filter': student_filter, 'save_query_form': SavedQueryForm(instance=saved_query),
+               "query_name": query_name}
     return render(request, 'update_query.html', context)
 
 
