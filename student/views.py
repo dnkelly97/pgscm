@@ -97,6 +97,10 @@ def ajax_save_query(request):
     return JsonResponse(response)
 
 
+def update_query(request, query_name):
+    pass
+
+
 @login_required(login_url='login')
 def deleteStudent(request, key):
     student = Student.objects.get(id=key)
