@@ -5,6 +5,14 @@ from django_filters import CharFilter
 from .models import Student
 
 
+def query_degree(queryset, name, value):
+    return queryset.filter(Q(degree__icontains=value))
+
+
+def query_uni(queryset, name, value):
+    return queryset.filter(Q(university__icontains=value))
+
+
 def query_interest(queryset, name, value):
     return queryset.filter(Q(research_interests__icontains=value))
 
@@ -16,6 +24,8 @@ def query_combined(queryset, name, value):
 class StudentFilter(django_filters.FilterSet):
     name = CharFilter(method=query_combined, label="Search by name/email")
     research_interests = CharFilter(method=query_interest, label="Research of Interest")
+    university = CharFilter(method=query_uni, label="University")
+    degree = CharFilter(method=query_degree, label="Degree")
 
     class Meta:
         model = Student

@@ -6,7 +6,7 @@
 
 {% block content1 %}
     <h5 class="card-header">Create Student</h5><br>
-    <form method="POST" class="form-group" id="create_student_form">
+    <form method="POST" class="form-group" id="create_student_form" enctype="multipart/form-data">
         {% csrf_token %}
         <div class="input-group mb-3">
             <div class="input-group-append">
@@ -91,6 +91,24 @@
                 <span class="input-group-text">{{form.military.label}}</span>
             </div>
             {{form.military}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Image Upload (Optional)</span>
+            </div><br>
+            &nbsp;&nbsp;{{form.profile_image}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Resume Upload</span>
+            </div><br>
+            &nbsp;&nbsp;{{form.resume}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">Transcript Upload</span>
+            </div><br>
+            &nbsp;&nbsp;{{form.transcript}}
         </div>
         <button id="create_student_submit_button" class="btn btn-primary" type="submit">Create</button>
     </form>

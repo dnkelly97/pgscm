@@ -23,7 +23,8 @@ def students_setup(live_server, browser):
 
 @when("I go to the 'dashboard'")
 def dashboard_location(live_server, browser):
-    student = Student.objects.create(email='hello@gmail.com', first_name='Joe', last_name='Chaplin')
+    student = Student.objects.create(email='hello@gmail.com', first_name='Joe', last_name='Chaplin', degree='testDeg',
+                                     university='Uni', research_interests=['testRea'])
     student.save()
     student2 = Student.objects.create(email='hello12@gmail.com', first_name='Joey', last_name='Morrow')
     student2.save()
@@ -50,6 +51,9 @@ def setup_attributes(live_server, browser):
 @when("I go to the queried 'dashboard'")
 def queried_dashboard(browser):
     browser.find_element_by_id('id_name').send_keys('Joe')
+    browser.find_element_by_id('id_degree').send_keys('testDeg')
+    browser.find_element_by_id('id_university').send_keys('Uni')
+    browser.find_element_by_id('id_research_interests').send_keys('testRea')
     browser.find_element_by_id('id_submit_filter').click()
 
 

@@ -7,6 +7,7 @@ urlpatterns = [
     path('create/', views.createPage, name='create_student'),
     path('delete_student/<str:key>', views.deleteStudent, name='delete_student'),
     path('update_student/<str:key>', views.updateStudent, name='update_student'),
-    path('run_query/<str:query_name>', views.run_saved_query, name='run_saved_query')
+    path('run_query/<str:query_name>', views.run_saved_query, name='run_saved_query'),
+    path('student_prfile/<str:key>', views.studentProfile, name='student_profile')
 ]
 

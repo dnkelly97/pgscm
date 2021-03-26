@@ -3,13 +3,17 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django.contrib.postgres.fields import ArrayField
 
+
 class Student(models.Model):
-    #Initial criteria
+    # Initial criteria
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
+    resume = models.FileField(upload_to='documents/', null=True, blank=True)
+    transcript = models.FileField(upload_to='documents/', null=True, blank=True)
+    profile_image = models.ImageField(upload_to='images/', null=True, blank=True)
 
-    #School Related
+    # School Related
     class YearInSchool(models.TextChoices):
         FRESHMAN = 'FR', _('Freshman')
         SOPHOMORE = 'SO', _('Sophomore')
@@ -27,13 +31,12 @@ class Student(models.Model):
     research_interests = ArrayField(
         models.CharField(max_length=55),blank=True,null=True
     )
+    degree = models.CharField(max_length=255, blank=True)
+    university = models.CharField(max_length=255, blank=True)
+    gpa = models.FloatField(blank=True, null=True)
 
-    degree = models.CharField(max_length=255,blank=True)
-    university = models.CharField(max_length=255,blank=True)
-    gpa = models.FloatField(blank=True,null=True)
-
-    #demographic info
-    #https://usg.uiowa.edu/assets/Documents/Reports-Guides-and-Plans/UISG-2018-2019-Fall-Demographics-Report.pdf
+    # demographic info
+    # https://usg.uiowa.edu/assets/Documents/Reports-Guides-and-Plans/UISG-2018-2019-Fall-Demographics-Report.pdf
     class Ethnicity(models.TextChoices):
         ASIAN = 'A', _('Asian American')
         BLACK = 'B', _('Black / African American')
@@ -66,10 +69,10 @@ class Student(models.Model):
         default=Gender.UNKNOWN
     )
 
-    country = CountryField(blank_label='(select country)',null=True,blank=True)
-    us_citizenship = models.BooleanField(blank=True,null=True)
-    first_generation = models.BooleanField(blank=True,null=True)
-    military = models.BooleanField(blank=True,null=True)
+    country = CountryField(blank_label='(select country)', null=True, blank=True)
+    us_citizenship = models.BooleanField(blank=True, null=True)
+    first_generation = models.BooleanField(blank=True, null=True)
+    military = models.BooleanField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
