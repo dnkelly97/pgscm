@@ -1,7 +1,5 @@
 
 <div class="modal-body">
-    {{ forms }}
-    {{ stages }}
     {% for form in forms %}
         <hr/>
         <br>
@@ -9,23 +7,23 @@
 
         <div>
             <label for="{{ form.name.id_for_label }}"> Name: </label>
-                <p> {{ form.name }} </p>
+                <p>  {{ form.name }} </p>
         </div>
         <br>
         <div>
             <label for="{{ form.time_window.id_for_label }}"> Name: </label>
-                <p> {{ form.time_window }} </p>
+                <p>  {{  form.time_window }} </p>
         </div>
         <br>
         <div>
             <label for="{{ form.advancement_condition.id_for_label }}"> Advancement Condition: </label>
-                <p> {{ form.advancement_condition }} </p>
+                <p>  {{ form.advancement_condition }} </p>
         </div>
     {% endfor %}
 </div>
 <div class="modal-footer">
     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-    <button type="submit" value="SUBMIT" formmethod="post" class="btn btn-primary">Save changes</button>
+    <button id="define_stages_submit_button" type="submit" value="SUBMIT" formmethod="post" class="btn btn-primary">Save changes</button>
 </div>
 
 
