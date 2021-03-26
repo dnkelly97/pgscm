@@ -59,6 +59,17 @@ def student(request):
 
 
 @login_required(login_url='login')
+def run_saved_query(request, query_name):
+    # get saved_query form db
+    saved_query = SavedQuery.objects.get(query_name=query_name).query
+    students = Student.objects.all()
+    student_filter = StudentFilter(saved_query, queryset=students)
+    students = student_filter.qs
+    context = {'students': students, 'student_filter': student_filter, 'save_query_form': SavedQueryForm()}
+    return render(request, 'home.html', context)
+
+
+@login_required(login_url='login')
 def ajax_save_query(request):
     query_fields = request.POST.copy()
     query_name = query_fields.pop('query_name')[0]
