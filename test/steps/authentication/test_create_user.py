@@ -4,7 +4,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import NoSuchElementException
 
 
-@scenario('../feature/create_user.feature', 'Create New User as an Admin')
+@scenario('../../feature/authentication/create_user.feature', 'Create New User as an Admin')
 def test_create_user(live_server):
     pass
 
@@ -35,7 +35,7 @@ def redirect_dashboard(live_server, browser):
     assert browser.find_element_by_id('id_dashboard')
 
 
-@scenario('../feature/create_user.feature', 'Unable to create user as non admin')
+@scenario('../../feature/authentication/create_user.feature', 'Unable to create user as non admin')
 def test_non_admin_cannot_create_user(live_server):
     pass
 
