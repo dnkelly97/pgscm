@@ -79,3 +79,24 @@ def assert_query_name_updated(logged_in_browser, saved_query):
         assert False
     except SavedQuery.DoesNotExist:
         assert True
+
+
+@scenario("../../feature/student/edit_query.feature", "Change name field to invalid name")
+def test_change_field_invalid(logged_in_browser, saved_query, saved_query2):
+    pass
+
+
+@given("I change the name of a query to an unavailable name")
+def change_query_name_invalid(logged_in_browser, saved_query2):
+    logged_in_browser.find_element_by_id("id_query_name").clear()
+    logged_in_browser.find_element_by_id("id_query_name").send_keys(saved_query2.query_name)
+
+
+@then("I should see a message telling me the query couldn't be saved")
+def assert_save_failure_message(logged_in_browser):
+    assert "Query could not be saved because one or more fields were invalid." in logged_in_browser.page_source
+
+
+@then("the name of the query should not be updated")
+def assert_name_of_query_not_updated(logged_in_browser, saved_query):
+    assert SavedQuery.objects.get(query_name=saved_query.query_name)
