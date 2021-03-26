@@ -11,6 +11,7 @@ class PipelineFactory(factory.django.DjangoModelFactory):
         model = Pipeline
 
     name = factory.Sequence(lambda n: f'Pipeline {n}')
+    num_stages = factory.Sequence(lambda n: 1)
 
 
 class SavedQueryFactory(factory.django.DjangoModelFactory):
