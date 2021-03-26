@@ -60,7 +60,6 @@ def student(request):
 
 @login_required(login_url='login')
 def run_saved_query(request, query_name):
-    # get saved_query form db
     saved_query = SavedQuery.objects.get(query_name=query_name).query
     students = Student.objects.all()
     student_filter = StudentFilter(saved_query, queryset=students)
@@ -98,7 +97,11 @@ def ajax_save_query(request):
 
 
 def update_query(request, query_name):
-    pass
+    saved_query = SavedQuery.objects.get(query_name=query_name)
+    students = Student.objects.all()
+    student_filter = StudentFilter(saved_query.query, queryset=students)
+    context = {'student_filter': student_filter, 'save_query_form': SavedQueryForm(instance=saved_query), "query_name": query_name}
+    return render(request, 'update_query.html', context)
 
 
 @login_required(login_url='login')
