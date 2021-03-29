@@ -28,7 +28,7 @@ $(document).ready(function() {
                     type: 'get',
                     url: '/pipeline/get_stages/',
                     success: function(response) {
-
+                        $("#define_stages").html(response['html'])
                     },
                     error: function (request, status, error) {
                          console.log(request.responseText);

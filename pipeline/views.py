@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect, reverse
-from .models import Pipeline, Stage
-from .models import SavedQuery
+from .models import Pipeline, Stage, SavedQuery
 from django.contrib.auth.decorators import login_required
 from pipeline.forms import CreateForm, UpdateStageForm
 from django.template.loader import render_to_string
@@ -24,8 +23,13 @@ def build_pipeline_page(request):
 
 @login_required(login_url='login')
 def ajax_get_stages(request):
-    breakpoint()
-    pass
+    num_stages = int(request.GET['num_stages'])
+    stage_forms = []
+    for i in range(num_stages):
+        stage = Stage(name="Stage " + str(i + 1))
+        stage_forms.append(UpdateStageForm(instance=stage))
+    partial = render_to_string('define_stages.html', {'forms': stage_forms})
+    return JsonResponse({'success': True, 'html': partial})
 
 
 @login_required(login_url='login')
