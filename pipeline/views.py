@@ -34,7 +34,7 @@ def ajax_get_stages(request):
 
 @login_required(login_url='login')
 def ajax_create_pipeline(request):
-    breakpoint()
+    # breakpoint()
     form = CreateForm(request.POST)
     pipeline = Pipeline.objects.all().order_by('id').last()
     if form.is_valid():
