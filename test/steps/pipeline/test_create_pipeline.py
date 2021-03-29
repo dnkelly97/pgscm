@@ -5,6 +5,25 @@ from selenium.webdriver.common.keys import Keys
 from django.urls import reverse
 
 
+@pytest.mark.django_db
+@scenario("../../feature/pipeline/create_pipeline.feature", "Change the number of stages")
+def test_change_num_stages(logged_in_browser):
+    pass
+
+
+@when("I change the number of stages")
+def change_num_stages(logged_in_browser):
+    logged_in_browser.find_element_by_id("id_num_stages").send_keys('2')
+    logged_in_browser.find_element_by_id("id_num_stages").send_keys(Keys.RETURN)
+
+
+@then("I should see fields for creating a stage equal to the number of stages selected")
+def assert_fields_for_correct_num_stages(logged_in_browser):
+    assert len(logged_in_browser.find_elements_by_xpath("//input[@name='time_window']")) == 2
+    assert len(logged_in_browser.find_elements_by_xpath("//select[@name='advancement_condition']")) == 2
+    assert len(logged_in_browser.find_elements_by_xpath("//input[@name='name']")) == 3
+
+
 @pytest.mark.parametrize(
     ['name', 'num_stages'],
     [
@@ -18,14 +37,8 @@ def test_pipeline_create_display(live_server, name, num_stages):
 
 
 @given("I am on the create pipeline page")
-def pipeline_create_setup(live_server, browser):
-    browser.get(live_server + '/')
-    user = User.objects.create_user('administrator', 'administrator@uiowa.edu', 'admin123456')
-    user.is_superuser = False
-    user.save()
-    browser.find_element_by_id('id_username').send_keys('administrator')
-    browser.find_element_by_id('id_password').send_keys('admin123456', Keys.RETURN)
-    browser.get(live_server + reverse('build_pipeline'))#change back to build
+def pipeline_create_setup(live_server, logged_in_browser):
+    logged_in_browser.get(live_server + reverse('build_pipeline'))
 
 
 @when("I fill out a name: <name>")

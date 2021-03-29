@@ -3,6 +3,11 @@ Feature: Administrator Create Pipeline Form
     So that I can manually create a pipeline
     I want to be able to fill out a form to create a pipeline
 
+    Scenario: Change the number of stages
+        Given I am on the create pipeline page
+        When I change the number of stages
+        Then I should see fields for creating a stage equal to the number of stages selected
+
     Scenario: I am on the create pipeline page and I successfully create a pipeline
         Given I am on the create pipeline page
         When I fill out a name: <name>
