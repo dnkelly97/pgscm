@@ -11,6 +11,7 @@
             <div class="col-8">
                 <div class="card card-body">
                     <h5 class="card-header"><b>Create Pipeline</b></h5><br>
+                    <div class="alert alert-danger" style="display: none;" id="message"></div>
                     <form method="POST" class="form-group" id="create_pipeline_form">
                         {% csrf_token %}
                         <div class="input-group mb-3">
