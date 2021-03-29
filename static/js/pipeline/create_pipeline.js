@@ -24,7 +24,7 @@ $(document).ready(function() {
         $("#id_num_stages").on('change', function(event) {
             event.preventDefault();
             var num_stages = $('#id_num_stages');
-            if(num_stages.val() != '0'){
+            if(parseInt(num_stages.val()) > 0){
                 document.getElementById("message").style = "display: none;";
                 $.ajax({ data: num_stages.serialize(),
                     type: 'get',
