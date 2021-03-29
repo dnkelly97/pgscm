@@ -5,26 +5,33 @@
 {% block title %}Create a Pipeline{% endblock %}
 
 {% block content %}
-    <h5 class="card-header">Create Pipeline</h5><br>
-    <form method="POST" class="form-group" id="create_pipeline_form">
-        {% csrf_token %}
-        <div class="input-group mb-3">
-            <div class="input-group-append">
-                <span class="input-group-text">{{form.name.label}}</span>
+    <br>
+    <div class="container-fluid offset-2">
+        <div class="row">
+            <div class="col-8">
+                <div class="card card-body">
+                    <h5 class="card-header"><b>Create Pipeline</b> '{{ query_name }}'</h5><br>
+                    <form method="POST" class="form-group" id="create_pipeline_form">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.name.label}}</span>
+                            </div>
+                            {{form.name}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.num_stages.label}}</span>
+                            </div>
+                            {{form.num_stages}}
+                        </div>
+                        <div id="define_stages"></div>
+                        <button id="create_pipeline_submit_button" name="create_pipeline_submit" class="btn btn-primary" style="display: none;" type="submit">Create</button>
+                    </form>
+                </div>
             </div>
-            {{form.name}}
         </div>
-        <div class="input-group mb-3">
-            <div class="input-group-append">
-                <span class="input-group-text">{{form.num_stages.label}}</span>
-            </div>
-            {{form.num_stages}}
-        </div>
-        <div id="define_stages"></div>
-        <button id="create_pipeline_submit_button" name="create_pipeline_submit" class="btn btn-primary" type="submit">Create</button>
-    </form>
-
-
+    </div>
 {% endblock %}
 
 {% block javascript %}

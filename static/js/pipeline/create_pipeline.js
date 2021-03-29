@@ -29,6 +29,7 @@ $(document).ready(function() {
                     url: '/pipeline/get_stages/',
                     success: function(response) {
                         $("#define_stages").html(response['html'])
+                        document.getElementById("create_pipeline_submit_button").style = "display: block;";
                     },
                     error: function (request, status, error) {
                          console.log(request.responseText);
