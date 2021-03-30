@@ -16,8 +16,7 @@ def json_view(request, format=None):
     key = request.META["HTTP_AUTHORIZATION"].split()[1]
     api_key = APIKey.objects.get_from_key(key)
     if api_key != None:
-        data= JSONParser().parse(request)
-        serializer = StudentSerializer(data=data)
+        serializer = StudentSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
