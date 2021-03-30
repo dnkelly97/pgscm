@@ -29,7 +29,7 @@ DATABASES = {
 }
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'staticfiles/images/')
 
 # these are for facilitating emails so users can reset their passwords
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
