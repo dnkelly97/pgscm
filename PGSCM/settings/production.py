@@ -29,6 +29,9 @@ DATABASES = {
 }
 
 DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+AZURE_ACCOUNT_NAME = 'pgscm'
+AZURE_ACCOUNT_KEY = '9+DnT2rlGVQk3272GEokrhqlAHC+B584XgknJXDLmGary2RgVxjGtFP4zgNJwnV+MPhKRmEkTPQAUk9Mh89QRQ=='
+AZURE_CONTAINER = 'pgscm-container'
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'staticfiles/images/')
 
