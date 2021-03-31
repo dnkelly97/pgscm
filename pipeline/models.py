@@ -16,7 +16,7 @@ class SavedQuery(models.Model):
 
 
 class Pipeline(models.Model):
-    source = models.ForeignKey(SavedQuery, on_delete=models.CASCADE, default=5)  ##this needs to be changed at some point to always point to a saved query that is all students
+    source = models.ForeignKey(SavedQuery, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=60, unique=True)
     description = models.TextField(blank=True, null=True)
     num_stages = models.IntegerField(
