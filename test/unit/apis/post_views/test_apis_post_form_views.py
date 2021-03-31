@@ -4,7 +4,6 @@ from django.urls import reverse
 from student.models import Student
 from rest_framework.test import APIRequestFactory
 from apis.post_views import form_view
-from django.test import Client
 
 @pytest.mark.django_db
 def test_student_portal_valid_form():

@@ -7,7 +7,6 @@ from .models import *
 from django.http.response import JsonResponse
 from .serializers import StudentSerializer
 from rest_framework import status
-from rest_framework.test import APIRequestFactory
 
 @api_view(['POST'])
 @parser_classes([JSONParser])
