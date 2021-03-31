@@ -80,7 +80,10 @@ class TestPipelineViews:
                         'time_window': ['30'], 'advancement_condition': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
-        assert 'PGSCM Dashboard' in response.content
+        assert json.loads(response.content)['success']
+
+    def test_create_pipeline_bad_name(self, rf, user):
+        pass
 
 
 class TestPipelineModel:
