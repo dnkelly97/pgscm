@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 class Pipeline(models.Model):
     name = models.CharField(max_length=60, unique=True)
+    description = models.TextField(blank=True, null=True)
     num_stages = models.IntegerField(
         default=1,
         validators=[
