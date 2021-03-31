@@ -28,12 +28,15 @@ DATABASES = {
     }
 }
 
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-AZURE_ACCOUNT_NAME = 'pgscm'
-AZURE_ACCOUNT_KEY = '9+DnT2rlGVQk3272GEokrhqlAHC+B584XgknJXDLmGary2RgVxjGtFP4zgNJwnV+MPhKRmEkTPQAUk9Mh89QRQ=='
-AZURE_CONTAINER = 'pgscm-container'
+AWS_ACCESS_KEY_ID = os.environ['AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['AWS_SECRET_ACCESS_KEY']
+AWS_STORAGE_BUCKET_NAME = os.environ['AWS_STORAGE_BUCKET_NAME']
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+#STATICFILES_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'staticfiles/images/')
+MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images/')
 
 # these are for facilitating emails so users can reset their passwords
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
