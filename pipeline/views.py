@@ -33,6 +33,11 @@ def ajax_get_stages(request):
 
 
 @login_required(login_url='login')
+def create_pipeline(request):
+    pass
+
+
+@login_required(login_url='login')
 def ajax_create_pipeline(request):
     # breakpoint()
     form = CreateForm(request.POST)
