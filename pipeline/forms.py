@@ -3,11 +3,10 @@ from pipeline.models import Pipeline, Stage
 from django.forms import ModelForm
 
 
-class CreateForm(ModelForm):
+class CreatePipelineForm(ModelForm):
     class Meta:
         model = Pipeline
-        fields = ['name', 'num_stages',
-                  ]
+        fields = ['name', 'num_stages']
 
 
 class UpdateStageForm(ModelForm):
