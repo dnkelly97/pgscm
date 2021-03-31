@@ -64,6 +64,15 @@ class TestPipelineViews:
         assert not response_dict['success']
         assert not response_dict['html']
 
+    def test_ajax_get_stages(self, rf, user):
+        request = rf.get('/pipeline/get_stages')
+        request.user = user
+        request.GET = {'num_stages': 3}
+        response = ajax_get_stages(request)
+        response_dict = json.loads(response.content)
+        assert response.status_code == 200
+        assert "Stage 3" in response_dict['html']
+
 
 class TestPipelineModel:
 
