@@ -38,4 +38,4 @@ django-filter~=2.4.0
 Pillow==8.1.2
 whitenoise==5.2.0
 django-storages==1.1.8
-boto3==1.11.7
+boto3==1.17.41
