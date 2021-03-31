@@ -16,13 +16,19 @@
         </div>
         <div class="input-group mb-3">
             <div class="input-group-append">
-                <span class="input-group-text">{{form.name.label}}:</span>
+                <span class="input-group-text">{{form.name.label}}</span>
             </div>
             {{form.name}}
         </div>
         <div class="input-group mb-3">
             <div class="input-group-append">
-                <span class="input-group-text">Number of stages:</span>
+                <span class="input-group-text">{{form.description.label}}</span>
+            </div>
+            {{form.description}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.num_stages.label}}</span>
             </div>
             {{form.num_stages}}
         </div>

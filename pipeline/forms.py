@@ -6,7 +6,7 @@ from django.forms import ModelForm
 class CreateForm(ModelForm):
     class Meta:
         model = Pipeline
-        fields = ['source', 'name', 'num_stages',
+        fields = ['source', 'name', 'num_stages', 'description',
                   ]
 
 
