@@ -18,7 +18,8 @@ def dashboard(request):
 
 @login_required(login_url='login')
 def build_pipeline_page(request):
-    context = {'form': CreateForm}
+    saved_queries = SavedQuery.objects.all()
+    context = {'form': CreateForm, 'saved_queries': saved_queries}
     return render(request, 'create_pipeline.html', context)
 
 
