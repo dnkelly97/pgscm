@@ -157,7 +157,8 @@ def updateStudent(request, key):
                 transcript = fs.save(uploaded_file_1.name, uploaded_file_1)
                 fs.url(transcript)
 
-            return redirect('student')
+            context = {'students': students, 'student': student}
+            return render(request, 'student_profile.html', context)
 
     context = {'form': form, 'students': students, 'student': student}
     return render(request, 'update_student.html', context)
