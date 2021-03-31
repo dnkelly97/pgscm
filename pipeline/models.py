@@ -3,9 +3,17 @@ from django.db import models
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 # Create your models here.
+from student.models import Student
+
+
+class SavedQuery(models.Model):
+    query_name = models.CharField(max_length=60, unique=True)
+    description = models.TextField(blank=True, null=True)
+    query = models.JSONField(null=True)
 
 
 class Pipeline(models.Model):
+    source = models.ForeignKey(SavedQuery, on_delete=models.CASCADE, default=5)  ##this needs to be changed at some point to always point to a saved query that is all students
     name = models.CharField(max_length=60, unique=True)
     num_stages = models.IntegerField(
         default=1,
@@ -23,12 +31,6 @@ class Pipeline(models.Model):
                                      advancement_condition='none').save()
 
 
-class SavedQuery(models.Model):
-    query_name = models.CharField(max_length=60, unique=True)
-    description = models.TextField(blank=True, null=True)
-    query = models.JSONField(null=True)
-
-
 class SavedQueryForm(ModelForm):
     class Meta:
         model = SavedQuery
@@ -38,6 +40,7 @@ class SavedQueryForm(ModelForm):
 class Stage(models.Model):
     pipeline = models.ForeignKey(Pipeline, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
+    students = models.ManyToManyField(Student)
     stage_number = models.IntegerField(
         validators=[
             MinValueValidator(1)
