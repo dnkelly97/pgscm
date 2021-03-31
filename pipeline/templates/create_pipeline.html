@@ -6,35 +6,23 @@
 
 {% block content %}
     <h5 class="card-header">Create Pipeline</h5><br>
-
-    <div class="col-6">
-        <div class="card h-100">
-            <div class="card-body">
-                <h5 class="card-title">Select Pipeline Source</h5>
-                <div class="container overflow-auto" style="max-height: 200px;">
-                    <form id="select_query_form">
-                        <div id="saved_query_menu">
-                            {% include 'saved_query_menu.html' %}
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <br>
-    <br>
-
     <form method="POST" class="form-group" id="create_pipeline_form">
         {% csrf_token %}
         <div class="input-group mb-3">
             <div class="input-group-append">
-                <span class="input-group-text">{{form.name.label}}</span>
+                <span class="input-group-text">{{form.source.label}}</span>
+            </div>
+            {{form.source}}
+        </div>
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text">{{form.name.label}}:</span>
             </div>
             {{form.name}}
         </div>
         <div class="input-group mb-3">
             <div class="input-group-append">
-                <span class="input-group-text">{{form.num_stages.label}}</span>
+                <span class="input-group-text">Number of stages:</span>
             </div>
             {{form.num_stages}}
         </div>
