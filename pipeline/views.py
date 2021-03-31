@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect, reverse
 from .models import Pipeline, Stage, SavedQuery
 from django.contrib.auth.decorators import login_required
-from pipeline.forms import CreateForm, UpdateStageForm
+from pipeline.forms import CreatePipelineForm, UpdateStageForm
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.http import JsonResponse
@@ -17,7 +17,7 @@ def dashboard(request):
 
 @login_required(login_url='login')
 def build_pipeline_page(request):
-    context = {'form': CreateForm}
+    context = {'form': CreatePipelineForm}
     return render(request, 'create_pipeline.html', context)
 
 
@@ -34,13 +34,32 @@ def ajax_get_stages(request):
 
 @login_required(login_url='login')
 def create_pipeline(request):
-    pass
+    post = dict(request.POST)
+    pipeline_info = {'name': post['name'].pop(0), 'num_stages': post['num_stages'][0]}
+    pipeline_form = CreatePipelineForm(pipeline_info)
+    if pipeline_form.is_valid():
+        pipeline = pipeline_form.save(commit=False)  # todo bring this back after rest is functional
+        stages = Stage.objects.filter(pipeline=pipeline.id)
+        for i in range(len(stages)):
+            fields = {'name': post['name'][i], 'stage_number': i + 1, 'time_window': post['time_window'][i],
+                      'advancement_condition': post['advancement_condition'][i]}
+            stage_form = UpdateStageForm(fields, instance=stages[i])
+            if stage_form.is_valid():
+                stage_form.save()
+            else:
+                pipeline.delete()
+                return JsonResponse({'success': False, 'message': f'Stage {i} invalid'})
+        return JsonResponse({'success': True})
+    elif pipeline_form.errors['name']:
+        return JsonResponse({'success': False, 'message': pipeline_form.errors['name']})
+    elif pipeline_form.errors['num_stages']:
+        return JsonResponse({'success': False, 'message': pipeline_form.errors['name']})
 
 
 @login_required(login_url='login')
 def ajax_create_pipeline(request):
     # breakpoint()
-    form = CreateForm(request.POST)
+    form = CreatePipelineForm(request.POST)
     pipeline = Pipeline.objects.all().order_by('id').last()
     if form.is_valid():
         success = True
