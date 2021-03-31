@@ -73,6 +73,15 @@ class TestPipelineViews:
         assert response.status_code == 200
         assert "Stage 3" in response_dict['html']
 
+    def test_create_pipeline(self, rf, user):
+        request = rf.get('/pipeline/create')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'name': ['pipeline name', 'stage 1 name'], 'num_stages': ['1'],
+                        'time_window': ['30'], 'advancement_condition': ['None']}
+        response = create_pipeline(request)
+        assert response.status_code == 200
+        assert 'PGSCM Dashboard' in response.content
+
 
 class TestPipelineModel:
 
