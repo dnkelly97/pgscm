@@ -121,6 +121,11 @@ class TestPipelineViews:
         except Stage.DoesNotExist:
             assert True
 
+    def test_build_pipeline(self, logged_in_client):
+        url = reverse('build_pipeline')
+        response = logged_in_client.get(url)
+        assert response.status_code == 200
+
 
 class TestPipelineModel:
 
