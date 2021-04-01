@@ -10,9 +10,9 @@ from django.template.loader import render_to_string
 import json
 
 
+@pytest.mark.django_db
 class TestPipelineViews:
 
-    @pytest.mark.django_db
     def test_dashboard_view(self, logged_in_client):
         url = reverse('dashboard')
         response = logged_in_client.get(url)
@@ -82,8 +82,42 @@ class TestPipelineViews:
         assert response.status_code == 200
         assert json.loads(response.content)['success']
 
-    def test_create_pipeline_bad_name(self, rf, user):
-        pass
+    def test_create_pipeline_bad_pipeline(self, rf, user):
+        request = rf.get('/pipeline/create')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'name': ['pipeline name', 'stage 1 name'], 'num_stages': ['0'],
+                        'time_window': ['30'], 'advancement_condition': ['None']}
+        response = create_pipeline(request)
+        assert response.status_code == 200
+        content = json.loads(response.content)
+        assert not content['success']
+        assert content['message'] == "A pipeline must have at least one stage"
+        try:
+            Pipeline.objects.get(name="pipeline name")
+            assert False
+        except Pipeline.DoesNotExist:
+            assert True
+
+    def test_create_pipeline_bad_stage(self, rf, user):
+        request = rf.get('/pipeline/create')
+        request.user = user
+        request.POST = {'csrf_token': 'fake_token', 'name': ['pipeline name', 'stage 1 name'], 'num_stages': ['1'],
+                        'time_window': ['-1'], 'advancement_condition': ['None']}
+        response = create_pipeline(request)
+        assert response.status_code == 200
+        content = json.loads(response.content)
+        assert not content['success']
+        assert content['message'] == 'Stage 1 invalid'
+        try:
+            Pipeline.objects.get(name="pipeline name")
+            assert False
+        except Pipeline.DoesNotExist:
+            assert True
+        try:
+            Stage.objects.get(name="stage 1 name")
+            assert False
+        except Stage.DoesNotExist:
+            assert True
 
 
 class TestPipelineModel:
