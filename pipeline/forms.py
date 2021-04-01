@@ -1,13 +1,16 @@
 from django.forms import ModelForm
 from pipeline.models import Pipeline, Stage
-from django.forms import ModelForm
+from django.forms import ModelForm, Textarea
 
 
-class CreateForm(ModelForm):
+class CreatePipelineForm(ModelForm):
     class Meta:
         model = Pipeline
         fields = ['name', 'num_stages', 'description'
                   ]
+        widgets = {
+            'description': Textarea(attrs={'rows': 3, 'cols': 40})
+        }
 
 
 class UpdateStageForm(ModelForm):
