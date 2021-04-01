@@ -5,6 +5,9 @@ from .decorators import admin_api_func
 from .forms import CreateForm
 from django.http import JsonResponse
 from django.urls import reverse
+from django.core.mail import send_mail,BadHeaderError
+from smtplib import SMTPException
+from django.conf import settings
 
 
 @admin_api_func
@@ -16,12 +19,27 @@ def apis(request):
 
         if form.is_valid():
             obj = form.save(commit=False)
-            APIKey.objects.assign_key(obj)
+            key = APIKey.objects.assign_key(obj)
+
+            try:
+                send_mail(subject="App Permissions",
+                          message="Your API key is: " + key +"\n\n"+
+                                  "This will only be sent to you once, so please store in a safe place." +
+                                  "If your API key expires or you lose it, please contact the Admin immediately.",
+                          from_email=settings.EMAIL_HOST_USER,
+                          recipient_list=[obj.email],
+                          fail_silently=False)
+
+            except BadHeaderError:  # If mail's Subject is not properly formatted.
+                print('Invalid header found.')
+            except SMTPException as e:  # It will catch other errors related to SMTP.
+                print('There was an error sending an email.' + str(e))
+            except:  # It will catch All other possible errors.
+                print("Mail Sending Failed!")
             obj.save()
             response = redirect('api')
             messages.success(request, 'Creation successful...')
             return response
-
         else:
             messages.error(request, 'Email already in system')
 
