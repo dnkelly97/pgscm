@@ -38,7 +38,7 @@ def create_pipeline(request):
     pipeline_info = {'name': post['name'].pop(0), 'num_stages': post['num_stages'][0]}
     pipeline_form = CreatePipelineForm(pipeline_info)
     if pipeline_form.is_valid():
-        pipeline = pipeline_form.save(commit=False)  # todo bring this back after rest is functional
+        pipeline = pipeline_form.save()
         stages = Stage.objects.filter(pipeline=pipeline.id)
         for i in range(len(stages)):
             fields = {'name': post['name'][i], 'stage_number': i + 1, 'time_window': post['time_window'][i],
@@ -48,12 +48,16 @@ def create_pipeline(request):
                 stage_form.save()
             else:
                 pipeline.delete()
-                return JsonResponse({'success': False, 'message': f'Stage {i} invalid'})
+                return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
         return JsonResponse({'success': True})
-    elif pipeline_form.errors['name']:
-        return JsonResponse({'success': False, 'message': pipeline_form.errors['name']})
-    elif pipeline_form.errors['num_stages']:
-        return JsonResponse({'success': False, 'message': pipeline_form.errors['name']})
+    try:
+        pipeline_form.errors['name']
+        message = "Pipeline name already exists"
+    except KeyError:
+        pipeline_form.errors['num_stages']
+        message = "A pipeline must have at least one stage"
+    finally:
+        return JsonResponse({'success': False, 'message': message})
 
 
 @login_required(login_url='login')
