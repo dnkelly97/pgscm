@@ -9,6 +9,7 @@ $(document).ready(function() {
                         if(!response['success']){
                             $('#message').html(response['message']);
                             document.getElementById('message').style = 'display: block;';
+                            $('html, body').animate({ scrollTop: 0 }, 'slow');
                         }
                         else{
                             document.getElementById('id_dashboard').click();
