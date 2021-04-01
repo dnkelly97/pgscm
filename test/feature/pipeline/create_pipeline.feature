@@ -14,3 +14,9 @@ Feature: Administrator Create Pipeline Form
         When I fill out number of stages: <num_stages>
         And I click the create pipeline submit button
         Then I should be on the dashboard
+
+    Scenario: I try to create a pipeline with a name that exists
+        Given I am on the create pipeline page
+        When I fill out a pipeline name that exists
+        When I click the create pipeline submit button
+        Then I should see an alert saying a pipeline with that name already exists

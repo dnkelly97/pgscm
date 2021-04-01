@@ -4,6 +4,12 @@ from django.urls import reverse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from factories import PipelineFactory
+
+
+@pytest.fixture
+def pipeline():
+    return PipelineFactory.create(name="my test pipeline")
 
 
 @pytest.mark.django_db
@@ -49,7 +55,7 @@ def fill_out_name(browser, name):
 
 
 @when("I fill out number of stages: <num_stages>")
-def fill_out_name(logged_in_browser, num_stages):
+def fill_out_num_stages(logged_in_browser, num_stages):
     logged_in_browser.find_element_by_id('id_num_stages').send_keys(num_stages)
     logged_in_browser.find_element_by_id("id_name").click()  # click elsewhere on the page to produce change event on num_stages
 
@@ -63,3 +69,27 @@ def create_pipeline_submit(logged_in_browser):
 def assert_on_dashboard(logged_in_browser):
     WebDriverWait(logged_in_browser, 10).until(
         EC.presence_of_element_located((By.ID, "create_query_button")))
+
+
+# Scenario: I try to create a pipeline with a name that exists
+#         Given I am on the create pipeline page
+#         When I fill out a pipeline name that exists
+#         And I click the create pipeline submit button
+#         Then I should see an alert saying a pipeline with that name already exists
+@scenario("../../feature/pipeline/create_pipeline.feature", "I try to create a pipeline with a name that exists")
+def test_create_pipeline_with_existing_name(logged_in_browser, pipeline):
+    pass
+
+
+@when("I fill out a pipeline name that exists")
+def fill_out_existing_name(logged_in_browser, pipeline):
+    logged_in_browser.find_element_by_id('id_name').send_keys(pipeline.name)
+    logged_in_browser.find_element_by_id('id_num_stages').send_keys(1)
+    logged_in_browser.find_element_by_id("id_name").click()  # click elsewhere on the page to produce change event on num_stages
+
+
+@then("I should see an alert saying a pipeline with that name already exists")
+def assert_error_message_displayed(logged_in_browser):
+    WebDriverWait(logged_in_browser, 10).until(
+        EC.visibility_of_element_located((By.ID, "message")))
+    assert "A pipeline with that name already exists" in logged_in_browser.page_source
