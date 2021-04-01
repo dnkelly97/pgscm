@@ -42,7 +42,7 @@ def create_pipeline(request):
         stages = Stage.objects.filter(pipeline=pipeline.id)
         for i in range(len(stages)):
             fields = {'name': post['name'][i], 'stage_number': i + 1, 'time_window': post['time_window'][i],
-                      'advancement_condition': post['advancement_condition'][i]}
+                      'advancement_condition': post['advancement_condition'][i], 'pipeline': pipeline.id}
             stage_form = UpdateStageForm(fields, instance=stages[i])
             if stage_form.is_valid():
                 stage_form.save()
@@ -52,7 +52,7 @@ def create_pipeline(request):
         return JsonResponse({'success': True})
     try:
         pipeline_form.errors['name']
-        message = "Pipeline name already exists"
+        message = "A pipeline with that name already exists"
     except KeyError:
         pipeline_form.errors['num_stages']
         message = "A pipeline must have at least one stage"
