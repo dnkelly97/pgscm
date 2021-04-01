@@ -6,7 +6,8 @@ from django.forms import ModelForm
 class CreatePipelineForm(ModelForm):
     class Meta:
         model = Pipeline
-        fields = ['name', 'num_stages']
+        fields = ['name', 'num_stages', 'description'
+                  ]
 
 
 class UpdateStageForm(ModelForm):
