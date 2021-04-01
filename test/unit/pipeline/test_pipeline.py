@@ -81,6 +81,8 @@ class TestPipelineViews:
         response = create_pipeline(request)
         assert response.status_code == 200
         assert json.loads(response.content)['success']
+        assert Pipeline.objects.get(name="pipeline name")
+        assert Stage.objects.get(name='stage 1 name')
 
     def test_create_pipeline_bad_pipeline(self, rf, user):
         request = rf.get('/pipeline/create')
