@@ -23,6 +23,15 @@ $(document).ready(function() {
 });
 
 $(document).ready(function() {
+  $(window).keydown(function(event){
+    if(event.keyCode == 13) {
+      event.preventDefault();
+      return false;
+    }
+  });
+});
+
+$(document).ready(function() {
         $("#id_num_stages").on('change', function(event) {
             event.preventDefault();
             var num_stages = $('#id_num_stages');
