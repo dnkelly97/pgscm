@@ -2,13 +2,15 @@ from django.shortcuts import render, redirect, reverse
 from .models import Pipeline, Stage
 from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
-from pipeline.forms import CreateForm, UpdateStageForm
+from pipeline.forms import CreatePipelineForm, UpdateStageForm
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.http import JsonResponse
 import pdb
 
 # Create your views here.
+
+
 @login_required(login_url='/login/')
 def dashboard(request):
     pipelines = Pipeline.objects.all()
@@ -18,43 +20,47 @@ def dashboard(request):
 
 @login_required(login_url='login')
 def build_pipeline_page(request):
-    saved_queries = SavedQuery.objects.all()
-    context = {'form': CreateForm, 'saved_queries': saved_queries}
+    context = {'form': CreatePipelineForm}
     return render(request, 'create_pipeline.html', context)
 
 
 @login_required(login_url='login')
-def ajax_create_pipeline(request):
-    form = CreateForm(request.POST)
-    pipeline = Pipeline.objects.all().order_by('id').last()
-    if form.is_valid():
-        success = True
-        pipeline = form.save()
-        stages = Stage.objects.filter(pipeline=pipeline.id)
-        stageforms = []
-        for i in range(len(stages)):
-            instance = stages.filter(stage_number=i).first()
-            stageforms.append(UpdateStageForm(instance=instance))
-        partial = render_to_string('define_stages.html', {'forms': stageforms, 'stages': stages})
-    else:
-        partial = None
-        success = False
-    return JsonResponse({'success': success, 'html': partial, 'pipeline_id': pipeline.id})
+def ajax_get_stages(request):
+    num_stages = int(request.GET['num_stages'])
+    stage_forms = []
+    for i in range(num_stages):
+        stage = Stage(name="Stage " + str(i + 1))
+        stage_forms.append(UpdateStageForm(instance=stage))
+    partial = render_to_string('define_stages.html', {'forms': stage_forms})
+    return JsonResponse({'success': True, 'html': partial})
 
 
 @login_required(login_url='login')
-def define_stages(request, pipeline_id):
-    stages = Stage.objects.filter(pipeline=pipeline_id)
-    success = True
+def create_pipeline(request):
     post = dict(request.POST)
-    for i in range(len(stages)):
-        fields = {'name': post['name'][i], 'stage_number': i+1, 'time_window': post['time_window'][i], 'advancement_condition': post['advancement_condition'][i], 'pipeline': pipeline_id}
-        form = UpdateStageForm(fields, instance=stages[i])
-        if form.is_valid():
-            stage = form.save()
-        else:
-            success = False
-    return redirect(reverse('dashboard'))
+    pipeline_info = {'name': post['name'].pop(0), 'description': post['description'][0], 'num_stages': post['num_stages'][0]}
+    pipeline_form = CreatePipelineForm(pipeline_info)
+    if pipeline_form.is_valid():
+        pipeline = pipeline_form.save()
+        stages = Stage.objects.filter(pipeline=pipeline.id)
+        for i in range(len(stages)):
+            fields = {'name': post['name'][i], 'stage_number': i + 1, 'time_window': post['time_window'][i],
+                      'advancement_condition': post['advancement_condition'][i], 'pipeline': pipeline.id}
+            stage_form = UpdateStageForm(fields, instance=stages[i])
+            if stage_form.is_valid():
+                stage_form.save()
+            else:
+                pipeline.delete()
+                return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
+        return JsonResponse({'success': True})
+    try:
+        pipeline_form.errors['name']
+        message = "A pipeline with that name already exists"
+    except KeyError:
+        pipeline_form.errors['num_stages']
+        message = "A pipeline must have at least one stage"
+    finally:
+        return JsonResponse({'success': False, 'message': message})
 
 
 @login_required(login_url='login')

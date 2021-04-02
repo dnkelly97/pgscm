@@ -19,8 +19,7 @@ class Pipeline(models.Model):
     source = models.ForeignKey(SavedQuery, on_delete=models.CASCADE, null=True, blank=True)
     name = models.CharField(max_length=60, unique=True)
     description = models.TextField(blank=True, null=True)
-    num_stages = models.IntegerField(
-        default=1,
+    num_stages = models.PositiveIntegerField(
         validators=[
             MinValueValidator(1)
         ]
