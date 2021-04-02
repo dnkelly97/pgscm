@@ -7,6 +7,8 @@ from .decorators import unauthenticated_user, admin_func
 from django.contrib.auth.models import Group
 from student.models import Student
 from student.filters import StudentFilter
+from django.contrib.auth import get_user_model
+
 
 
 # Create your views here.
@@ -32,6 +34,8 @@ def loginPage(request):
 
 @admin_func
 def registerPage(request):
+    users = get_user_model().objects.all()
+
     form = CreateUserForm()
     if request.method == 'POST':
         form = CreateUserForm(request.POST)
@@ -42,9 +46,9 @@ def registerPage(request):
             group = Group.objects.get(name='administrator')
             group.user_set.add(user)
 
-            return redirect('dashboard')
+            return redirect('register')
 
-    context = {'form': form}
+    context = {'form': form, 'users': users}
     return render(request, 'login/register.html', context)
 
 
