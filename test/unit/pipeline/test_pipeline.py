@@ -76,7 +76,7 @@ class TestPipelineViews:
     def test_create_pipeline(self, rf, user):
         request = rf.get('/pipeline/create')
         request.user = user
-        saved_query = SavedQueryFactory.create(query_name='daniel')
+        saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'source': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
                         'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None']}
         response = create_pipeline(request)
@@ -95,7 +95,7 @@ class TestPipelineViews:
         assert response.status_code == 200
         content = json.loads(response.content)
         assert not content['success']
-        assert content['message'] == "A pipeline must have at least one stage"
+        assert content['message'] == "A pipeline must have at least one stage\n"
         try:
             Pipeline.objects.get(name="pipeline name")
             assert False
