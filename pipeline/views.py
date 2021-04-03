@@ -53,14 +53,26 @@ def create_pipeline(request):
                 pipeline.delete()
                 return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
         return JsonResponse({'success': True})
-    try:
-        pipeline_form.errors['name']
-        message = "A pipeline with that name already exists"
-    except KeyError:
-        pipeline_form.errors['num_stages']
-        message = "A pipeline must have at least one stage"
-    finally:
-        return JsonResponse({'success': False, 'message': message})
+    message = ''
+    for fields, error in pipeline_form.errors.items():
+        if fields == 'name':
+            message += "A pipeline with that name already exists\n"
+        elif fields == 'num_stages':
+            message += "A pipeline must have at least one stage\n"
+        else:
+            message += f"There was an issue with: {fields}\n"
+
+    return JsonResponse({'success': False, 'message': message})
+
+    #
+    # try:
+    #     pipeline_form.errors['name']
+    #     message = "A pipeline with that name already exists"
+    # except KeyError:
+    #     pipeline_form.errors['num_stages']
+    #     message = "A pipeline must have at least one stage"
+    # finally:
+    #     return JsonResponse({'success': False, 'message': message})
 
 
 @login_required(login_url='login')
