@@ -2,42 +2,66 @@
 {% load static %}
 {% block content %}
 
-<br>
-    <div class="col-md-8">
-        <div class="card card-body">
-            {% block content1 %}
-            <h4 class="card-header">API Keys
-                <small class="float-sm-right">
-                    <form action="{% url 'create_api' %}">
-                        <button id="create_api_button" class="btn btn-primary" type="submit">Create API Key</button>
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-body">
+                    <h5 class="card-header">Create API</h5><br>
+                    <form method="POST" class="form-group" id="create_student_form">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.name.label}}</span>
+                            </div>
+                            {{form.name}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.email.label}}</span>
+                            </div>
+                            {{form.email}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.expiry_date.label}}</span>
+                            </div>
+                            {{form.expiry_date}}
+                        </div>
+                        <button id="create_student_submit_button" class="btn btn-primary" type="submit">Create</button>
                     </form>
-                </small>
-            </h4>
-            <table class="table table-sm">
-                <tr>
-                    <th>Name</th>
-                    <th>Prefix</th>
-                    <th>Email</th>
-                    <th>Date</th>
-                    <th>Active</th>
-                </tr>
-                {% for key in keys %}
-                <tr>
-                    <td>{{key.name}}</td>
-                    <td>{{key.prefix }}</td>
-                    <td>{{key.email}}</td>
-                    <td>{{key.created }}</td>
-                    <td>
-                        {% if key.revoked %}
-                            False
-                        {%  else %}
-                            True
-                        {% endif %}
-                    </td>
-                </tr>
-                {% endfor %}
-            </table>
-            {% endblock %}
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-body">
+                    <h4 class="card-header">API Keys</h4>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Name</th>
+                            <th>Prefix</th>
+                            <th>Email</th>
+                            <th>Date</th>
+                            <th>Active</th>
+                        </tr>
+                        {% for key in keys %}
+                        <tr>
+                            <td>{{key.name}}</td>
+                            <td>{{key.prefix }}</td>
+                            <td>{{key.email}}</td>
+                            <td>{{key.created }}</td>
+                            <td>
+                                {% if key.revoked %}
+                                    False
+                                {%  else %}
+                                    True
+                                {% endif %}
+                            </td>
+                            <td><a class="btn btn-sm btn-info" href="{% url 'api_profile' key.prefix %}">View</a></td>
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
