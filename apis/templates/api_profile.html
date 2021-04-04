@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-body">
+                    <h5 class="card-header">API Keys</h5>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                        {% for key in api_keys %}
+                            <tr>
+                                <td>{{key.name}}</td>
+                                <td>{{key.email}}</td>
+                                <td><a class="btn btn-sm btn-info" href="{% url 'api_profile' key.prefix %}">View</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-body">
+
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
