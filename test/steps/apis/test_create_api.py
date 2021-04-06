@@ -38,7 +38,7 @@ def key_entry(browser):
 
 @then("I should get error for duplicate emails")
 def duplicate_error(browser):
-    assert "Email already in system" not in browser.page_source
+    assert "Email already in system" in browser.page_source
 
 
 @pytest.mark.django_db
