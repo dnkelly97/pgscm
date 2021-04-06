@@ -56,7 +56,6 @@ def test_student_serializer(email,first_name,last_name,valid):
 def test_extended_student_serializer(email, first_name, last_name, school_year, research_interests, degree,
                                      university, gpa, ethnicity, gender, country, us_citizenship, first_generation,
                                      military, valid):
-
     data = {
         'email': email,
         'first_name': first_name,
@@ -73,9 +72,19 @@ def test_extended_student_serializer(email, first_name, last_name, school_year, 
         'first_generation': first_generation,
         'military': military,
     }
-
     serializer = StudentSerializer(data=data)
-
-    assert True is not None
-
     assert serializer.is_valid() == valid
+
+
+@pytest.mark.django_db
+def test_extend_serializer_with_incomplete_field_info():
+    data = {
+        'email': 'yes@gmail.com',
+        'first_name': 'boz',
+        'last_name': 'scaggs',
+        'school_year': 'SR',
+        'gpa': 4.1,
+        'military': True
+    }
+    serializer = StudentSerializer(data=data)
+    assert serializer.is_valid() == True
