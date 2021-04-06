@@ -4,25 +4,6 @@ from pytest_bdd import scenario, given, when, then
 from selenium.webdriver.common.keys import Keys
 
 
-# @pytest.mark.django_db
-# @scenario('../../feature/apis/create_api.feature', 'Create API Key Page')
-# def test_view_create_api_form(live_server):
-#     pass
-
-
-
-# @given("I access the 'api portal' page")
-# def connect_register(live_server,browser):
-#     browser.get(live_server + '/apis')
-#
-# @when("I click the Create API Button")
-# def redirect_register(browser):
-#     browser.find_element_by_id('create_api_button').click()
-#
-# @then("I get redirected to 'Create API form' page")
-# def redirect_register(browser):
-#     assert browser.find_element_by_id('create_student_submit_button')
-
 @pytest.mark.django_db
 @scenario('../../feature/apis/create_api.feature', 'Submit New API Key')
 def test_submit_api_key(live_server):
