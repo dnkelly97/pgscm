@@ -3,7 +3,7 @@ from pytest_bdd import scenario, given, when, then
 from selenium.webdriver.common.keys import Keys
 
 
-@scenario('../feature/creating_roles.feature', 'Access Create User Page as Admin')
+@scenario('../../feature/authentication/creating_roles.feature', 'Access Create User Page as Admin')
 def test_user_roles_admin(live_server):
     pass
 
@@ -28,7 +28,7 @@ def redirect_register(browser):
     assert browser.find_element_by_id('id_register_form')
 
 
-@scenario('../feature/creating_roles.feature', 'Access Create User Page as Administrator')
+@scenario('../../feature/authentication/creating_roles.feature', 'Access Create User Page as Administrator')
 def test_user_roles_administrator(live_server):
     pass
 

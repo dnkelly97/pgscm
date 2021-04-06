@@ -84,11 +84,13 @@ def user():
 @pytest.mark.parametrize("post_dict,expected_response",
                          [({'csrfmiddlewaretoken': 'faketoken', 'name': 'andrew', 'school_year': 'FR', 'degree': '', 'university': '', 'gpa': '', 'ethnicity': '', 'gender': '', 'country': 'US', 'us_citizenship': 'true', 'first_generation': 'unknown', 'military': 'unknown', 'query_name': 'glouberman query', 'description': 'finding potential gloubermans'}, {'success': True, 'message': 'Query successfully saved!'}),
                           ({'csrfmiddlewaretoken': 'faketoken', 'name': 'andrew', 'school_year': 'FR', 'degree': '', 'university': '', 'gpa': '', 'ethnicity': '', 'gender': '', 'country': 'US', 'us_citizenship': 'true', 'first_generation': 'unknown', 'military': 'unknown', 'query_name': 'glouberman query jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj', 'description': 'finding potential gloubermans'}, {'success': False, 'message': "Save Failed - Query names must be less than 60 characters in length."}),
-                          ({'csrfmiddlewaretoken': 'faketoken', 'name': 'andrew', 'school_year': 'FR', 'degree': '', 'university': '', 'gpa': '', 'ethnicity': '', 'gender': '', 'country': 'US', 'us_citizenship': 'true', 'first_generation': 'unknown', 'military': 'unknown', 'query_name': 'Query 2', 'description': 'finding potential gloubermans'}, {'success': False, 'message': "Save Failed - A query with this name already exists."}),
+                          ({'csrfmiddlewaretoken': 'faketoken', 'name': 'andrew', 'school_year': 'FR', 'degree': '', 'university': '', 'gpa': '', 'ethnicity': '', 'gender': '', 'country': 'US', 'us_citizenship': 'true', 'first_generation': 'unknown', 'military': 'unknown', 'query_name': 'already_exists', 'description': 'finding potential gloubermans'}, {'success': False, 'message': "Save Failed - A query with this name already exists."}),
                           ({'csrfmiddlewaretoken': 'faketoken', 'name': 'andrew', 'school_year': 'FR', 'degree': '', 'university': '', 'gpa': '', 'ethnicity': '', 'gender': '', 'country': 'US', 'us_citizenship': 'true', 'first_generation': 'unknown', 'military': 'unknown', 'query_name': '', 'description': 'finding potential gloubermans'}, {'success': False, 'message': 'Save Failed - Invalid query name.'})
                           ])
 def test_ajax_save_query(user, post_dict, expected_response):
-    SavedQueryFactory.create()
+    query = SavedQueryFactory.build()
+    query.query_name = "already_exists"
+    query.save()
     factory = RequestFactory()
     request = factory.post('/student/ajax_save_query')
     request.user = user

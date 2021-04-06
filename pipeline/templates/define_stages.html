@@ -1,0 +1,25 @@
+
+<div class="card card-body" style="border: none;">
+    <h6 class="card-header"><b>Stage Definition</b></h6><br>
+    {% for form in forms %}
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">{{form.name.label}}</span>
+        </div>
+        {{ form.name }}
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">{{form.time_window.label}}</span>
+        </div>
+        {{ form.time_window }}
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">{{ form.advancement_condition.label }}</span>
+        </div>
+        {{ form.advancement_condition }}
+    </div>
+    <hr/>
+    {% endfor %}
+</div>

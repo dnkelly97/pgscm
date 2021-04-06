@@ -3,7 +3,7 @@ from pytest_bdd import scenario, given, when, then
 from selenium.webdriver.common.keys import Keys
 
 
-@scenario('../feature/authentication.feature', 'Login into the application as an Administrator')
+@scenario('../../feature/authentication/authentication.feature', 'Login into the application as an Administrator')
 def test_authentication_success(live_server):
     pass
 
@@ -27,7 +27,7 @@ def redirect_dashboard(browser):
     assert browser.find_element_by_id('id_dashboard')
 
 
-@scenario('../feature/authentication.feature', 'Login into the application with wrong credentials')
+@scenario('../../feature/authentication/authentication.feature', 'Login into the application with wrong credentials')
 def test_authentication_fail(live_server):
     pass
 

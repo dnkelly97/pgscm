@@ -35,8 +35,8 @@
     <div class="card">
         <h5 class="card-header">{{ student.first_name }} {{ student.last_name }}'s profile
             <small class="float-sm-right">
-                <a class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a>
-                <a class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a>
+                <a id="update_student_button"  class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a>
+                <a id="delete_student_button" class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a>
             </small>
         </h5><br>
         <div class="container-fluid">

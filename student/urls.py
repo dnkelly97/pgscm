@@ -9,6 +9,7 @@ urlpatterns = [
     path('update_student/<str:key>', views.updateStudent, name='update_student'),
     path('run_query/<str:query_name>', views.run_saved_query, name='run_saved_query'),
     path('student_prfile/<str:key>', views.studentProfile, name='student_profile'),
+    path('update_query/<str:query_name>', views.update_query, name='update_query'),
     path('send_email', views.sendEmail, name='send_email')
 ]
 

@@ -47,7 +47,8 @@ def click_to_update(live_server, browser):
 def confirm_update(browser):
     browser.find_element_by_id('id_first_name').send_keys('test_first_change')
     browser.find_element_by_id('update_student_submit_button').click()
-    assert browser.find_element_by_id('create_student_button')
+    assert browser.find_element_by_id('update_student_button')
+    assert browser.find_element_by_id('delete_student_button')
 
 
 @then("I should see the updated student on the student portal")
