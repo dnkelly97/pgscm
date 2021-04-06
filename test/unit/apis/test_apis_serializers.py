@@ -32,3 +32,23 @@ def test_student_serializer(email,first_name,last_name,valid):
     assert True is not None
 
     assert valid == serializer.is_valid()
+
+
+@pytest.mark.parametrize('email, first_name, last_name, school_year, valid', [
+    ('mymail@gmail.com', 'tuck', 'dickson', 'NOT_A_YEAR', False)
+])
+@pytest.mark.django_db
+def test_extended_student_serializer(email, first_name, last_name, school_year, valid):
+
+    data = {
+        'email': email,
+        'first_name': first_name,
+        'last_name': last_name,
+        'school_year': school_year
+    }
+
+    serializer = StudentSerializer(data=data)
+
+    assert True is not None
+
+    assert valid == serializer.is_valid()
