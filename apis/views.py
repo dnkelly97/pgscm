@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from .models import *
 from .decorators import admin_api_func
 from .forms import CreateForm
+from django.http import JsonResponse
 
 
 @admin_api_func
@@ -48,12 +49,12 @@ def ajax_api_regenerate(request):
         key.delete()
         APIKey.objects.assign_key(new_key)
         new_key.save()
-        partial = render_to_string('api_profile.html', context, request)
         success = True
+        url = '/apis/api_profile/'+new_key.prefix
     except APIKey.DoesNotExist:
-        partial = None
+        url = None
         success = False
-    return JsonResponse({'success': success, 'html': partial})
+    return JsonResponse({'success': success, 'url': url})
 
 @admin_api_func
 def apiUpdate(request, key):
