@@ -57,6 +57,19 @@ def ajax_api_regenerate(request):
     return JsonResponse({'success': success, 'url': url})
 
 @admin_api_func
+def ajax_api_delete(request):
+    try:
+        key = APIKey.objects.get(prefix=request.POST['prefix'])
+        name = key.name
+        key.delete()
+        success = True
+        url = '/apis/'
+    except APIKey.DoesNotExist:
+        url = None
+        success = False
+    return JsonResponse({'success': success, 'url': url})
+
+@admin_api_func
 def apiUpdate(request, key):
     api_keys = APIKey.objects.order_by('-created')
     api_key = APIKey.objects.get(prefix=key)
