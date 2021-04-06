@@ -5,8 +5,8 @@ from selenium.webdriver.common.keys import Keys
 
 
 @pytest.mark.django_db
-@scenario('../../feature/apis/create_api.feature', 'Submit New API Key')
-def test_submit_api_key(live_server):
+@scenario('../../feature/apis/create_api.feature', 'Duplicate API Key')
+def test_duplicate_key(live_server):
     pass
 
 
@@ -23,6 +23,28 @@ def admin_access(live_server, browser):
 @given("I access the Create API Form")
 def redirect_register(live_server, browser):
     browser.get(live_server + '/apis')
+
+
+@when("I fill out the Create API Form same way twice")
+def key_entry(browser):
+    browser.find_element_by_id('id_name').send_keys('hello')
+    browser.find_element_by_id('id_email').send_keys('hello@gmail.com')
+    browser.find_element_by_id('create_student_submit_button').click()
+
+    browser.find_element_by_id('id_name').send_keys('hello')
+    browser.find_element_by_id('id_email').send_keys('hello@gmail.com')
+    browser.find_element_by_id('create_student_submit_button').click()
+
+
+@then("I should get error for duplicate emails")
+def duplicate_error(browser):
+    assert "Email already in system" not in browser.page_source
+
+
+@pytest.mark.django_db
+@scenario('../../feature/apis/create_api.feature', 'Submit New API Key')
+def test_submit_api_key(live_server):
+    pass
 
 
 @when("I fill out the Create API Form with <name>, <email>, <expiration_date>")

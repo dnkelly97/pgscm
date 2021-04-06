@@ -3,6 +3,13 @@ Feature:
   So that I can control what different users can do
   I want to differentiate between an admin who can add apis and an administrator who can simply just use the application
 
+  Scenario: Duplicate API Key
+    Given I am an Admin
+    And I access the Create API Form
+    When I fill out the Create API Form same way twice
+    Then I should get error for duplicate emails
+
+
   Scenario Outline: Submit New API Key
     Given I am an Admin
     And I access the Create API Form
