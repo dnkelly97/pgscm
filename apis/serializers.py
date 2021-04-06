@@ -1,8 +1,9 @@
 from rest_framework import serializers
 from student.models import Student
+from django_countries.serializers import CountryFieldMixin
 
 
-class StudentSerializer(serializers.ModelSerializer):
+class StudentSerializer(CountryFieldMixin, serializers.ModelSerializer):
     class Meta:
         model = Student
         fields = ('email',
