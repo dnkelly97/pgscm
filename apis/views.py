@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.shortcuts import render, redirect
 from .models import *
 from .decorators import admin_api_func
@@ -15,9 +16,14 @@ def apis(request):
             APIKey.objects.assign_key(obj)
             obj.save()
             response = redirect('api')
+            messages.success(request, 'Creation successful...')
             return response
+
+        else:
+            messages.error(request, 'Email already in system')
+
         context = {'keys': keys, 'form': form}
-        return render(request, 'create_api.html', context)
+        return render(request, 'api_home.html', context)
 
     form = CreateForm
 
