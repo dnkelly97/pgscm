@@ -25,8 +25,25 @@
             </div>
             <div class="col-md-8">
                 <div class="card card-body" id="id_profile_header">
-                    <h5 class="card-header">About {{ api_key.name }}</h5>
-
+                    <h5 class="card-header">About {{ api_key.name }}</h5><br>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="card card-body">
+                                <p><strong>Name: </strong> {{ api_key.name }} </p>
+                                <p><strong>Email: </strong> {{ api_key.email }} </p>
+                                <p><strong>Prefix: </strong>  {{ api_key.prefix }} </p>
+                                <p><strong>Created on: </strong>  {{ api_key.created }} </p>
+                                <p><strong>Revoked: </strong>  {{ api_key.revoked }} </p>
+                            </div>
+                            <br>
+                        </div><br>
+                        <div class="row">
+                            <div class="card card-body">
+                                <h6 class="card-title">Logs</h6><br>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
