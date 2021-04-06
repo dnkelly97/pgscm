@@ -34,21 +34,48 @@ def test_student_serializer(email,first_name,last_name,valid):
     assert valid == serializer.is_valid()
 
 
-@pytest.mark.parametrize('email, first_name, last_name, school_year, valid', [
-    ('mymail@gmail.com', 'tuck', 'dickson', 'NOT_A_YEAR', False)
+@pytest.mark.parametrize('email, first_name, last_name, school_year, research_interests, degree, '
+                         'university, gpa, ethnicity, gender, country, us_citizenship, first_generation,'
+                         'military, valid', [
+    ('mymail@gmail.com', 'tuck', 'dickson', 'NOT_A_YEAR', None, "", "", None, "U", "U", None, None, None, None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "", "", None, "U", "U", None, None, None, None, True),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', 'NOT_AN_ARRAY', "", "", None, "U", "U", None, None, None, None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', ['AI', 'Medical Imaging'], "", "", None, "U", "U", None, None, None, None, True),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, None, "", None, "U", "U", None, None, None, None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", "", None, "U", "U", None, None, None, None, True),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", None, None, "U", "U", None, None, None, None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", "", "NOT_A_FLOAT", "U", "U", None, None, None, None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", "", None, None, "U", None, None, None, None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", "", None, "U", None, None, None, None, None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", "", None, "U", "U", "NOT_A_COUNTRY", None, None, None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", "", None, "U", "U", None, "NOT_A_BOOLEAN", None, None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", "", None, "U", "U", None, None, "NOT_A_BOOLEAN", None, False),
+    ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", "", None, "U", "U", None, None, None, "NOT_A_BOOLEAN", False),
 ])
 @pytest.mark.django_db
-def test_extended_student_serializer(email, first_name, last_name, school_year, valid):
+def test_extended_student_serializer(email, first_name, last_name, school_year, research_interests, degree,
+                                     university, gpa, ethnicity, gender, country, us_citizenship, first_generation,
+                                     military, valid):
 
     data = {
         'email': email,
         'first_name': first_name,
         'last_name': last_name,
-        'school_year': school_year
+        'school_year': school_year,
+        'research_interests': research_interests,
+        'degree': degree,
+        'university': university,
+        'gpa': gpa,
+        'ethnicity': ethnicity,
+        'gender': gender,
+        'country': country,
+        'us_citizenship': us_citizenship,
+        'first_generation': first_generation,
+        'military': military,
     }
 
     serializer = StudentSerializer(data=data)
 
     assert True is not None
 
-    assert valid == serializer.is_valid()
+    assert serializer.is_valid() == valid

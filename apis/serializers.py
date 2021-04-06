@@ -8,4 +8,15 @@ class StudentSerializer(serializers.ModelSerializer):
         fields = ('email',
                   'first_name',
                   'last_name',
-                  'school_year')
+                  'school_year',
+                  'research_interests',
+                  'degree',
+                  'university',
+                  'gpa',
+                  'ethnicity',
+                  'gender',
+                  'country',
+                  'us_citizenship',
+                  'first_generation',
+                  'military',
+                  )
