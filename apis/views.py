@@ -39,3 +39,31 @@ def apiProfile(request, key):
 
     context = {'api_keys': api_keys, 'api_key': api_key}
     return render(request, 'api_profile.html', context)
+
+@admin_api_func
+def apiUpdate(request, key):
+    api_keys = APIKey.objects.order_by('-created')
+    api_key = APIKey.objects.get(prefix=key)
+
+    if request.method == 'POST':
+        form = CreateForm(request.POST)
+
+        if form.is_valid():
+            obj = form.save(commit=False)
+            APIKey.objects.assign_key(obj)
+            obj.save()
+            context = {'api_keys': api_keys, 'api_key': api_key}
+            response = render(request, 'api_profile.html', context)
+            messages.success(request, 'Update successful...')
+            return response
+
+        else:
+            messages.error(request, 'Email already in system')
+
+        context = {'api_keys': api_keys, 'api_key': api_key, 'form': form}
+        return render(request, 'api_profile.html', context)
+
+    form = CreateForm(initial={'name': api_key.name, 'email': api_key.email, 'expiry_date': api_key.expiry_date})
+
+    context = {'api_keys': api_keys, 'api_key': api_key, 'form': form}
+    return render(request, 'api_update.html', context)
