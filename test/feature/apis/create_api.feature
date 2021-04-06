@@ -2,12 +2,6 @@ Feature:
   As a developer
   So that I can control what different users can do
   I want to differentiate between an admin who can add apis and an administrator who can simply just use the application
-#
-#  Scenario: Create API Key Page
-#    Given I am an Admin
-#    And I access the 'api portal' page
-#    When I click the Create API Button
-#    Then I get redirected to 'Create API form' page
 
   Scenario Outline: Submit New API Key
     Given I am an Admin
