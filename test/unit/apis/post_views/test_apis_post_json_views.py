@@ -100,7 +100,7 @@ def test_student_portal_invalid(email,first_name,last_name,code):
 
 
 @pytest.mark.django_db
-def test_student_portal_valid():
+def test_api_add_student_with_some_extended_fields():
     obj = APIKey(
         name="tester",
         email="tester@uiowa.edu",
