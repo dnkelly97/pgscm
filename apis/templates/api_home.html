@@ -8,6 +8,15 @@
             <div class="col-md-4">
                 <div class="card card-body">
                     <h5 class="card-header">Create API</h5><br>
+                    {% if messages %}
+                        <div class="alert alert-danger">
+                            <ul class="messages">
+                                {% for message in messages %}
+                                <li> {{ message }} </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
                     <form method="POST" class="form-group" id="create_student_form">
                         {% csrf_token %}
                         <div class="input-group mb-3">
