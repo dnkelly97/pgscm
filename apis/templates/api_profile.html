@@ -29,6 +29,7 @@
                     <small class="float-sm-right">
                         <a id="update_api_button"  class="btn btn-sm btn-info" href="{% url 'update_api' api_key.prefix %}">Update</a>
                         <a id="regenerate_api_button" class="btn btn-sm btn-warning" onclick="regenerateAPIKey('{{api_key.name }}')">Re-Generate</a>
+                        <a id="regenerate_api_button" class="btn btn-sm btn-danger" onclick="deleteAPIKey('{{api_key.name }}')">Delete</a>
                     </small>
                     </h5><br>
                     <div class="container-fluid">
@@ -75,9 +76,30 @@
             </form>
         </div>
     </div>
-
+    <div class="modal" tabindex="-1" role="dialog" id="delete_modal">
+        <div class="modal-dialog" role="document">
+            <form id="delete_api_form">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Deletion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="prefix" value='{{ api_key.prefix }}' />
+                    <div class="modal-body" id="confirm_delete_message"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="final_delete_button">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_popup">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}
 
 {% block javascript %}
-<script src="{% static 'js/api/regenerate.js' %}"></script>
+    <script src="{% static 'js/api/regenerate.js' %}"></script>
+    <script src="{% static 'js/api/delete.js' %}"></script>
 {% endblock javascript %}
