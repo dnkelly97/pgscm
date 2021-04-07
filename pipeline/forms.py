@@ -1,22 +1,18 @@
 from django.forms import forms
 from pipeline.models import Pipeline, Stage, SavedQuery
-from django.forms import ModelForm, Textarea, widgets
+from django.forms import ModelForm, Textarea, widgets, ModelMultipleChoiceField
 
 
 class CreatePipelineForm(ModelForm):
+    sources = ModelMultipleChoiceField(widget=widgets.CheckboxSelectMultiple(),
+                                       queryset=SavedQuery.objects.all())
+
     class Meta:
         model = Pipeline
-        fields = ['source', 'name', 'num_stages', 'description',
-                  ]
+        fields = ['sources', 'name', 'num_stages', 'description', ]
         widgets = {
             'description': Textarea(attrs={'rows': 3, 'cols': 40})
         }
-
-    def __init__(self, *args, **kwargs):
-        super(CreatePipelineForm, self).__init__(*args, **kwargs)
-        self.fields["source"].widget = widgets.CheckboxSelectMultiple()
-        self.fields["source"].help_text = ""
-        self.fields["source"].queryset = SavedQuery.objects.all()
 
 
 class UpdateStageForm(ModelForm):
