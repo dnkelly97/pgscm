@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+    <br>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="card card-body">
+                    <h5 class="card-header">API Keys</h5>
+                    <table class="table table-sm">
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                        </tr>
+                        {% for key in api_keys %}
+                            <tr>
+                                <td>{{key.name}}</td>
+                                <td>{{key.email}}</td>
+                                <td><a class="btn btn-sm btn-info" href="{% url 'api_profile' key.prefix %}">View</a></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <div class="card card-body" id="id_profile_header">
+                    <h5 class="card-header">About {{ api_key.name }}</h5><br>
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="card card-body">
+                                <p><strong>Name: </strong> {{ api_key.name }} </p>
+                                <p><strong>Email: </strong> {{ api_key.email }} </p>
+                                <p><strong>Prefix: </strong>  {{ api_key.prefix }} </p>
+                                <p><strong>Created on: </strong>  {{ api_key.created }} </p>
+                                <p><strong>Revoked: </strong>  {{ api_key.revoked }} </p>
+                            </div>
+                            <br>
+                        </div><br>
+                        <div class="row">
+                            <div class="card card-body">
+                                <h6 class="card-title">Logs</h6><br>
+                            </div>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

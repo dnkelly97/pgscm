@@ -25,7 +25,7 @@ def connect_register(live_server, browser):
 
 @then("I get redirected to 'api portal' page")
 def redirect_register(browser):
-    assert browser.find_element_by_id('create_api_button')
+    assert browser.find_element_by_id('create_student_form')
 
 
 @scenario('../../feature/apis/admin_portal_access.feature', 'Access Admin Portal as Administrator')
