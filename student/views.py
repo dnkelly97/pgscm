@@ -170,11 +170,14 @@ def updateStudent(request, key):
 def studentProfile(request, key):
     students = Student.objects.all()
     student = Student.objects.get(id=key)
+    name = student.first_name
+    path = request.build_absolute_uri()
 
     if request.method == 'POST':
-
         send_mail(subject='Update Request',
-                  message="Please update your information within the UIOWA database by following this link ",
+                  message="This is important, please update...",
+                  html_message="<p> Hello " + name + ", <br><br> Please update your information within the "
+                               "UIOWA database by following this link <br><br> <a href='" + path + "'>" + path + "</a> </p>",
                   from_email=settings.EMAIL_HOST_USER,
                   recipient_list=[student.email],
                   fail_silently=False)
@@ -188,3 +191,6 @@ def sendEmail(request):
     students = Student.objects.all()
     context = {'students': students}
     return render(request, 'send_email.html', context)
+
+
+
