@@ -4,6 +4,9 @@ from django.urls import reverse
 from student.models import Student
 from rest_framework.test import APIRequestFactory, APIClient
 from apis.post_views import form_view
+from PIL import Image
+import tempfile
+
 
 @pytest.mark.django_db
 def test_student_portal_valid_form():
@@ -145,3 +148,34 @@ def test_api_add_student_with_some_extended_fields():
     assert not new_student.first_generation
     assert new_student.university == ""
     assert not new_student.us_citizenship
+
+
+@pytest.mark.django_db
+def test_image_and_data_post():
+    obj = APIKey(
+        name="tester",
+        email="tester@uiowa.edu",
+    )
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    image = Image.new('RGB', (100, 100))
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+    image.save(tmp_file)
+    tmp_file.seek(0)
+    data = {
+        'email': 'yes@gmail.com',
+        'first_name': 'boz',
+        'last_name': 'scaggs',
+        'school_year': 'SR',
+        'research_interests': ['AI', 'Medical Imaging', 'Art of Dance'],
+        'gpa': 4.1,
+        'military': True,
+        'profile_image': tmp_file
+    }
+    response = client.post(reverse('create_student_form'), data, format='multipart')
+    student = Student.objects.get(email='yes@gmail.com')
+    assert student.profile_image
+    assert student.school_year == 'SR'
