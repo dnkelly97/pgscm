@@ -2,6 +2,9 @@ import pytest
 from apis.models import APIKey
 from apis.serializers import StudentSerializer
 from student.models import Student
+from PIL import Image
+import tempfile
+from django.core.files.uploadedfile import SimpleUploadedFile
 
 
 @pytest.mark.django_db
@@ -88,3 +91,21 @@ def test_extend_serializer_with_incomplete_field_info():
     }
     serializer = StudentSerializer(data=data)
     assert serializer.is_valid() == True
+
+
+@pytest.mark.django_db
+def test_file_upload():
+    # image = Image.new('RGB', (100, 100))
+    # tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+    # image.save(tmp_file)
+    # tmp_file.seek(0)
+    # with open("test_file.txt", 'rb') as f:
+    #     tmp_file = SimpleUploadedFile("file.txt", f.read())
+    data = {
+        'email': 'yes@gmail.com',
+        'first_name': 'boz',
+        'last_name': 'scaggs',
+        'resume': "NOT_A_FILE"
+    }
+    serializer = StudentSerializer(data=data)
+    assert not serializer.is_valid()

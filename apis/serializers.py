@@ -20,4 +20,7 @@ class StudentSerializer(CountryFieldMixin, serializers.ModelSerializer):
                   'us_citizenship',
                   'first_generation',
                   'military',
+                  'resume',
+                  # 'transcript',
+                  # 'profile_image',
                   )
