@@ -21,6 +21,6 @@ class StudentSerializer(CountryFieldMixin, serializers.ModelSerializer):
                   'first_generation',
                   'military',
                   'resume',
-                  # 'transcript',
-                  # 'profile_image',
+                  'transcript',
+                  'profile_image',
                   )

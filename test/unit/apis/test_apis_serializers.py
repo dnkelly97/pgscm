@@ -94,7 +94,12 @@ def test_extend_serializer_with_incomplete_field_info():
 
 
 @pytest.mark.django_db
-def test_file_upload():
+@pytest.mark.parametrize("resume, transcript, profile_image, expected",
+                         [(None, None, None, True),
+                          ("NOT_A_FILE", None, None, False),
+                          (None, "NOT_A_FILE", None, False),
+                          (None, None, "NOT_AN_IMAGE", False)])
+def test_file_and_image_upload(resume, transcript, profile_image, expected):
     # image = Image.new('RGB', (100, 100))
     # tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
     # image.save(tmp_file)
@@ -105,7 +110,9 @@ def test_file_upload():
         'email': 'yes@gmail.com',
         'first_name': 'boz',
         'last_name': 'scaggs',
-        'resume': "NOT_A_FILE"
+        'resume': resume,
+        'transcript': transcript,
+        'profile_image': profile_image
     }
     serializer = StudentSerializer(data=data)
-    assert not serializer.is_valid()
+    assert serializer.is_valid() == expected
