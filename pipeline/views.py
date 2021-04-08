@@ -8,6 +8,7 @@ from django.template import RequestContext
 from django.http import JsonResponse
 import pdb
 
+
 # Create your views here.
 
 
@@ -38,7 +39,12 @@ def ajax_get_stages(request):
 @login_required(login_url='login')
 def create_pipeline(request):
     post = dict(request.POST)
-    pipeline_info = {'name': post['name'].pop(0), 'description': post['description'][0], 'sources': post['sources'], 'num_stages': post['num_stages'][0]}
+    try:
+        post['sources']
+    except:
+        post['sources'] = None
+    pipeline_info = {'name': post['name'].pop(0), 'description': post['description'][0], 'sources': post['sources'],
+                     'num_stages': post['num_stages'][0]}
     pipeline_form = CreatePipelineForm(pipeline_info)
     if pipeline_form.is_valid():
         pipeline = pipeline_form.save()
