@@ -179,3 +179,73 @@ def test_image_and_data_post():
     student = Student.objects.get(email='yes@gmail.com')
     assert student.profile_image
     assert student.school_year == 'SR'
+
+
+@pytest.mark.django_db()
+def test_multiple_file_upload():
+    obj = APIKey(
+        name="tester",
+        email="tester@uiowa.edu",
+    )
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    image = Image.new('RGB', (100, 100))
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+    image.save(tmp_file)
+    tmp_file.seek(0)
+    tmp_file2 = tempfile.NamedTemporaryFile(suffix='.txt')
+    tmp_file2.write(b'plz hire me')
+    tmp_file2.seek(0)
+    tmp_file3 = tempfile.NamedTemporaryFile(suffix='.txt')
+    tmp_file3.write(b'all As bb')
+    tmp_file3.seek(0)
+    data = {
+        'email': 'yes@gmail.com',
+        'first_name': 'boz',
+        'last_name': 'scaggs',
+        'school_year': 'SR',
+        'research_interests': ['AI', 'Medical Imaging', 'Art of Dance'],
+        'gpa': 4.1,
+        'military': True,
+        'profile_image': tmp_file,
+        'resume': tmp_file2,
+        'transcript': tmp_file3
+    }
+    response = client.post(reverse('create_student_form'), data, format='multipart')
+    student = Student.objects.get(email='yes@gmail.com')
+    assert response.status_code == 201
+    assert student.profile_image
+    assert student.resume
+    assert student.transcript
+    assert student.school_year == 'SR'
+
+
+@pytest.mark.django_db()
+def test_bad_file_upload():
+    obj = APIKey(
+        name="tester",
+        email="tester@uiowa.edu",
+    )
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.txt')
+    # file contains no content so it should fail and product status code 400
+    tmp_file.seek(0)
+    data = {
+        'email': 'yes@gmail.com',
+        'first_name': 'boz',
+        'last_name': 'scaggs',
+        'school_year': 'SR',
+        'research_interests': ['AI', 'Medical Imaging', 'Art of Dance'],
+        'gpa': 4.1,
+        'military': True,
+        'resume': tmp_file
+    }
+    response = client.post(reverse('create_student_form'), data, format='multipart')
+    assert response.status_code == 400
