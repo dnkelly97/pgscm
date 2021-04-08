@@ -77,7 +77,7 @@ class TestPipelineViews:
         request = rf.get('/pipeline/create')
         request.user = user
         saved_query = SavedQueryFactory.create()
-        request.POST = {'csrf_token': 'fake_token', 'source': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
+        request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
                         'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
@@ -89,7 +89,7 @@ class TestPipelineViews:
         request = rf.get('/pipeline/create')
         request.user = user
         saved_query = SavedQueryFactory.create()
-        request.POST = {'csrf_token': 'fake_token', 'source': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
+        request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
                         'num_stages': ['0'], 'time_window': ['30'], 'advancement_condition': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
@@ -106,7 +106,7 @@ class TestPipelineViews:
         request = rf.get('/pipeline/create')
         request.user = user
         saved_query = SavedQueryFactory.create()
-        request.POST = {'csrf_token': 'fake_token', 'source': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
+        request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
                         'num_stages': ['1'], 'time_window': ['-1'], 'advancement_condition': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
