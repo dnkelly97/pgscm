@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css" integrity="sha384-gfdkjb5BdAXd+lj+gudLWI+BXq4IuLW5IT+brZEZsLFm++aCMlF1V92rMkPaX4PP" crossorigin="anonymous">
+    <title>Student Form</title>
+	<style>
+		body,
+		html {
+			margin: 0;
+			padding: 0;
+			height: 100%;
+            {#background-image: linear-gradient(#dddddd, #323131);#}
+            background: #dddddd;
+		}
+
+        .card {
+
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			border-radius: 20px;
+
+		}
+
+        .btn {
+
+			box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-webkit-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			-moz-box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+			border-radius: 7px;
+
+		}
+
+    </style>
+</head>
+<body>
+    <div class="container-fluid offset-2">
+        <div class="row">
+            <div class="col-8">
+                <div class="card card-body">
+                    <h4 class="card-header"><b>Update Information</b></h4><br>
+                    <form method="POST" class="form-group" id="update_student_form" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.first_name.label}}</span>
+                            </div>
+                            {{form.first_name}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.last_name.label}}</span>
+                            </div>
+                            {{form.last_name}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.email.label}}</span>
+                            </div>
+                            {{form.email}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.school_year.label}}</span>
+                            </div>
+                            {{form.school_year}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.degree.label}}</span>
+                            </div>
+                            {{form.degree}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.research_interests.label}}</span>
+                            </div>
+                            {{form.research_interests}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.university.label}}</span>
+                            </div>
+                            {{form.university}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.gpa.label}}</span>
+                            </div>
+                            {{form.gpa}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.ethnicity.label}}</span>
+                            </div>
+                            {{form.ethnicity}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.gender.label}}</span>
+                            </div>
+                            {{form.gender}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.country.label}}</span>
+                            </div>
+                            {{form.country}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.us_citizenship.label}}</span>
+                            </div>
+                            {{form.us_citizenship}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.first_generation.label}}</span>
+                            </div>
+                            {{form.first_generation}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">{{form.military.label}}</span>
+                            </div>
+                            {{form.military}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Image Upload (Optional)</span>
+                            </div>
+                        </div>
+                        {{form.profile_image}}<br><br>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Resume Upload</span>
+                            </div>
+                        </div>
+                        {{form.resume}}<br><br>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text">Transcript Upload</span>
+                            </div>
+                        </div>
+                        {{form.transcript}}<br><br>
+                        <button id="update_student_submit_button" class="btn btn-primary" type="submit">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
