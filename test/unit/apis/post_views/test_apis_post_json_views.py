@@ -3,6 +3,7 @@ from apis.models import APIKey
 from django.urls import reverse
 from rest_framework.test import APIClient
 from student.models import Student
+import tempfile
 
 
 @pytest.mark.django_db
@@ -136,3 +137,32 @@ def test_api_add_student_with_some_extended_fields():
     assert not new_student.first_generation
     assert new_student.university == ""
     assert not new_student.us_citizenship
+
+
+@pytest.mark.django_db()
+def test_multiple_file_upload():
+    obj = APIKey(
+        name="tester",
+        email="tester@uiowa.edu",
+    )
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    tmp_file = tempfile.NamedTemporaryFile(suffix='.txt')
+    tmp_file.write(b'plz hire me')
+    tmp_file.seek(0)
+    data = {
+        'email': 'yes@gmail.com',
+        'first_name': 'boz',
+        'last_name': 'scaggs',
+        'school_year': 'SR',
+        'research_interests': ['AI', 'Medical Imaging', 'Art of Dance'],
+        'gpa': 4.1,
+        'military': True,
+        'resume': tmp_file
+    }
+    response = client.post(reverse('create_student_json'), data, format='json')
+    assert response.status_code == 400
+

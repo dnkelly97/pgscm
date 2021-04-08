@@ -56,6 +56,7 @@ def test_student_serializer(email,first_name,last_name,valid):
                                                 ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "MSEE", "", None, "U", "U", None, None, None, "NOT_A_BOOLEAN", False),
                             ])
 @pytest.mark.django_db
+# this doesn't include testing for the file and image fields, these fields have separate tests below
 def test_extended_student_serializer(email, first_name, last_name, school_year, research_interests, degree,
                                      university, gpa, ethnicity, gender, country, us_citizenship, first_generation,
                                      military, valid):
@@ -100,12 +101,6 @@ def test_extend_serializer_with_incomplete_field_info():
                           (None, "NOT_A_FILE", None, False),
                           (None, None, "NOT_AN_IMAGE", False)])
 def test_file_and_image_upload(resume, transcript, profile_image, expected):
-    # image = Image.new('RGB', (100, 100))
-    # tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
-    # image.save(tmp_file)
-    # tmp_file.seek(0)
-    # with open("test_file.txt", 'rb') as f:
-    #     tmp_file = SimpleUploadedFile("file.txt", f.read())
     data = {
         'email': 'yes@gmail.com',
         'first_name': 'boz',
