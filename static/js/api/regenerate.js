@@ -25,7 +25,9 @@ $(document).ready(function() {
                             //$(menu).html(response['html']);
                             document.getElementById('final_regenerate_button').style.display = 'none';
                             $('#confirm_delete_message').html("<div class='alert alert-success'>Successfully regenerated.</div>");
-                            window.location.href = response['url']
+                            window.setTimeout(function() {
+                                window.location.href = response['url'];
+                            }, 2000);
                         }
                         else{
                             //this case should be impossible unless caching is involved

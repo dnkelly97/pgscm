@@ -25,7 +25,6 @@ $(document).ready(function() {
                             //$(menu).html(response['html']);
                             document.getElementById('final_regenerate_button').style.display = 'none';
                             $('#confirm_delete_message').html("<div class='alert alert-success'>Successfully deleted.</div>");
-                            setTimeout(function(){}, 3000);
                             window.setTimeout(function() {
                                 window.location.href = response['url'];
                             }, 2000);
