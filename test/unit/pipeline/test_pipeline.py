@@ -10,6 +10,17 @@ from django.template.loader import render_to_string
 import json
 
 
+@pytest.fixture
+def pipeline_with_sources(db):
+    queries = []
+    for i in range(4):
+        queries.append(SavedQueryFactory.create())
+    pipeline = PipelineFactory.create(name="test_pipeline_1")
+    pipeline.sources.add(queries[0])
+    pipeline.sources.add(queries[1])
+    return pipeline
+
+
 @pytest.mark.django_db
 class TestPipelineViews:
 
@@ -129,6 +140,21 @@ class TestPipelineViews:
         response = logged_in_client.get(url)
         assert response.status_code == 200
 
+    # def test_edit_pipeline(self, rf, user):
+    #     request = rf.get('/pipeline/edit')
+    #     request.user = user
+    #     for i in range(4):
+    #         saved_query = SavedQueryFactory.create()
+    #     pipeline = PipelineFactory.create(name='pipeline_name')
+    #     pipeline.sources.add(SavedQuery.objects.get(id=1))
+    #     pipeline.sources.add(SavedQuery.objects.get(id=2))
+    #     pipeline.save()
+    #     request.GET = {'csrfmiddlewaretoken': ['fake_token'], 'name': ['pipeline_name'], 'description': ['yum yum yum'],
+    #                     'update_pipeline_submit': ['']}
+    #     request.method = 'GET'
+    #     response = update_pipeline(request, pipeline.name)
+
+
 
 class TestPipelineModel:
 
@@ -142,3 +168,23 @@ class TestSavedQueryModel:
         assert hasattr(SavedQuery, 'query_name')
         assert hasattr(SavedQuery, 'description')
         assert hasattr(SavedQuery, 'query')
+
+
+class TestUpdatePipelineForm:
+
+    def test_add_and_remove_field_options(self, pipeline_with_sources):
+        form = UpdatePipelineForm(instance=pipeline_with_sources)
+        source_query_ids = [p.id for p in pipeline_with_sources.sources.all()]
+        not_source_query_ids = [q.id for q in SavedQuery.objects.all() if q.id not in source_query_ids]
+        assert [q.id for q in form.fields['add_sources'].queryset] == not_source_query_ids
+        assert [q.id for q in form.fields['remove_sources'].queryset] == source_query_ids
+
+    def test_no_instance_raises_error(self):
+        try:
+            form = UpdatePipelineForm()
+            assert False
+        except ValueError as e:
+            if e.args[0] == "No pipeline instance given":
+                assert True
+            else:
+                assert False
