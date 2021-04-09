@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from .models import Pipeline, Stage
 from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
-from pipeline.forms import CreatePipelineForm, UpdateStageForm
+from pipeline.forms import CreatePipelineForm, UpdateStageForm, UpdatePipelineForm
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.http import JsonResponse
@@ -99,7 +99,16 @@ def delete_pipeline(request):
 
 @login_required(login_url='login')
 def update_pipeline(request, pipeline_name):
+    pipeline = Pipeline.objects.get(name=pipeline_name)
     if request.method == 'GET':
-        pipeline = Pipeline.objects.get(name=pipeline_name)
-        form = CreatePipelineForm(instance=pipeline)
+        form = UpdatePipelineForm(instance=pipeline)
         return render(request, 'edit_pipeline.html', {"form": form, "pipeline_name": pipeline_name})
+    elif request.method == 'POST':
+        form = UpdatePipelineForm(request.POST, instance=pipeline)
+        if form.is_valid():
+            pipeline = form.save()
+            return redirect('dashboard')
+        else:
+            # todo error feedback
+            pass
+    # todo: add sources
