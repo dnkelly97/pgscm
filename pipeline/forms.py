@@ -15,6 +15,15 @@ class CreatePipelineForm(ModelForm):
         }
 
 
+class UpdatePipelineForm(ModelForm):
+    class Meta:
+        model = Pipeline
+        fields = ['name', 'description']
+        widgets = {
+            'description': Textarea(attrs={'rows': 3, 'cols': 40})
+        }
+
+
 class UpdateStageForm(ModelForm):
     class Meta:
         model = Stage
