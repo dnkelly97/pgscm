@@ -1,5 +1,6 @@
 from django.forms import ModelForm
 from student.models import Student
+from django import forms
 
 class CreateForm(ModelForm):
     class Meta:
@@ -21,3 +22,7 @@ class CreateForm(ModelForm):
                   'resume',
                   'transcript',
                   'profile_image']
+
+
+class EmailForm(forms.Form):
+    from_email = forms.EmailField(required=True)
