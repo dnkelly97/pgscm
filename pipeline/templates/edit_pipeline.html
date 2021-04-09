@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+
+{% block content %}
+<br>
+<div class="container-fluid offset-2">
+    <div class="row">
+        <div class="col-8">
+            <div class="card card-body">
+                <h4 class="card-header"><b>Update Pipeline:</b> '{{ pipeline_name }}'</h4><br>
+                <div class="alert alert-danger" style="display: none;" id="message"></div>
+                <form method="POST" class="form-group" id="update_pipeline_form">
+                     {% csrf_token %}
+<!--                     <div class="input-group mb-3">-->
+<!--                        <div class="input-group-append">-->
+<!--                             <span class="input-group-text">{{form.sources.label}}</span>-->
+<!--                        </div>-->
+<!--                        {{form.sources}}-->
+<!--                     </div>-->
+                     <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text">{{form.name.label}}</span>
+                        </div>
+                        {{form.name}}
+                     </div>
+                     <div class="input-group mb-3">
+                         <div class="input-group-append">
+                            <span class="input-group-text">{{form.description.label}}</span>
+                         </div>
+                        {{form.description}}
+                     </div>
+                    <button id="update_pipeline_submit_button" name="update_pipeline_submit" class="btn btn-primary" style="display: none;" type="submit">Update</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+
+{% block javascript %}
+<!--    <script src="{% static 'js/pipeline/edit_pipeline.js' %}"></script>-->
+{% endblock %}

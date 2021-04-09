@@ -98,5 +98,8 @@ def delete_pipeline(request):
 
 
 @login_required(login_url='login')
-def edit_pipeline(request):
-    pass
+def update_pipeline(request, pipeline_name):
+    if request.method == 'GET':
+        pipeline = Pipeline.objects.get(name=pipeline_name)
+        form = CreatePipelineForm(instance=pipeline)
+        return render(request, 'edit_pipeline.html', {"form": form, "pipeline_name": pipeline_name})
