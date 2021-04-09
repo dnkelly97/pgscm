@@ -10,5 +10,5 @@ urlpatterns = [
     path('create/', create_pipeline, name='create_pipeline'),
     path('delete_query/', delete_query, name="delete_query"),
     path('delete_pipeline/', delete_pipeline, name="delete_pipeline"),
-    path('edit_pipeline/', edit_pipeline, name="edit_pipeline"),
+    path('edit_pipeline/<str:pipeline_name>', update_pipeline, name="update_pipeline"),
 ]
