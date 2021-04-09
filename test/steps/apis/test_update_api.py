@@ -20,11 +20,11 @@ def admin_access(live_server, browser):
 
 
 @given("I go to the api portal")
-def connect_register(live_server, browser):
+def open_api_portal(live_server, browser):
     browser.get(live_server + '/apis')
 
 @given("I select an API Form with <name>, <email>, <expiration_date> to view")
-def connect_register(live_server,name, email, expiration_date, browser):
+def create_and_select_api_key(live_server,name, email, expiration_date, browser):
     browser.get(live_server + '/apis')
     browser.find_element_by_id('id_name').send_keys(name)
     browser.find_element_by_id('id_email').send_keys(email)
@@ -32,11 +32,11 @@ def connect_register(live_server,name, email, expiration_date, browser):
     browser.find_element_by_link_text("View").click()
 
 @when("I select the update API Key button")
-def connect_register(live_server,name, email, expiration_date, browser):
+def select_update_api_key(live_server,name, email, expiration_date, browser):
     browser.find_element_by_id("update_api_button").click()
 
 @then("I should see 'Update <name>' on the Update Page")
-def connect_register(browser,name):
+def confirm_update_page(browser,name):
     assert 'Update '+name in browser.page_source
 
 @scenario('../../feature/apis/update_api.feature', 'Update API Key Page Submit')
@@ -44,7 +44,7 @@ def test_regenerate_api_key_confirmation(live_server):
     pass
 
 @when("I fill out the update form with a <new_name>, <new_email>, <new_expiration_date>")
-def connect_register(browser,new_name, new_email, new_expiration_date):
+def fill_out_update_form(browser,new_name, new_email, new_expiration_date):
     browser.find_element_by_id('id_name').clear()
     browser.find_element_by_id('id_email').clear()
     browser.find_element_by_id('id_name').send_keys(new_name)
@@ -52,6 +52,6 @@ def connect_register(browser,new_name, new_email, new_expiration_date):
     browser.find_element_by_id("update_api_submit_button").click()
 
 @then("I should see <new_name>, <new_email>, <new_expiration_date> on the API Key's profile page")
-def connect_register(browser, new_name, new_email, new_expiration_date):
+def confirm_changed_values(browser, new_name, new_email, new_expiration_date):
     assert new_name in browser.page_source
     assert new_email in browser.page_source

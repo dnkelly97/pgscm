@@ -20,11 +20,11 @@ def admin_access(live_server, browser):
 
 
 @given("I go to the api portal")
-def connect_register(live_server, browser):
+def open_api_portal(live_server, browser):
     browser.get(live_server + '/apis')
 
 @given("I select an API Form with <name>, <email>, <expiration_date> to view")
-def connect_register(live_server,name, email, expiration_date, browser):
+def save_and_select_api_key(live_server,name, email, expiration_date, browser):
     browser.get(live_server + '/apis')
     browser.find_element_by_id('id_name').send_keys(name)
     browser.find_element_by_id('id_email').send_keys(email)
@@ -32,11 +32,11 @@ def connect_register(live_server,name, email, expiration_date, browser):
     browser.find_element_by_link_text("View").click()
 
 @when("I select the delete API Key button")
-def connect_register(live_server,name, email, expiration_date, browser):
+def click_delete_api_key(live_server,name, email, expiration_date, browser):
     browser.find_element_by_id("delete_api_button").click()
 
 @then("I should see a popup modal appear to confirm the deletion of the key")
-def connect_register(browser):
+def modal(browser):
     assert browser.find_element_by_id("final_delete_button").get_attribute('style') == 'display: block;'
 
 @scenario('../../feature/apis/delete_api.feature', 'Delete API Key')
@@ -44,13 +44,13 @@ def test_delete_api_key_confirmation(live_server):
     pass
 
 @when("I confirm I want to delete the API Key")
-def connect_register(browser):
+def modal_confirmation(browser):
     print(browser.page_source)
     browser.find_element_by_id("final_delete_button").click()
     time.sleep(3) #needed for delay
 
 @then("I should not see <name>, <email> or <expiration_date> on the api portal")
-def connect_register(browser, name, email, expiration_date):
+def confirm_key_is_deleted(browser, name, email, expiration_date):
     assert name not in browser.page_source
     assert email not in browser.page_source
     assert expiration_date not in browser.page_source
@@ -60,10 +60,10 @@ def test_delete_api_key_modal_cancel(live_server):
     pass
 
 @when("I cancel my delete API Key command")
-def connect_register(browser):
+def cancel_deletion(browser):
     browser.find_element_by_id("escape_delete_popup").click()
 
 @then("I should see <name>, <email> or <expiration_date> on the api profile page")
-def connect_register(browser, name, email, expiration_date):
+def confirm_api_profile(browser, name, email, expiration_date):
     assert name in browser.page_source
     assert email in browser.page_source

@@ -20,11 +20,11 @@ def admin_access(live_server, browser):
 
 
 @given("I go to the api portal")
-def connect_register(live_server, browser):
+def open_api_portal(live_server, browser):
     browser.get(live_server + '/apis')
 
 @given("I select an API Form with <name>, <email>, <expiration_date> to view")
-def connect_register(live_server,name, email, expiration_date, browser):
+def create_and_select_api_key(live_server,name, email, expiration_date, browser):
     browser.get(live_server + '/apis')
     browser.find_element_by_id('id_name').send_keys(name)
     browser.find_element_by_id('id_email').send_keys(email)
@@ -32,11 +32,11 @@ def connect_register(live_server,name, email, expiration_date, browser):
     browser.find_element_by_link_text("View").click()
 
 @when("I select the regenerate API Key button")
-def connect_register(live_server,name, email, expiration_date, browser):
+def select_regenerate_api_key(live_server,name, email, expiration_date, browser):
     browser.find_element_by_id("regenerate_api_button").click()
 
 @then("I should see a popup modal appear to confirm the regeneration of the key")
-def connect_register(browser):
+def confirm_modal(browser):
     assert browser.find_element_by_id("final_regenerate_button").get_attribute('style') == 'display: block;'
 
 @scenario('../../feature/apis/regenerate_api.feature', 'Regenerate API Key')
@@ -44,13 +44,13 @@ def test_regenerate_api_key_confirmation(live_server):
     pass
 
 @when("I confirm I want to regenerate the API Key")
-def connect_register(browser):
+def confirm_regeneration(browser):
     print(browser.page_source)
     browser.find_element_by_id("final_regenerate_button").click()
     time.sleep(3) #needed for delay
 
 @then("I should see <name>, <email> or <expiration_date> on the api profile with a new prefix")
-def connect_register(browser, name, email, expiration_date):
+def confirm_new_key_is_present(browser, name, email, expiration_date):
     assert name in browser.page_source
     assert email in browser.page_source
 
@@ -59,10 +59,10 @@ def test_regenerate_api_key_modal_cancel(live_server):
     pass
 
 @when("I cancel my regenerate API Key command")
-def connect_register(browser):
+def cancel_regeneration(browser):
     browser.find_element_by_id("escape_regeneration_popup").click()
 
 @then("I should see <name>, <email> or <expiration_date> on the api profile page")
-def connect_register(browser, name, email, expiration_date):
+def api_profile_confirm(browser, name, email, expiration_date):
     assert name in browser.page_source
     assert email in browser.page_source
