@@ -104,11 +104,24 @@ def update_pipeline(request, pipeline_name):
         form = UpdatePipelineForm(instance=pipeline)
         return render(request, 'edit_pipeline.html', {"form": form, "pipeline_name": pipeline_name})
     elif request.method == 'POST':
-        form = UpdatePipelineForm(request.POST, instance=pipeline)
+        post = dict(request.POST)
+        try:
+            add_sources = post.pop('add_sources')
+            pipeline.add_sources(add_sources)
+        except KeyError:
+            pass
+        try:
+            remove_sources = post.pop('remove_sources')
+            pipeline.remove_sources(remove_sources)
+        except KeyError:
+            pass
+        pipeline_info = {'name': post['name'][0], 'description': post['description'][0]}
+        # breakpoint()
+        form = UpdatePipelineForm(pipeline_info, instance=pipeline)
         if form.is_valid():
             pipeline = form.save()
             return redirect('dashboard')
         else:
+            breakpoint()
             # todo error feedback
             pass
-    # todo: add sources
