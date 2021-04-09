@@ -39,10 +39,6 @@ def ajax_get_stages(request):
 @login_required(login_url='login')
 def create_pipeline(request):
     post = dict(request.POST)
-    try:
-        post['sources']
-    except:
-        post['sources'] = None
     pipeline_info = {'name': post['name'].pop(0), 'description': post['description'][0], 'sources': post['sources'],
                      'num_stages': post['num_stages'][0]}
     pipeline_form = CreatePipelineForm(pipeline_info)
