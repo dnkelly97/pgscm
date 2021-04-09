@@ -4,6 +4,7 @@ from .models import *
 from .decorators import admin_api_func
 from .forms import CreateForm
 from django.http import JsonResponse
+from django.urls import reverse
 
 
 @admin_api_func
@@ -73,26 +74,20 @@ def ajax_api_delete(request):
 def apiUpdate(request, key):
     api_keys = APIKey.objects.order_by('-created')
     api_key = APIKey.objects.get(prefix=key)
+    email = api_key.email
 
-    if request.method == 'POST':
-        form = CreateForm(request.POST)
+    form = CreateForm(request.POST or None, instance=api_key)
+    if form.is_valid():
+        obj = form.save()
+        if(obj.email != email):
+            new_obj = obj
+            obj.delete()
+            APIKey.objects.assign_key(new_obj)
+            new_obj.save()
+            return redirect(reverse('api_profile', kwargs={'key':new_obj.prefix}))
 
-        if form.is_valid():
-            obj = form.save(commit=False)
-            APIKey.objects.assign_key(obj)
-            obj.save()
-            context = {'api_keys': api_keys, 'api_key': api_key}
-            response = render(request, 'api_profile.html', context)
-            messages.success(request, 'Update successful...')
-            return response
+        return redirect(reverse('api_profile', kwargs={'key':obj.prefix}))
 
-        else:
-            messages.error(request, 'Email already in system')
-
-        context = {'api_keys': api_keys, 'api_key': api_key, 'form': form}
-        return render(request, 'api_profile.html', context)
-
-    form = CreateForm(initial={'name': api_key.name, 'email': api_key.email, 'expiry_date': api_key.expiry_date})
 
     context = {'api_keys': api_keys, 'api_key': api_key, 'form': form}
     return render(request, 'api_update.html', context)
