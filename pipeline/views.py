@@ -95,3 +95,8 @@ def delete_pipeline(request):
         partial = None
         success = False
     return JsonResponse({'success': success, 'html': partial})
+
+
+@login_required(login_url='login')
+def edit_pipeline(request):
+    pass
