@@ -140,20 +140,40 @@ class TestPipelineViews:
         response = logged_in_client.get(url)
         assert response.status_code == 200
 
-    # def test_edit_pipeline(self, rf, user):
-    #     request = rf.get('/pipeline/edit')
-    #     request.user = user
-    #     for i in range(4):
-    #         saved_query = SavedQueryFactory.create()
-    #     pipeline = PipelineFactory.create(name='pipeline_name')
-    #     pipeline.sources.add(SavedQuery.objects.get(id=1))
-    #     pipeline.sources.add(SavedQuery.objects.get(id=2))
-    #     pipeline.save()
-    #     request.GET = {'csrfmiddlewaretoken': ['fake_token'], 'name': ['pipeline_name'], 'description': ['yum yum yum'],
-    #                     'update_pipeline_submit': ['']}
-    #     request.method = 'GET'
-    #     response = update_pipeline(request, pipeline.name)
+    def test_get_update_pipeline(self, rf, user, pipeline_with_sources):
+        request = rf.get('/pipeline/edit/')
+        request.user = user
+        response = update_pipeline(request, pipeline_with_sources.name)
+        assert response.status_code == 200
+        assert pipeline_with_sources.name in str(response.content)
 
+    def test_post_update_pipeline_with_sources_changed(self, rf, user, pipeline_with_sources):
+        request = rf.post('/pipeline/edit/')
+        request.user = user
+        remove_sources = [str(pipeline_with_sources.sources.all()[0].id)]
+        add_sources = []
+        for query in SavedQuery.objects.all():
+            id = str(query.id)
+            if id not in remove_sources:
+                add_sources.append(id)
+        post = {'csrfmiddlewaretoken': ['fake_token'], 'name': [pipeline_with_sources.name], 'description': ['asdf'], 'add_sources': add_sources, 'remove_sources': remove_sources, 'update_pipeline_submit': ['']}
+        request.POST = post
+        response = update_pipeline(request, pipeline_with_sources.name)
+        assert response.status_code == 302
+        for source in add_sources:
+            assert int(source) in [p.id for p in pipeline_with_sources.sources.all()]
+        for source in remove_sources:
+            assert int(source) not in [p.id for p in pipeline_with_sources.sources.all()]
+
+    def test_post_update_pipeline_no_sources(self, rf, user, pipeline_with_sources):
+        request = rf.post('/pipeline/edit/')
+        request.user = user
+        post = {'csrfmiddlewaretoken': ['fake_token'], 'name': [pipeline_with_sources.name], 'description': ['asdf'], 'update_pipeline_submit': ['']}
+        request.POST = post
+        response = update_pipeline(request, pipeline_with_sources.name)
+        assert response.status_code == 302
+        updated_pipeline = Pipeline.objects.get(name=pipeline_with_sources.name)
+        assert updated_pipeline.description == 'asdf'
 
 
 class TestPipelineModel:
@@ -176,8 +196,8 @@ class TestUpdatePipelineForm:
         form = UpdatePipelineForm(instance=pipeline_with_sources)
         source_query_ids = [p.id for p in pipeline_with_sources.sources.all()]
         not_source_query_ids = [q.id for q in SavedQuery.objects.all() if q.id not in source_query_ids]
-        assert [q.id for q in form.fields['add_sources'].queryset] == not_source_query_ids
-        assert [q.id for q in form.fields['remove_sources'].queryset] == source_query_ids
+        assert set([q.id for q in form.fields['add_sources'].queryset]) == set(not_source_query_ids)
+        assert set([q.id for q in form.fields['remove_sources'].queryset]) == set(source_query_ids)
 
     def test_no_instance_raises_error(self):
         try:

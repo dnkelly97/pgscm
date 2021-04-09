@@ -122,6 +122,5 @@ def update_pipeline(request, pipeline_name):
             pipeline = form.save()
             return redirect('dashboard')
         else:
-            breakpoint()
             # todo error feedback
             pass

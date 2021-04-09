@@ -42,7 +42,6 @@ class Pipeline(models.Model):
             # todo:
             pass
 
-
     def save(self, *args, **kwargs):
         created = not self.pk
         super().save(*args, **kwargs)
