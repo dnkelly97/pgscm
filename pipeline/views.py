@@ -122,5 +122,4 @@ def update_pipeline(request, pipeline_name):
             pipeline = form.save()
             return redirect('dashboard')
         else:
-            # todo error feedback
-            pass
+            return render(request, 'edit_pipeline.html', {"form": form, "pipeline_name": pipeline_name, "message": "Pipeline name already in use."})

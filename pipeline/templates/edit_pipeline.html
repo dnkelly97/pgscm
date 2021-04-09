@@ -12,7 +12,11 @@
         <div class="col-8">
             <div class="card card-body">
                 <h4 class="card-header"><b>Update Pipeline:</b> '{{ pipeline_name }}'</h4><br>
-                <div class="alert alert-danger" style="display: none;" id="message"></div>
+                <div class="alert alert-danger" {% if not message %} style="display: none;" {% endif %} id="message">
+                    {% if message %}
+                        {{ message }}
+                    {% endif %}
+                </div>
                 <form method="POST" class="form-group" id="update_pipeline_form">
                     {% csrf_token %}
                     <div class="input-group mb-3">
