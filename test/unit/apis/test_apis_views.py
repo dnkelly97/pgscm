@@ -57,12 +57,12 @@ class StudentView(TestCase):
 
     @pytest.mark.django_db
     def test_get_update_api(self):
-        url = '/apis/update_api/' + self.obj.prefix
+        url = reverse('update_api', kwargs={'key':self.obj.prefix})
         response = self.client.get(url)
         assert response.status_code == 200
 
     @pytest.mark.django_db
     def test_post_update_api(self):
-        url = '/apis/update_api/' + self.obj.prefix
+        url = reverse('update_api', kwargs={'key':self.obj.prefix})
         response = self.client.post(url,json.dumps({'name':'new','email':'email@uiowa.edu'}), content_type='application/json')
         assert response.status_code == 200
