@@ -38,11 +38,21 @@
     </style>
 </head>
 <body>
+<br>
     <div class="container-fluid offset-2">
         <div class="row">
             <div class="col-8">
                 <div class="card card-body">
-                    <h4 class="card-header"><b>Update Information</b></h4><br>
+                    <h4 class="card-header"><b>Enter Information</b></h4><br>
+                    {% if messages %}
+                        <div class="alert alert-dark">
+                            <ul class="messages-no-bullets">
+                                {% for message in messages %}
+                                <li> {{ message }} </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    {% endif %}
                     <form method="POST" class="form-group" id="update_student_form" enctype="multipart/form-data">
                         {% csrf_token %}
                         <div class="input-group mb-3">
@@ -129,29 +139,12 @@
                             </div>
                             {{form.military}}
                         </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text">Image Upload (Optional)</span>
-                            </div>
-                        </div>
-                        {{form.profile_image}}<br><br>
-                        <div class="input-group mb-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text">Resume Upload</span>
-                            </div>
-                        </div>
-                        {{form.resume}}<br><br>
-                        <div class="input-group mb-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text">Transcript Upload</span>
-                            </div>
-                        </div>
-                        {{form.transcript}}<br><br>
                         <button id="update_student_submit_button" class="btn btn-primary" type="submit">Update</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
+<br>
 </body>
 </html>
