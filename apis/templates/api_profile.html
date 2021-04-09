@@ -28,8 +28,8 @@
                     <h5 class="card-header">About {{ api_key.name }}
                     <small class="float-sm-right">
                         <a id="update_api_button"  class="btn btn-sm btn-info" href="{% url 'update_api' api_key.prefix %}">Update</a>
-                        <a id="regenerate_api_button" class="btn btn-sm btn-warning" onclick="regenerateAPIKey('{{api_key.name }}')">Re-Generate</a>
-                        <a id="regenerate_api_button" class="btn btn-sm btn-danger" onclick="deleteAPIKey('{{api_key.name }}')">Delete</a>
+                        <a id="regenerate_api_button" class="btn btn-sm btn-warning" onclick="regenerateAPIKey('{{api_key.name }}')">Regenerate</a>
+                        <a id="delete_api_button" class="btn btn-sm btn-danger" onclick="deleteAPIKey('{{api_key.name }}')">Delete</a>
                     </small>
                     </h5><br>
                     <div class="container-fluid">
@@ -70,7 +70,7 @@
                     <div class="modal-body" id="confirm_regenerate_message"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary" id="final_regenerate_button">Regenerate</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_popup">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_regeneration_popup">Cancel</button>
                     </div>
                 </div>
             </form>
@@ -91,7 +91,7 @@
                     <div class="modal-body" id="confirm_delete_message"></div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" id="final_delete_button">Delete</button>
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_popup">Cancel</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_delete_popup">Cancel</button>
                     </div>
                 </div>
             </form>
