@@ -17,8 +17,8 @@ class CreatePipelineForm(ModelForm):
 
 class UpdatePipelineForm(ModelForm):
     # todo: Add model multiple choice fields for add_sources and delete sources. The tricky part will be defining the query_set
-    add_sources = ModelMultipleChoiceField(widget=widgets.CheckboxSelectMultiple(), queryset=None)
-    remove_sources = ModelMultipleChoiceField(widget=widgets.CheckboxSelectMultiple(), queryset=None)
+    add_sources = ModelMultipleChoiceField(widget=widgets.CheckboxSelectMultiple(), queryset=None, required=False)
+    remove_sources = ModelMultipleChoiceField(widget=widgets.CheckboxSelectMultiple(), queryset=None, required=False)
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
