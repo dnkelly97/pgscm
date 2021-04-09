@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import QueryDict
 from django.contrib import messages
-from student.forms import CreateForm
+from student.forms import CreateForm, EmailForm
 from .models import *
 from login.decorators import unauthenticated_user, admin_func
 from django.contrib.auth.decorators import login_required
@@ -189,8 +189,49 @@ def studentProfile(request, key):
 @login_required(login_url='login')
 def sendEmail(request):
     students = Student.objects.all()
-    context = {'students': students}
+    scheme = request.scheme
+    host = request.get_host()
+
+    if request.method == 'GET':
+        form = EmailForm()
+    else:
+        form = EmailForm(request.POST)
+        if form.is_valid():
+            send_mail(subject='Update Request',
+                      message="This is important, please update...",
+                      html_message="<p> Hello student, <br><br> Please update your information within the "
+                                   "UIOWA database by following this link <br><br> <a href='" + scheme + "://" + host +
+                                   "/student/self_create'> " + scheme + "://" + host + "/student/self_create" + "</a></p>",
+                      from_email=settings.EMAIL_HOST_USER,
+                      recipient_list=[form.cleaned_data['from_email']],
+                      fail_silently=False)
+            messages.success(request, 'Email sent...')
+
+        else:
+            messages.error(request, 'Something went wrong... Try again...')
+
+    context = {'students': students, 'form': form}
     return render(request, 'send_email.html', context)
+
+
+def form_email(response):
+    if response.method == 'POST':
+        form = CreateForm(response.POST)
+
+        if form.is_valid():
+
+            form.save()
+            messages.success(response, 'Creation successful...')
+
+        else:
+            messages.error(response, 'Something went wrong... Try again...')
+
+        context = {'form': form}
+        return render(response, 'self_create_form.html', context)
+
+    form = CreateForm
+    context = {'form': form}
+    return render(response, 'self_create_form.html', context)
 
 
 
