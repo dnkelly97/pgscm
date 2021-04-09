@@ -5,6 +5,7 @@
 {% block title %}Create a Pipeline{% endblock %}
 
 {% block content %}
+  <style>ul#id_sources {list-style-type: none;}</style>
     <br>
     <div class="container-fluid offset-2">
         <div class="row">
@@ -12,26 +13,32 @@
                 <div class="card card-body">
                     <h5 class="card-header"><b>Create Pipeline</b></h5><br>
                     <div class="alert alert-danger" style="display: none;" id="message"></div>
-                    <form method="POST" class="form-group" id="create_pipeline_form">
-                        {% csrf_token %}
-                        <div class="input-group mb-3">
+                     <form method="POST" class="form-group" id="create_pipeline_form">
+                         {% csrf_token %}
+                         <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                 <span class="input-group-text">{{form.sources.label}}</span>
+                            </div>
+                            {{form.sources}}
+                         </div>
+                         <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text">{{form.name.label}}</span>
                             </div>
                             {{form.name}}
-                        </div>
+                         </div>
                          <div class="input-group mb-3">
-                            <div class="input-group-append">
+                             <div class="input-group-append">
                                 <span class="input-group-text">{{form.description.label}}</span>
-                            </div>
+                             </div>
                             {{form.description}}
-                        </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text">{{form.num_stages.label}}</span>
-                            </div>
-                            {{form.num_stages}}
-                        </div>
+                         </div>
+                         <div class="input-group mb-3">
+                             <div class="input-group-append">
+                                 <span class="input-group-text">{{form.num_stages.label}}</span>
+                             </div>
+                             {{form.num_stages}}
+                         </div>
                         <div id="define_stages"></div>
                         <button id="create_pipeline_submit_button" name="create_pipeline_submit" class="btn btn-primary" style="display: none;" type="submit">Create</button>
                     </form>

@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, reverse
-from .models import Pipeline, Stage, SavedQuery
+from .models import Pipeline, Stage
+from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
 from pipeline.forms import CreatePipelineForm, UpdateStageForm
 from django.template.loader import render_to_string
@@ -7,7 +8,10 @@ from django.template import RequestContext
 from django.http import JsonResponse
 import pdb
 
+
 # Create your views here.
+
+
 @login_required(login_url='/login/')
 def dashboard(request):
     pipelines = Pipeline.objects.all()
@@ -35,7 +39,8 @@ def ajax_get_stages(request):
 @login_required(login_url='login')
 def create_pipeline(request):
     post = dict(request.POST)
-    pipeline_info = {'name': post['name'].pop(0), 'description': post['description'][0], 'num_stages': post['num_stages'][0]}
+    pipeline_info = {'name': post['name'].pop(0), 'description': post['description'][0], 'sources': post['sources'],
+                     'num_stages': post['num_stages'][0]}
     pipeline_form = CreatePipelineForm(pipeline_info)
     if pipeline_form.is_valid():
         pipeline = pipeline_form.save()
@@ -50,14 +55,16 @@ def create_pipeline(request):
                 pipeline.delete()
                 return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
         return JsonResponse({'success': True})
-    try:
-        pipeline_form.errors['name']
-        message = "A pipeline with that name already exists"
-    except KeyError:
-        pipeline_form.errors['num_stages']
-        message = "A pipeline must have at least one stage"
-    finally:
-        return JsonResponse({'success': False, 'message': message})
+    message = ''
+    for fields, error in pipeline_form.errors.items():
+        if fields == 'name':
+            message += "A pipeline with that name already exists\n"
+        elif fields == 'num_stages':
+            message += "A pipeline must have at least one stage\n"
+        else:
+            message += f"There was an issue with: {fields}\n"
+
+    return JsonResponse({'success': False, 'message': message})
 
 
 @login_required(login_url='login')

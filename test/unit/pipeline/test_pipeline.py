@@ -76,7 +76,8 @@ class TestPipelineViews:
     def test_create_pipeline(self, rf, user):
         request = rf.get('/pipeline/create')
         request.user = user
-        request.POST = {'csrf_token': 'fake_token', 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
+        saved_query = SavedQueryFactory.create()
+        request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
                         'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
@@ -87,13 +88,14 @@ class TestPipelineViews:
     def test_create_pipeline_bad_pipeline(self, rf, user):
         request = rf.get('/pipeline/create')
         request.user = user
-        request.POST = {'csrf_token': 'fake_token', 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
+        saved_query = SavedQueryFactory.create()
+        request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
                         'num_stages': ['0'], 'time_window': ['30'], 'advancement_condition': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
         content = json.loads(response.content)
         assert not content['success']
-        assert content['message'] == "A pipeline must have at least one stage"
+        assert content['message'] == "A pipeline must have at least one stage\n"
         try:
             Pipeline.objects.get(name="pipeline name")
             assert False
@@ -103,7 +105,8 @@ class TestPipelineViews:
     def test_create_pipeline_bad_stage(self, rf, user):
         request = rf.get('/pipeline/create')
         request.user = user
-        request.POST = {'csrf_token': 'fake_token', 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
+        saved_query = SavedQueryFactory.create()
+        request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
                         'num_stages': ['1'], 'time_window': ['-1'], 'advancement_condition': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
