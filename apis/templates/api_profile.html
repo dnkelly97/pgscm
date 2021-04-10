@@ -25,15 +25,21 @@
             </div>
             <div class="col-md-8">
                 <div class="card card-body" id="id_profile_header">
-                    <h5 class="card-header">About {{ api_key.name }}</h5><br>
+                    <h5 class="card-header">About {{ api_key.name }}
+                    <small class="float-sm-right">
+                        <a id="update_api_button"  class="btn btn-sm btn-info" href="{% url 'update_api' api_key.prefix %}">Update</a>
+                        <a id="regenerate_api_button" class="btn btn-sm btn-warning" onclick="regenerateAPIKey('{{api_key.name }}')">Regenerate</a>
+                        <a id="delete_api_button" class="btn btn-sm btn-danger" onclick="deleteAPIKey('{{api_key.name }}')">Delete</a>
+                    </small>
+                    </h5><br>
                     <div class="container-fluid">
                         <div class="row">
                             <div class="card card-body">
-                                <p><strong>Name: </strong> {{ api_key.name }} </p>
-                                <p><strong>Email: </strong> {{ api_key.email }} </p>
-                                <p><strong>Prefix: </strong>  {{ api_key.prefix }} </p>
-                                <p><strong>Created on: </strong>  {{ api_key.created }} </p>
-                                <p><strong>Revoked: </strong>  {{ api_key.revoked }} </p>
+                                <p><strong>Name: </strong> {{ api_key.name }}</p>
+                                <p><strong>Email: </strong> {{ api_key.email }}</p>
+                                <p><strong>Prefix: </strong>  {{ api_key.prefix }}</p>
+                                <p><strong>Created on: </strong>  {{ api_key.created }}</p>
+                                <p><strong>Revoked: </strong>  {{ api_key.revoked }}</p>
                             </div>
                             <br>
                         </div><br>
@@ -48,4 +54,52 @@
             </div>
         </div>
     </div>
+
+    <div class="modal" tabindex="-1" role="dialog" id="regenerate_modal">
+        <div class="modal-dialog" role="document">
+            <form id="regenerate_api_form">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Regeneration</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="prefix" value='{{ api_key.prefix }}' />
+                    <div class="modal-body" id="confirm_regenerate_message"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="final_regenerate_button">Regenerate</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_regeneration_popup">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" role="dialog" id="delete_modal">
+        <div class="modal-dialog" role="document">
+            <form id="delete_api_form">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Deletion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="prefix" value='{{ api_key.prefix }}' />
+                    <div class="modal-body" id="confirm_delete_message"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="final_delete_button">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_delete_popup">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 {% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/api/regenerate.js' %}"></script>
+    <script src="{% static 'js/api/delete.js' %}"></script>
+{% endblock javascript %}
