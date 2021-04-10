@@ -25,6 +25,23 @@ class Pipeline(models.Model):
         ]
     )
 
+    def add_sources(self, source_list):
+        for source_str in source_list:
+            self.add_source(int(source_str))
+
+    def remove_sources(self, source_list, boot_current_members=False):
+        for source_str in source_list:
+            self.remove_source(int(source_str), boot_current_members)
+
+    def add_source(self, source_id):
+        self.sources.add(SavedQuery.objects.get(id=source_id))
+
+    def remove_source(self, source_id, boot_current_members=False):
+        self.sources.remove(SavedQuery.objects.get(id=source_id))
+        if boot_current_members:
+            # todo:
+            pass
+
     def save(self, *args, **kwargs):
         created = not self.pk
         super().save(*args, **kwargs)
