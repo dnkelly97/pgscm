@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, reverse
 from .models import Pipeline, Stage
 from .models import SavedQuery
 from django.contrib.auth.decorators import login_required
-from pipeline.forms import CreatePipelineForm, UpdateStageForm
+from pipeline.forms import CreatePipelineForm, UpdateStageForm, UpdatePipelineForm
 from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.http import JsonResponse
@@ -91,3 +91,31 @@ def delete_pipeline(request):
         partial = None
         success = False
     return JsonResponse({'success': success, 'html': partial})
+
+
+@login_required(login_url='login')
+def update_pipeline(request, pipeline_name):
+    pipeline = Pipeline.objects.get(name=pipeline_name)
+    if request.method == 'GET':
+        form = UpdatePipelineForm(instance=pipeline)
+        return render(request, 'edit_pipeline.html', {"form": form, "pipeline_name": pipeline_name})
+    elif request.method == 'POST':
+        post = dict(request.POST)
+        try:
+            add_sources = post.pop('add_sources')
+            pipeline.add_sources(add_sources)
+        except KeyError:
+            pass
+        try:
+            remove_sources = post.pop('remove_sources')
+            pipeline.remove_sources(remove_sources)
+        except KeyError:
+            pass
+        pipeline_info = {'name': post['name'][0], 'description': post['description'][0]}
+        # breakpoint()
+        form = UpdatePipelineForm(pipeline_info, instance=pipeline)
+        if form.is_valid():
+            pipeline = form.save()
+            return redirect('dashboard')
+        else:
+            return render(request, 'edit_pipeline.html', {"form": form, "pipeline_name": pipeline_name, "message": "Pipeline name already in use."})
