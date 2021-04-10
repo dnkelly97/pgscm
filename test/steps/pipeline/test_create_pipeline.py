@@ -4,7 +4,12 @@ from django.urls import reverse
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from factories import PipelineFactory
+from factories import PipelineFactory, SavedQueryFactory
+
+
+@pytest.fixture
+def savedquery():
+    return SavedQueryFactory.create(query_name="my test saved query")
 
 
 @pytest.fixture
@@ -40,7 +45,7 @@ def assert_fields_for_correct_num_stages(logged_in_browser):
 )
 @scenario("../../feature/pipeline/create_pipeline.feature",
           "I am on the create pipeline page and I successfully create a pipeline")
-def test_pipeline_create_display(live_server, name, num_stages):
+def test_pipeline_create_display(live_server, name, num_stages, savedquery):
     pass
 
 
@@ -50,8 +55,9 @@ def pipeline_create_setup(live_server, logged_in_browser):
 
 
 @when("I fill out a name: <name>")
-def fill_out_name(browser, name):
+def fill_out_name(browser, name, savedquery):
     browser.find_element_by_id('id_name').send_keys(name)
+    browser.find_element_by_id('id_sources').click()
 
 
 @when("I fill out number of stages: <num_stages>")
@@ -77,13 +83,14 @@ def assert_on_dashboard(logged_in_browser):
 #         And I click the create pipeline submit button
 #         Then I should see an alert saying a pipeline with that name already exists
 @scenario("../../feature/pipeline/create_pipeline.feature", "I try to create a pipeline with a name that exists")
-def test_create_pipeline_with_existing_name(logged_in_browser, pipeline):
+def test_create_pipeline_with_existing_name(logged_in_browser, pipeline, savedquery):
     pass
 
 
 @when("I fill out a pipeline name that exists")
-def fill_out_existing_name(logged_in_browser, pipeline):
+def fill_out_existing_name(logged_in_browser, pipeline, savedquery):
     logged_in_browser.find_element_by_id('id_name').send_keys(pipeline.name)
+    logged_in_browser.find_element_by_id('id_sources').click()
     logged_in_browser.find_element_by_id('id_num_stages').send_keys(1)
     logged_in_browser.find_element_by_id("id_name").click()  # click elsewhere on the page to produce change event on num_stages
 
