@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import QueryDict
 from django.contrib import messages
-from student.forms import CreateForm, EmailForm
+from student.forms import CreateForm, ResearchForm, EmailForm
 from .models import *
 from login.decorators import unauthenticated_user, admin_func
 from django.contrib.auth.decorators import login_required
@@ -171,13 +171,21 @@ def studentProfile(request, key):
     students = Student.objects.all()
     student = Student.objects.get(id=key)
     name = student.first_name
-    path = request.build_absolute_uri()
+    email = student.email
+    scheme = request.scheme
+    host = request.get_host()
 
     if request.method == 'POST':
+        print(student.submitted)
+        student.submitted = False
+        student.save()
+        print(student.submitted)
         send_mail(subject='Update Request',
                   message="This is important, please update...",
                   html_message="<p> Hello " + name + ", <br><br> Please update your information within the "
-                               "UIOWA database by following this link <br><br> <a href='" + path + "'>" + path + "</a> </p>",
+                               "UIOWA database by following this link <br><br> <a href='" + scheme + "://" + host +
+                               "/student/research_interests/" + email + "'> " + scheme + "://" + host +
+                               "/student/research_interests/" + email + "</a></p>",
                   from_email=settings.EMAIL_HOST_USER,
                   recipient_list=[student.email],
                   fail_silently=False)
@@ -197,18 +205,15 @@ def sendEmail(request):
     else:
         form = EmailForm(request.POST)
         if form.is_valid():
-            send_mail(subject='Update Request',
+            send_mail(subject='Submit Information',
                       message="This is important, please update...",
-                      html_message="<p> Hello student, <br><br> Please update your information within the "
+                      html_message="<p> Hello student, <br><br> Please submit your information within the "
                                    "UIOWA database by following this link <br><br> <a href='" + scheme + "://" + host +
                                    "/student/self_create'> " + scheme + "://" + host + "/student/self_create" + "</a></p>",
                       from_email=settings.EMAIL_HOST_USER,
                       recipient_list=[form.cleaned_data['from_email']],
                       fail_silently=False)
             messages.success(request, 'Email sent...')
-
-        else:
-            messages.error(request, 'Something went wrong... Try again...')
 
     context = {'students': students, 'form': form}
     return render(request, 'send_email.html', context)
@@ -219,12 +224,8 @@ def form_email(response):
         form = CreateForm(response.POST)
 
         if form.is_valid():
-
             form.save()
             messages.success(response, 'Creation successful...')
-
-        else:
-            messages.error(response, 'Something went wrong... Try again...')
 
         context = {'form': form}
         return render(response, 'self_create_form.html', context)
@@ -233,5 +234,31 @@ def form_email(response):
     context = {'form': form}
     return render(response, 'self_create_form.html', context)
 
+
+def research_interests_form(request, key):
+    student = Student.objects.get(email=key)
+    form = ResearchForm(instance=student)
+
+    if student.submitted is False:
+        if request.method == 'POST':
+            form = ResearchForm(request.POST, instance=student)
+
+            if form.is_valid():
+                form.save()
+                student.submitted = True
+                student.save()
+                messages.success(request, 'Creation successful...')
+
+            else:
+                messages.error(request, 'Something went wrong... Try again...')
+
+            context = {'form': form, 'student': student}
+            return render(request, 'research_interests.html', context)
+
+        context = {'form': form, 'student': student}
+        return render(request, 'research_interests.html', context)
+
+    else:
+        return render(request, 'error.html')
 
 
