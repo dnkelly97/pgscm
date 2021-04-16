@@ -5,7 +5,6 @@ from .decorators import admin_api_func
 from .forms import CreateForm
 from django.http import JsonResponse
 from django.urls import reverse
-import sys
 
 
 @admin_api_func
