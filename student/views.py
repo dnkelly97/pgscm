@@ -121,15 +121,16 @@ def update_query(request, query_name):
 
 
 @login_required(login_url='login')
-def deleteStudent(request, key):
-    student = Student.objects.get(id=key)
-    if request.method == "POST":
+def deleteStudent(request):
+    try:
+        student = Student.objects.get(id=request.POST['id'])
         student.delete()
-        return redirect('student')
-
-    context = {'student': student}
-    return render(request, 'delete.html', context)
-
+        success = True
+        url = '/student/'
+    except Student.DoesNotExist:
+        url = None
+        success = False
+    return JsonResponse({'success': success, 'url': url})
 
 @login_required(login_url='login')
 def updateStudent(request, key):
