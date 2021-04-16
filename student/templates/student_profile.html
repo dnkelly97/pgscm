@@ -36,7 +36,7 @@
         <h5 class="card-header">{{ student.first_name }} {{ student.last_name }}'s profile
             <small class="float-sm-right">
                 <a id="update_student_button"  class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a>
-                <a id="delete_student_button" class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a>
+                <a id="delete_student_button" class="btn btn-sm btn-danger" onclick="deleteStudent('{{student.email }}')">Delete</a>
             </small>
         </h5><br>
         <div class="container-fluid">
@@ -133,4 +133,30 @@
         </div>
     </div>
 
+    <div class="modal" tabindex="-1" role="dialog" id="delete_student_modal">
+        <div class="modal-dialog" role="document">
+            <form id="delete_student_form">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Deletion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="id" value='{{ student.id }}' />
+                    <div class="modal-body" id="confirm_student_delete_message"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="final_student_delete_button">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_student_popup">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 {% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/student/delete.js' %}"></script>
+{% endblock javascript %}
