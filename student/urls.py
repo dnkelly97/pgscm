@@ -11,6 +11,7 @@ urlpatterns = [
     path('student_prfile/<str:key>', views.studentProfile, name='student_profile'),
     path('update_query/<str:query_name>', views.update_query, name='update_query'),
     path('send_email', views.sendEmail, name='send_email'),
-    path('self_create', views.form_email, name='self_form')
+    path('self_create', views.form_email, name='self_form'),
+    path('research_interests/<str:key>', views.research_interests_form, name='research_interests')
 ]
 
