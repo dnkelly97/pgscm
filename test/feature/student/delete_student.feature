@@ -3,9 +3,22 @@ Feature: Remove students from the system
   So that I can keep the system up to date
   I want to be able to remove students from the system
 
-  Scenario: Deleting student already in system
+  Scenario Outline: Delete Student Popup Confirmation
     Given I am logged in and on the student page
-    When I create a student that I plan on removing
+    And I create a student that I plan on removing
     When I click the delete button to remove this student
-    Then I should be redirected to the delete student page
-    Then I should see student removed on student portal
+    Then I should see a modal popup to confirm I want to delete a student
+
+  Scenario Outline: Delete Student Popup Cancel
+    Given I am logged in and on the student page
+    And I create a student that I plan on removing
+    When I click the delete button to remove this student
+    And I cancel the deletion of the student
+    Then I should still be on the student's profile page
+
+  Scenario Outline: Delete Student Submit
+    Given I am logged in and on the student page
+    And I create a student that I plan on removing
+    When I click the delete button to remove this student
+    And I confirm I want to remove this student
+    Then I should not see the student on the student portal page
