@@ -1,29 +1,25 @@
-function deleteAPIKey(name){
-    $('#confirm_delete_message').html("<h6>Are you sure you want to delete: " + name + "?</h6>");
-    document.getElementById('final_delete_button').style.display = 'block';
-    $('#escape_popup').html("Cancel");
-    $('#delete_modal').modal();
+function deleteStudent(email){
+    $('#confirm_student_delete_message').html("<h6>Are you sure you want to delete: " + email + "?</h6>");
+    document.getElementById('final_student_delete_button').style.display = 'block';
+    $('#escape_student_popup').html("Cancel");
+    $('#delete_student_modal').modal();
 }
 
 $(document).ready(function() {
-     $("#final_delete_button").on('click', function(event) {
-            console.log('here');
-            console.log('prefix');
+     $("#final_student_delete_button").on('click', function(event) {
 
-            var url = '/apis/delete_api/';
-            var form = '#delete_api_form';
-
-            console.log($(form).serialize());
+            var url = '/student/delete_student/';
+            var form = '#delete_student_form';
 
             $.ajax({
                     data: $(form).serialize(),
                     type: 'post',
                     url: url,
                     success: function(response) {
-                        $('#escape_popup').html("Close");
+                        console.log("MATHEW");
                         if(response['success']){
-                            //$(menu).html(response['html']);
-                            document.getElementById('final_regenerate_button').style.display = 'none';
+                            document.getElementById('escape_student_popup').style.display = 'none';
+                            document.getElementById('final_student_delete_button').style.display = 'none';
                             $('#confirm_delete_message').html("<div class='alert alert-success'>Successfully deleted.</div>");
                             window.setTimeout(function() {
                                 window.location.href = response['url'];
