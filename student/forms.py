@@ -24,5 +24,16 @@ class CreateForm(ModelForm):
                   'profile_image']
 
 
+class ResearchForm(ModelForm):
+    class Meta:
+        model = Student
+        fields = [
+            'research_interests',
+            'degree',
+            'university',
+            'gpa'
+        ]
+
+
 class EmailForm(forms.Form):
     from_email = forms.EmailField(required=True)
