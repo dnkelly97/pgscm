@@ -189,6 +189,7 @@ def studentProfile(request, key):
                   from_email=settings.EMAIL_HOST_USER,
                   recipient_list=[student.email],
                   fail_silently=False)
+        messages.success(request, 'Email sent...')
 
     context = {'students': students, 'student': student}
     return render(request, 'student_profile.html', context)
@@ -247,10 +248,7 @@ def research_interests_form(request, key):
                 form.save()
                 student.submitted = True
                 student.save()
-                messages.success(request, 'Creation successful...')
-
-            else:
-                messages.error(request, 'Something went wrong... Try again...')
+                messages.success(request, 'Thank you for updating this...')
 
             context = {'form': form, 'student': student}
             return render(request, 'research_interests.html', context)
