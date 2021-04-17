@@ -16,12 +16,15 @@ def apis(request):
 
         if form.is_valid():
             obj = form.save(commit=False)
-            APIKey.objects.assign_key(obj)
-            obj.save()
+            key = APIKey.objects.assign_key(obj)
+
+            object = obj.save()
+
+            APIKey.send_email(object, key, obj.email)
+
             response = redirect('api')
             messages.success(request, 'Creation successful...')
             return response
-
         else:
             messages.error(request, 'Email already in system')
 
@@ -48,8 +51,9 @@ def ajax_api_regenerate(request):
         key = APIKey.objects.get(prefix=request.POST['prefix'])
         new_key = key
         key.delete()
-        APIKey.objects.assign_key(new_key)
-        new_key.save()
+        new_client_key = APIKey.objects.assign_key(new_key)
+        object = new_key.save()
+        APIKey.send_email(object, new_client_key, new_key.email)
         success = True
         url = '/apis/api_profile/'+new_key.prefix
     except APIKey.DoesNotExist:
@@ -61,7 +65,6 @@ def ajax_api_regenerate(request):
 def ajax_api_delete(request):
     try:
         key = APIKey.objects.get(prefix=request.POST['prefix'])
-        name = key.name
         key.delete()
         success = True
         url = '/apis/'
@@ -82,8 +85,9 @@ def apiUpdate(request, key):
         if(obj.email != email):
             new_obj = obj
             obj.delete()
-            APIKey.objects.assign_key(new_obj)
-            new_obj.save()
+            key = APIKey.objects.assign_key(new_obj)
+            object = new_obj.save()
+            APIKey.send_email(object, key, obj.email)
             return redirect(reverse('api_profile', kwargs={'key':new_obj.prefix}))
 
         return redirect(reverse('api_profile', kwargs={'key':obj.prefix}))
