@@ -105,6 +105,8 @@
                                     <p><strong>First Generation:</strong>
                                         {% if student.first_generation %}
                                             <span class="badge badge-success"> YES </span>
+                                        {% elif student.first_generation == null %}
+                                            <span class="badge badge badge-pill  badge-info"> UNKNOWN </span>
                                         {% else %}
                                             <span class="badge badge-danger"> NO </span>
                                         {% endif %}
@@ -112,6 +114,8 @@
                                     <p><strong>US Citizen:</strong>
                                         {% if student.us_citizenship %}
                                             <span class="badge badge-success"> YES </span>
+                                        {% elif student.us_citizenship == null %}
+                                            <span class="badge badge badge-pill  badge-info"> UNKNOWN </span>
                                         {% else %}
                                             <span class="badge badge-danger"> NO </span>
                                         {% endif %}
@@ -119,6 +123,8 @@
                                     <p><strong>Military:</strong>
                                         {% if student.military %}
                                             <span class="badge badge-success"> YES </span>
+                                        {% elif student.military == null %}
+                                            <span class="badge badge badge-pill  badge-info"> UNKNOWN </span>
                                         {% else %}
                                             <span class="badge badge-danger"> NO </span>
                                         {% endif %}

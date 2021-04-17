@@ -1,0 +1,10 @@
+[run]
+omit =
+
+
+[report]
+omit =
+    apis/migrations/*
+    student/migrations/*
+    pipeline/migrations/*
+    login/migrations/*
