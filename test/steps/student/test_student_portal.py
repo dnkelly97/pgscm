@@ -36,6 +36,27 @@ def assert_create_student_buttons(browser):
     assert browser.find_element_by_id('create_student_submit_button')
 
 
-@then("Then I should see a create student button")
+@then("I should see a create student button")
 def assert_create_student_submit_button(browser):
     assert browser.find_element_by_id('create_student_submit_button')
+
+
+@scenario("../../feature/student/student_portal.feature", "I send an email to particular student")
+def test_sending_email(live_server):
+    pass
+
+
+@when("I click on the Request Information Button")
+def click_request_button(browser):
+    browser.find_element_by_id("email_student_button").click()
+
+
+@when("I enter the student's email")
+def enter_info(browser):
+    browser.find_element_by_id("id_from_email").send_keys("test@test.com")
+    browser.find_element_by_id("send_email_submit_button").click()
+
+
+@then("I should see a response message")
+def response_message(browser):
+    assert "Email sent..." in browser.page_source

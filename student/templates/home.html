@@ -106,9 +106,8 @@
                 {%  block content2 %}
                 <h4 class="card-header">Students
                     <small class="float-sm-right">
-                        <form action="{% url 'create_student' %}">
-                            <button id="create_student_button" class="btn btn-primary" type="submit">Create Students</button>
-                        </form>
+                        <a id="email_student_button" class="btn btn-secondary" href="{% url 'send_email' %}">Request Information</a>
+                        <a id="create_student_button" class="btn btn-primary" href="{% url 'create_student' %}">Create Students</a>
                     </small>
                 </h4>
                 <table class="table table-sm">

@@ -1,0 +1,29 @@
+{% extends "home.html" %}
+
+{% load static %}
+
+{% block title %}Send Student Email{% endblock %}
+
+{% block content1 %}
+    <h5 class="card-header">Request Student Input</h5><br>
+    {% if messages %}
+        <div class="alert alert-dark">
+            <ul class="messages-no-bullets">
+                {% for message in messages %}
+                <li> {{ message }} </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <div class="input-group mb-3">
+            <div class="input-group-append">
+                <span class="input-group-text"> Email </span>
+            </div>
+            {{form.from_email}}
+        </div>
+        <button id="send_email_submit_button" class="btn btn-primary" type="submit">Send</button>
+    </form>
+
+{% endblock %}

@@ -8,4 +8,10 @@ Feature: Administrator View Student Portal
         And I should see a button for creating a new student
         When I click the create student button
         Then I should see a create student form
-        And Then I should see a create student button
+        Then I should see a create student button
+
+   Scenario: I send an email to particular student
+       Given I am on the student portal
+       When I click on the Request Information Button
+       When I enter the student's email
+       Then I should see a response message
