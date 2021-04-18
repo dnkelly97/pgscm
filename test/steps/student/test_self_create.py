@@ -86,4 +86,26 @@ def submit_with_info(browser):
 
 @then("I should see a success message")
 def check_success(browser):
-    assert "Creation successful..."  in browser.page_source
+    assert "Creation successful..." in browser.page_source
+
+
+@when("I try to submit use the same email")
+def submit_same_info(live_server, browser):
+    browser.get(live_server + reverse('self_form'))
+
+    browser.find_element_by_id("id_first_name").send_keys("Test")
+    browser.find_element_by_id("id_last_name").send_keys("Test")
+    browser.find_element_by_id("id_email").send_keys("test@uiowa.edu")
+    browser.find_element_by_id("update_student_submit_button").click()
+
+    browser.get(live_server + reverse('self_form'))
+
+    browser.find_element_by_id("id_first_name").send_keys("Test")
+    browser.find_element_by_id("id_last_name").send_keys("Test")
+    browser.find_element_by_id("id_email").send_keys("test@uiowa.edu")
+    browser.find_element_by_id("update_student_submit_button").click()
+
+
+@then("I should see an error telling me that the email is already in use")
+def duplicate_email(browser):
+    assert "Email already exists..." in browser.page_source
