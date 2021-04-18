@@ -83,19 +83,19 @@
                             <div class="col-md-6 d-flex align-items-stretch">
                                 <div class="card card-body">
                                     <h6 class="card-title">Academics Information
-                                        <small class="float-sm-right">
-                                            <form method="post" action="{% url 'student_profile' student.id %}">
-                                                {% csrf_token %}
-                                                <button id="submit_student_email_button" class="btn btn-sm btn-info" type="submit">Request Update</button>
-                                            </form>
-                                        </small>
-                                    </h6>
+                                    </h6><br>
                                     <p><strong>Year in School:</strong> {{ student.school_year }} </p>
                                     <p><strong>Degree:</strong> {{ student.degree }} </p>
                                     <div class="input-group-append">
                                         <p><strong>Research Interest:</strong> {% for i in student.research_interests %} &nbsp; <span class="badge badge badge-pill  badge-info"> {{ i }} </span> {% endfor %} </p>
                                     </div>
                                     <p><strong>GPA:</strong>  {{ student.gpa }} </p>
+                                    <small class="float-sm-left">
+                                        <form method="post" action="{% url 'student_profile' student.id %}">
+                                            {% csrf_token %}
+                                            <button id="submit_student_email_button" class="btn btn-sm btn-info" type="submit">Request Update</button>
+                                        </form>
+                                    </small>
                                 </div>
                             </div>
                             <br>
