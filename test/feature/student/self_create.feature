@@ -21,3 +21,5 @@ Feature One Time Research Interest Form
     Then I should see an error message
     When I press the submit button with information
     Then I should see a success message
+    When I try to submit use the same email
+    Then I should see an error telling me that the email is already in use
