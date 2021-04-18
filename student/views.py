@@ -229,8 +229,14 @@ def form_email(response):
             form.save()
             messages.success(response, 'Creation successful...')
 
-        context = {'form': form}
-        return render(response, 'self_create_form.html', context)
+            context = {'form': form}
+            return render(response, 'success.html', context)
+
+        else:
+            messages.error(response, 'Email already exists...')
+
+            context = {'form': form}
+            return render(response, 'self_create_form.html', context)
 
     form = CreateForm
     context = {'form': form}
