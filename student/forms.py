@@ -28,6 +28,7 @@ class ResearchForm(ModelForm):
     class Meta:
         model = Student
         fields = [
+            'school_year',
             'research_interests',
             'degree',
             'university',

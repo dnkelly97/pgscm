@@ -60,6 +60,12 @@
                         {% csrf_token %}
                         <div class="input-group mb-3">
                             <div class="input-group-append">
+                                <span class="input-group-text">{{form.school_year.label}}</span>
+                            </div>
+                            {{form.school_year}}
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
                                 <span class="input-group-text">{{form.degree.label}}</span>
                             </div>
                             {{form.degree}}
