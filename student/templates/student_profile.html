@@ -15,15 +15,15 @@
         <h5 class="card-header">Students</h5><br>
         <table class="table table-sm">
             <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
+                <th>&nbsp;&nbsp;First Name</th>
+                <th>&nbsp;&nbsp;Last Name</th>
                 <th></th>
             </tr>
 
             {% for student in students %}
             <tr>
-                <td>{{student.first_name}}</td>
-                <td>{{student.last_name}}</td>
+                <td>&nbsp;&nbsp;{{student.first_name}}</td>
+                <td>&nbsp;&nbsp;{{student.last_name}}</td>
                 <td><a class="btn btn-sm btn-info" href="{% url 'student_profile' student.id %}">View</a></td>
             </tr>
             {% endfor %}
@@ -36,9 +36,18 @@
         <h5 class="card-header">{{ student.first_name }} {{ student.last_name }}'s profile
             <small class="float-sm-right">
                 <a id="update_student_button"  class="btn btn-sm btn-info" href="{% url 'update_student' student.id %}">Update</a>
-                <a id="delete_student_button" class="btn btn-sm btn-danger" href="{% url 'delete_student' student.id %}">Delete</a>
+                <a id="delete_student_button" class="btn btn-sm btn-danger" onclick="deleteStudent('{{student.email }}')">Delete</a>
             </small>
         </h5><br>
+        {% if messages %}
+            <div class="alert alert-dark">
+                <ul class="messages-no-bullets">
+                    {% for message in messages %}
+                    <li> {{ message }} </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-8">
@@ -73,13 +82,20 @@
                         <div class="row">
                             <div class="col-md-6 d-flex align-items-stretch">
                                 <div class="card card-body">
-                                    <h6 class="card-title">Academics Information</h6><br>
+                                    <h6 class="card-title">Academics Information
+                                    </h6><br>
                                     <p><strong>Year in School:</strong> {{ student.school_year }} </p>
                                     <p><strong>Degree:</strong> {{ student.degree }} </p>
                                     <div class="input-group-append">
                                         <p><strong>Research Interest:</strong> {% for i in student.research_interests %} &nbsp; <span class="badge badge badge-pill  badge-info"> {{ i }} </span> {% endfor %} </p>
                                     </div>
                                     <p><strong>GPA:</strong>  {{ student.gpa }} </p>
+                                    <small class="float-sm-left">
+                                        <form method="post" action="{% url 'student_profile' student.id %}">
+                                            {% csrf_token %}
+                                            <button id="submit_student_email_button" class="btn btn-sm btn-info" type="submit">Request Update</button>
+                                        </form>
+                                    </small>
                                 </div>
                             </div>
                             <br>
@@ -126,11 +142,37 @@
                         <p><strong>Transcript:</strong>{% if student.transcript %} <a href="{{ student.transcript.url }}"> Click Here</a>{% endif %}</p>
                     </div><br>
                     <div class="card card-body">
-                        <h6 class="card-title">Communication Log</h6><br>
+                        <h6 class="card-title">Communication Log</h6>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="modal" tabindex="-1" role="dialog" id="delete_student_modal">
+        <div class="modal-dialog" role="document">
+            <form id="delete_student_form">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Confirm Deletion</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <input type="hidden" name="id" value='{{ student.id }}' />
+                    <div class="modal-body" id="confirm_student_delete_message"></div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" id="final_student_delete_button">Delete</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" id="escape_student_popup">Cancel</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
 {% endblock %}
+
+{% block javascript %}
+    <script src="{% static 'js/student/delete.js' %}"></script>
+{% endblock javascript %}

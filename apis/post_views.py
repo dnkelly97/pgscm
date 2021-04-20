@@ -15,13 +15,13 @@ def json_view(request, format=None):
     key = request.META["HTTP_AUTHORIZATION"].split()[1]
     api_key = APIKey.objects.get_from_key(key)
     if api_key != None:
-        serializer = StudentSerializer(data=request.data)
+        serializer = StudentSerializer(data=request.data, many=True)
         if serializer.is_valid():
             serializer.save()
-            return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-        return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse(serializer.data, safe=False, status=status.HTTP_201_CREATED)
+        return JsonResponse(serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return JsonResponse("No API In Database", status=status.HTTP_400_BAD_REQUEST)
+        return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @parser_classes([FormParser,MultiPartParser])
