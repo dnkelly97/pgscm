@@ -65,7 +65,7 @@
                                 </div>
                                 <div class="card-block px-6">
                                     <br>
-                                    <h5 class="card-title">&nbsp;&nbsp; About</h5>
+                                    <h5 class="card-title">&nbsp;&nbsp; About </h5>
                                     <p class="card-text">
                                         <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;Name:</strong> {{ student.first_name }} {{ student.last_name }} </p>
                                         <p><strong> &nbsp;&nbsp;&nbsp;&nbsp;Email:</strong> {{ student.email }} </p>
@@ -90,12 +90,14 @@
                                         <p><strong>Research Interest:</strong> {% for i in student.research_interests %} &nbsp; <span class="badge badge badge-pill  badge-info"> {{ i }} </span> {% endfor %} </p>
                                     </div>
                                     <p><strong>GPA:</strong>  {{ student.gpa }} </p>
-                                    <small class="float-sm-left">
-                                        <form method="post" action="{% url 'student_profile' student.id %}">
-                                            {% csrf_token %}
-                                            <button id="submit_student_email_button" class="btn btn-sm btn-info" type="submit">Request Update</button>
-                                        </form>
-                                    </small>
+                                    <div class="mt-auto">
+                                        <small class="float-sm-left">
+                                            <form method="post" action="{% url 'student_profile' student.id %}">
+                                                {% csrf_token %}
+                                                <button id="submit_student_email_button" name="form1" class="btn btn-sm btn-info" type="submit">Request Update</button>
+                                            </form>
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
                             <br>
@@ -128,7 +130,15 @@
                                         {% else %}
                                             <span class="badge badge-danger"> NO </span>
                                         {% endif %}
-                                    </p>
+                                    </p><br>
+                                    <div class="mt-auto">
+                                        <small class="float-sm-left">
+                                            <form method="post" action="{% url 'student_profile' student.id %}">
+                                                {% csrf_token %}
+                                                <button id="demographics_email_button" name="form2" class="btn btn-sm btn-info btn-block" type="submit">Request Update</button>
+                                            </form>
+                                        </small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
