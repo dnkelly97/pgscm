@@ -1,3 +1,5 @@
+{% load static %}
+
 <div class="card card-body" style="border: none;">
     <h6 class="card-header"><b>Stage Definition</b></h6><br>
     {% for form in forms %}
@@ -7,16 +9,19 @@
         </div>
         {{ form.name }}
     </div>
-        <div class="btn-group">
-          <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Action
-          </button>
-          <div class="dropdown-menu">
-            {% for template in templates %}
-                <a class="dropdown-item" href="#">{{template.name}}</a>
-            {% endfor %}
-          </div>
-        </div>
+    <div class="btn-group" style="margin-bottom: 16px">
+      <button type="button" class="btn btn-danger dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Select Template
+      </button>
+      <div class="dropdown-menu">
+        {% for template in templates %}
+            <button class="dropdown-item" value = "{{template.content}}">{{template.name}}</button>
+        {% endfor %}
+      </div>
+    </div>
+    <div id = "placeholders">
+
+    </div>
     <div class="input-group mb-3">
         <div class="input-group-append">
             <span class="input-group-text">{{form.time_window.label}}</span>
@@ -33,6 +38,9 @@
     {% endfor %}
 </div>
 
+{% block javascript %}
+    <script src="{% static 'js/pipeline/create_template.js' %}"></script>
+{% endblock %}
 
 
 
