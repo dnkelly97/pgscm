@@ -23,9 +23,7 @@ def dashboard(request):
 
 @login_required(login_url='login')
 def build_pipeline_page(request):
-    context = {'form': CreatePipelineForm}
-    print(getTemplates())
-
+    context = {'form': CreatePipelineForm, 'templates': getTemplates()}
     return render(request, 'create_pipeline.html', context)
 
 def getTemplates():
@@ -49,7 +47,7 @@ def ajax_get_stages(request):
     for i in range(num_stages):
         stage = Stage(name="Stage " + str(i + 1))
         stage_forms.append(UpdateStageForm(instance=stage))
-    partial = render_to_string('define_stages.html', {'forms': stage_forms})
+    partial = render_to_string('define_stages.html', {'forms': stage_forms, 'templates': getTemplates()})
     return JsonResponse({'success': True, 'html': partial})
 
 
