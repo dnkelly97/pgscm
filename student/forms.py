@@ -41,7 +41,6 @@ class DemographicsForm(ModelForm):
         model = Student
         fields = [
             'country',
-            'university',
             'us_citizenship',
             'first_generation',
             'military'
