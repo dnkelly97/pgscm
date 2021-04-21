@@ -75,6 +75,7 @@ class Student(models.Model):
     military = models.BooleanField(blank=True, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     submitted = models.BooleanField(default=True)
+    submit_demo = models.BooleanField(default=True)
 
     def __str__(self):
         return self.email
