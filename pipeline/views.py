@@ -7,6 +7,8 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.http import JsonResponse
 import pdb
+import requests
+import os
 
 
 # Create your views here.
@@ -22,8 +24,23 @@ def dashboard(request):
 @login_required(login_url='login')
 def build_pipeline_page(request):
     context = {'form': CreatePipelineForm}
+    print(getTemplates())
+
     return render(request, 'create_pipeline.html', context)
 
+def getTemplates():
+    if 'WEBSITE_HOSTNAME' in os.environ:
+        dispatch_lite_url = ""
+    else:
+        dispatch_lite_url = "http://127.0.0.1:8000/templates/"
+    template_urls = requests.get(dispatch_lite_url, headers={'Authorization': 'x-dispatch-api-key DrLhBvOpwJcoMRtDq3z1'}).json()
+
+    template_objects = []
+    for templates_url in template_urls:
+        #print(templates_url)
+        template_objects.append(requests.get(templates_url, headers={'Authorization': 'x-dispatch-api-key DrLhBvOpwJcoMRtDq3z1'}).json())
+
+    return template_objects
 
 @login_required(login_url='login')
 def ajax_get_stages(request):
