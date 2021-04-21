@@ -177,10 +177,8 @@ def studentProfile(request, key):
     host = request.get_host()
 
     if request.method == 'POST' and 'form1' in request.POST:
-        print(student.submitted)
         student.submitted = False
         student.save()
-        print(student.submitted)
         send_mail(subject='Update Request',
                   message="This is important, please update...",
                   html_message="<p> Hello " + name + ", <br><br> Please update your information within the "
@@ -193,10 +191,8 @@ def studentProfile(request, key):
         messages.success(request, 'Email sent...')
 
     elif request.method == 'POST' and 'form2' in request.POST:
-        print(student.submitted)
-        student.submitted = False
+        student.submit_demo = False
         student.save()
-        print(student.submitted)
         send_mail(subject='Update Request',
                   message="This is important, please update...",
                   html_message="<p> Hello " + name + ", <br><br> Please update your information within the "
@@ -287,13 +283,13 @@ def demographics_form(request, key):
     student = Student.objects.get(email=key)
     form = DemographicsForm(instance=student)
 
-    if student.submitted is False:
+    if student.submit_demo is False:
         if request.method == 'POST':
             form = DemographicsForm(request.POST, instance=student)
 
             if form.is_valid():
                 form.save()
-                student.submitted = True
+                student.submit_demo = True
                 student.save()
                 messages.success(request, 'Thank you for updating this...')
 
