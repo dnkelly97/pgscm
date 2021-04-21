@@ -8,6 +8,6 @@ urlpatterns = [
     path('regenerate_api/', views.ajax_api_regenerate, name='regenerate_api'),
     path('delete_api/', views.ajax_api_delete, name='delete_api'),
     path('api_profile/<str:key>/update', views.apiUpdate, name='update_api'),
-    path('create_json/', post_views.json_view, name='create_student_json'),
-    path('create_form/', post_views.form_view, name='create_student_form')
+    path('create_json/', post_views.CreateStudents.json_view, name='create_student_json'),
+    path('create_form/', post_views.CreateStudents.form_view, name='create_student_form')
 ]
