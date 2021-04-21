@@ -36,5 +36,16 @@ class ResearchForm(ModelForm):
         ]
 
 
+class DemographicsForm(ModelForm):
+    class Meta:
+        model = Student
+        fields = [
+            'country',
+            'us_citizenship',
+            'first_generation',
+            'military'
+        ]
+
+
 class EmailForm(forms.Form):
     from_email = forms.EmailField(required=True)
