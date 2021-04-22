@@ -67,3 +67,10 @@ def user(db):
 @pytest.fixture(scope="session")
 def httpserver_listen_address():
     return ("127.0.0.1", 8001)
+
+@pytest.fixture()
+def authorization_header():
+    header = {
+        'Authorization': ('x-dispatch-api-key ""')
+    }
+    return header
