@@ -4,6 +4,7 @@ from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
 # Create your models here.
 from student.models import Student
+from django.contrib.postgres.fields import JSONField
 
 
 class SavedQuery(models.Model):
@@ -72,6 +73,8 @@ class Stage(models.Model):
             MinValueValidator(0)
         ]
     )
+    placeholders = models.JSONField(default=dict)
+    template_url = models.CharField(max_length=55, blank=True)
 
     class ConditionsForAdvancement(models.TextChoices):
         NONE = 'None', _('None')
@@ -83,4 +86,3 @@ class Stage(models.Model):
         choices=ConditionsForAdvancement.choices,
         default=ConditionsForAdvancement.NONE
     )
-
