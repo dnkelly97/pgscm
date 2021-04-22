@@ -6,6 +6,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from factories import PipelineFactory, SavedQueryFactory
 from pytest_httpserver import httpserver
+from selenium.webdriver.support.select import Select
 
 @pytest.fixture
 def savedquery():
@@ -24,9 +25,10 @@ def test_change_num_stages(logged_in_browser):
 
 
 @when("I change the number of stages")
-def change_num_stages(logged_in_browser, httpserver):
-    httpserver.expect_request("/templates/").respond_with_json(["http://127.0.0.1:8001/templates/1"])
-    httpserver.expect_request("/templates/1").respond_with_json({'name': 'yourmom'})
+def change_num_stages(logged_in_browser, httpserver,authorization_header):
+    httpserver.expect_request("/templates/", headers=authorization_header).respond_with_json(["http://127.0.0.1:8001/templates/1"])
+    httpserver.expect_request("/templates/1", headers=authorization_header).respond_with_json({'name': 'yourmom'})
+
     logged_in_browser.find_element_by_id("id_num_stages").send_keys('2')
     logged_in_browser.find_element_by_id("id_name").click()  # click elsewhere on the page to produce change event on num_stages
 
@@ -41,8 +43,8 @@ def assert_fields_for_correct_num_stages(logged_in_browser):
 @pytest.mark.parametrize(
     ['name', 'num_stages'],
     [
-        ('t', 1),
-        ('t2', 2)
+        ('t', 1)
+        # ('t2', 2)
     ]
 )
 @scenario("../../feature/pipeline/create_pipeline.feature",
@@ -63,12 +65,12 @@ def fill_out_name(browser, name, savedquery):
 
 
 @when("I fill out number of stages: <num_stages>")
-def fill_out_num_stages(logged_in_browser, num_stages,httpserver):
-    httpserver.expect_request("/templates/").respond_with_json(["http://127.0.0.1:8001/templates/1"])
-    httpserver.expect_request("/templates/1").respond_with_json({'name': 'Basic Template', 'content':'<@placeholder name="content" type="richtext" />' ,'id': '123'})
+def fill_out_num_stages(logged_in_browser, num_stages,httpserver,authorization_header):
+    httpserver.expect_request("/templates/", headers=authorization_header).respond_with_json(["http://127.0.0.1:8001/templates/1"])
+    httpserver.expect_request("/templates/1", headers=authorization_header).respond_with_json({'name': 'Basic Template','content':'<@placeholder name="content" type="richtext" />','id': '123'})
+
     logged_in_browser.find_element_by_id('id_num_stages').send_keys(num_stages)
     logged_in_browser.find_element_by_id("id_name").click()  # click elsewhere on the page to produce change event on num_stages
-
 
 @when("I click the create pipeline submit button")
 def create_pipeline_submit(logged_in_browser):
@@ -82,19 +84,20 @@ def assert_on_dashboard(logged_in_browser):
 
 
 # Scenario: I try to create a pipeline with a name that exists
-#         Given I am on the create pipeline page
-#         When I fill out a pipeline name that exists
-#         And I click the create pipeline submit button
-#         Then I should see an alert saying a pipeline with that name already exists
+# #         Given I am on the create pipeline page
+# #         When I fill out a pipeline name that exists
+# #         And I click the create pipeline submit button
+# #         Then I should see an alert saying a pipeline with that name already exists
+
 @scenario("../../feature/pipeline/create_pipeline.feature", "I try to create a pipeline with a name that exists")
 def test_create_pipeline_with_existing_name(logged_in_browser, pipeline, savedquery):
     pass
 
 
 @when("I fill out a pipeline name that exists")
-def fill_out_existing_name(logged_in_browser, pipeline, savedquery ,httpserver):
-    httpserver.expect_request("/templates/").respond_with_json(["http://127.0.0.1:8001/templates/1"])
-    httpserver.expect_request("/templates/1").respond_with_json(
+def fill_out_existing_name(logged_in_browser, pipeline, savedquery ,httpserver,authorization_header):
+    httpserver.expect_request("/templates/", headers=authorization_header).respond_with_json(["http://127.0.0.1:8001/templates/1"])
+    httpserver.expect_request("/templates/1", headers=authorization_header).respond_with_json(
         {'name': 'Basic Template', 'content': '<@placeholder name="content" type="richtext" />', 'id': '123'})
 
     logged_in_browser.find_element_by_id('id_name').send_keys(pipeline.name)
@@ -108,3 +111,17 @@ def assert_error_message_displayed(logged_in_browser):
     WebDriverWait(logged_in_browser, 10).until(
         EC.visibility_of_element_located((By.ID, "message")))
     assert "A pipeline with that name already exists" in logged_in_browser.page_source
+
+@when("I select a template for each of the <num_stages>")
+def logged_in_browser(logged_in_browser, num_stages):
+    for i in range(num_stages):
+        logged_in_browser.find_element_by_id('Stage_'+str(i+1)+'_dropdown_initalizer').click()
+        WebDriverWait(logged_in_browser, 10).until(
+            EC.visibility_of_element_located((By.XPATH, '//button[text()="Basic Template"]'))).click()
+
+@when("I fill in content for of the <num_stages> templates")
+def logged_in_browser(logged_in_browser, num_stages):
+    for i in range(num_stages):
+        WebDriverWait(logged_in_browser, 10).until(
+            EC.visibility_of_element_located((By.NAME, str(i + 1) + '_content' + '_123'))).send_keys("testing")
+
