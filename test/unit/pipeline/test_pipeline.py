@@ -77,13 +77,13 @@ class TestPipelineViews:
         assert not response_dict['success']
         assert not response_dict['html']
 
-    def test_ajax_get_stages(self, rf, user, httpserver):
+    def test_ajax_get_stages(self, rf, user, httpserver,authorization_header):
         request = rf.get('/pipeline/get_stages')
         request.user = user
         request.GET = {'num_stages': 3}
 
-        httpserver.expect_request("/templates/").respond_with_json(["http://127.0.0.1:8001/templates/1"])
-        httpserver.expect_request("/templates/1").respond_with_json({'name': 'yourmom'})
+        httpserver.expect_request("/templates/", headers=authorization_header).respond_with_json(["http://127.0.0.1:8001/templates/1"])
+        httpserver.expect_request("/templates/1", headers=authorization_header).respond_with_json({'name': 'yourmom'})
 
         response = ajax_get_stages(request)
         response_dict = json.loads(response.content)
@@ -104,6 +104,30 @@ class TestPipelineViews:
         assert Stage.objects.get(name='stage 1 name')
         assert Stage.objects.all().filter(name='stage 1 name')[0].placeholders == {'content': 'hello'}
         assert Stage.objects.all().filter(name='stage 1 name')[0].template_url == "http://127.0.0.1:8001/templates/123"
+
+    def test_create_pipeline_invalid_template_input(self, rf, user):
+        request = rf.get('/pipeline/create')
+        request.user = user
+        saved_query = SavedQueryFactory.create()
+        request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
+                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], '1_content_123': ['']}
+        response = create_pipeline(request)
+        assert response.status_code == 200
+        content = json.loads(response.content)
+        assert not content['success']
+        assert content['message'] == "Stage 1 does not have it's template content filled out\n"
+
+    def test_create_pipeline_no_template_selected(self, rf, user):
+        request = rf.get('/pipeline/create')
+        request.user = user
+        saved_query = SavedQueryFactory.create()
+        request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
+                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None']}
+        response = create_pipeline(request)
+        assert response.status_code == 200
+        content = json.loads(response.content)
+        assert not content['success']
+        assert content['message'] == "Stage 1 does not have a template selected\n"
 
     def test_create_pipeline_bad_pipeline(self, rf, user):
         request = rf.get('/pipeline/create')
