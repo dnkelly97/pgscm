@@ -1,8 +1,8 @@
 import requests
 import os
 
-DISPATCH_URL = "" if 'WEBSITE_HOSTNAME' in os.environ else "http://127.0.0.1:8001"
-DISPATCH_AUTH = "https://dispatchlite.azurewebsites.net/" if 'WEBSITE_HOSTNAME' in os.environ else "" #your testing url, leave blank for testing
+DISPATCH_URL = "" if 'WEBSITE_HOSTNAME' in os.environ else "http://127.0.0.1:8001" #make sure dispatch runs on port 8001
+DISPATCH_AUTH = "https://dispatchlite.azurewebsites.net/" if 'WEBSITE_HOSTNAME' in os.environ else "" #your developing client key, leave blank for testing
 
 def get_all_template_data():
     templates = get_templates()

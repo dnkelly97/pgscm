@@ -52,9 +52,9 @@ def create_pipeline(request):
                 values = [val for key, val in post.items() if str(i + 1)+'_' in key]
                 keys = [key for key, val in post.items() if str(i + 1)+'_' in key]
                 possible_new_content = jsonify_placeholders(keys, values)
-                if (len(keys) == 0):
+                if (len(keys) == 0): #check if template was specified
                     stage_errors+="Stage "+ str(i+1) + " does not have a template selected\n"
-                elif (possible_new_content == "Invalid"):
+                elif (possible_new_content == "Invalid"): #check if values were valid
                     stage_errors+="Stage "+ str(i+1) + " does not have it's template content filled out\n"
                 else:
                     obj.placeholders = possible_new_content
@@ -64,7 +64,7 @@ def create_pipeline(request):
                 pipeline.delete()
                 return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
 
-        if stage_errors != "":
+        if stage_errors != "": #return stage errors for templates
             pipeline.delete()
             return JsonResponse({'success': False, 'message': stage_errors})
         return JsonResponse({'success': True})
