@@ -83,13 +83,13 @@ class TestPipelineViews:
         request.GET = {'num_stages': 3}
 
         httpserver.expect_request("/templates/", headers=authorization_header).respond_with_json(["http://127.0.0.1:8001/templates/1"])
-        httpserver.expect_request("/templates/1", headers=authorization_header).respond_with_json({'name': 'yourmom'})
+        httpserver.expect_request("/templates/1", headers=authorization_header).respond_with_json({'name': 'test'})
 
         response = ajax_get_stages(request)
         response_dict = json.loads(response.content)
         assert response.status_code == 200
         assert "Stage 3" in response_dict['html']
-        assert "yourmom" in response_dict['html']
+        assert "test" in response_dict['html']
 
     def test_create_pipeline(self, rf, user):
         request = rf.get('/pipeline/create')
