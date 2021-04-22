@@ -36,11 +36,11 @@ def ajax_get_stages(request):
 @login_required(login_url='login')
 def create_pipeline(request):
     post = dict(request.POST)
-    print(post)
     pipeline_info = {'name': post['name'].pop(0), 'description': post['description'][0], 'sources': post['sources'],
                      'num_stages': post['num_stages'][0]}
     pipeline_form = CreatePipelineForm(pipeline_info)
     if pipeline_form.is_valid():
+        stage_errors = ""
         pipeline = pipeline_form.save()
         stages = Stage.objects.filter(pipeline=pipeline.id)
         for i in range(len(stages)):
@@ -51,16 +51,22 @@ def create_pipeline(request):
                 obj = stage_form.save()
                 values = [val for key, val in post.items() if str(i + 1)+'_' in key]
                 keys = [key for key, val in post.items() if str(i + 1)+'_' in key]
-
-                obj.placeholders = jsonify_placeholders(keys,values)
-                obj.template_url = get_template_url(keys[0])
-                obj.save()
+                possible_new_content = jsonify_placeholders(keys, values)
+                if (len(keys) == 0):
+                    stage_errors+="Stage "+ str(i+1) + " does not have a template selected\n"
+                elif (possible_new_content == "Invalid"):
+                    stage_errors+="Stage "+ str(i+1) + " does not have it's template content filled out\n"
+                else:
+                    obj.placeholders = possible_new_content
+                    obj.template_url = get_template_url(keys[0]) #only assign template if template was selected
+                    obj.save()
             else:
                 pipeline.delete()
                 return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
-        new_stages = Stage.objects.filter(pipeline=pipeline.id)
-        for stage in new_stages:
-            print(stage.placeholders)
+
+        if stage_errors != "":
+            pipeline.delete()
+            return JsonResponse({'success': False, 'message': stage_errors})
         return JsonResponse({'success': True})
     message = ''
     for fields, error in pipeline_form.errors.items():
