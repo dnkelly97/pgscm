@@ -125,3 +125,34 @@ def logged_in_browser(logged_in_browser, num_stages):
         WebDriverWait(logged_in_browser, 10).until(
             EC.visibility_of_element_located((By.NAME, str(i + 1) + '_content' + '_123'))).send_keys("testing")
 
+@pytest.mark.parametrize(
+    ['name', 'num_stages'],
+    [
+        ('t', 1)
+    ]
+)
+@scenario("../../feature/pipeline/create_pipeline.feature", "I try to create a pipeline with selecting a template")
+def test_create_pipeline_without_specifying_template(live_server, name, num_stages, savedquery):
+    pass
+
+@then("I should see an alert saying the stage does not have a template specified")
+def assert_error_message_displayed_for_no_template_specified(logged_in_browser):
+    WebDriverWait(logged_in_browser, 10).until(
+        EC.visibility_of_element_located((By.ID, "message")))
+    assert "Stage 1 does not have a template selected" in logged_in_browser.page_source
+
+@pytest.mark.parametrize(
+    ['name', 'num_stages'],
+    [
+        ('t', 1)
+    ]
+)
+@scenario("../../feature/pipeline/create_pipeline.feature", "I try to create a pipeline without specifying input for a selected template")
+def test_create_pipeline_without_specifying_template_data(live_server, name, num_stages, savedquery):
+    pass
+
+@then("I should see an alert saying the stage does not have its template data filled out")
+def assert_error_message_displayed_for_no_template_data(logged_in_browser):
+    WebDriverWait(logged_in_browser, 10).until(
+        EC.visibility_of_element_located((By.ID, "message")))
+    assert "Stage 1 does not have it's template content filled out" in logged_in_browser.page_source
