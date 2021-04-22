@@ -1,10 +1,7 @@
 import requests
 import os
 
-if 'WEBSITE_HOSTNAME' in os.environ:
-    DISPATCH_URL = "http://127.0.0.1:8000"
-else:
-    DISPATCH_URL = "http://127.0.0.1:8001"
+DISPATCH_URL = "" if 'WEBSITE_HOSTNAME' in os.environ else "http://127.0.0.1:8001"
 
 def get_all_template_data():
     templates = get_templates()

@@ -2,6 +2,9 @@ import pytest
 from pytest_httpserver import httpserver
 from pipeline.management.dispatch.dispatch_requests import *
 
+def test_dispatch_url():
+    assert DISPATCH_URL == "http://127.0.0.1:8001"
+
 def test_json_request(httpserver):
     httpserver.expect_request("/templates/").respond_with_json(["http://127.0.0.1:8001/templates/1"])
     assert get_templates() == ["http://127.0.0.1:8001/templates/1"]
