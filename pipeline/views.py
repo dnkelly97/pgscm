@@ -7,12 +7,7 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.http import JsonResponse
 import pdb
-import requests
-import os
-
-
-# Create your views here.
-
+from pipeline.management.dispatch.dispatch_requests import *
 
 @login_required(login_url='/login/')
 def dashboard(request):
@@ -23,37 +18,25 @@ def dashboard(request):
 
 @login_required(login_url='login')
 def build_pipeline_page(request):
-    context = {'form': CreatePipelineForm, 'templates': getTemplates()}
+    context = {'form': CreatePipelineForm}
     return render(request, 'create_pipeline.html', context)
-
-def getTemplates():
-    if 'WEBSITE_HOSTNAME' in os.environ:
-        dispatch_lite_url = ""
-    else:
-        dispatch_lite_url = "http://127.0.0.1:8000/templates/"
-    template_urls = requests.get(dispatch_lite_url, headers={'Authorization': 'x-dispatch-api-key DrLhBvOpwJcoMRtDq3z1'}).json()
-
-    template_objects = []
-    for templates_url in template_urls:
-        #print(templates_url)
-        template_objects.append(requests.get(templates_url, headers={'Authorization': 'x-dispatch-api-key DrLhBvOpwJcoMRtDq3z1'}).json())
-
-    return template_objects
 
 @login_required(login_url='login')
 def ajax_get_stages(request):
     num_stages = int(request.GET['num_stages'])
     stage_forms = []
+    templates = get_all_template_data()
     for i in range(num_stages):
         stage = Stage(name="Stage " + str(i + 1))
         stage_forms.append(UpdateStageForm(instance=stage))
-    partial = render_to_string('define_stages.html', {'forms': stage_forms, 'templates': getTemplates()})
+    partial = render_to_string('define_stages.html', {'forms': stage_forms, 'templates': templates})
     return JsonResponse({'success': True, 'html': partial})
 
 
 @login_required(login_url='login')
 def create_pipeline(request):
     post = dict(request.POST)
+    print(post)
     pipeline_info = {'name': post['name'].pop(0), 'description': post['description'][0], 'sources': post['sources'],
                      'num_stages': post['num_stages'][0]}
     pipeline_form = CreatePipelineForm(pipeline_info)
@@ -65,10 +48,19 @@ def create_pipeline(request):
                       'advancement_condition': post['advancement_condition'][i], 'pipeline': pipeline.id}
             stage_form = UpdateStageForm(fields, instance=stages[i])
             if stage_form.is_valid():
-                stage_form.save()
+                obj = stage_form.save()
+                values = [val for key, val in post.items() if str(i + 1)+'_' in key]
+                keys = [key for key, val in post.items() if str(i + 1)+'_' in key]
+
+                obj.placeholders = jsonify_placeholders(keys,values)
+                obj.template_url = get_template_url(keys[0])
+                obj.save()
             else:
                 pipeline.delete()
                 return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
+        new_stages = Stage.objects.filter(pipeline=pipeline.id)
+        for stage in new_stages:
+            print(stage.placeholders)
         return JsonResponse({'success': True})
     message = ''
     for fields, error in pipeline_form.errors.items():
