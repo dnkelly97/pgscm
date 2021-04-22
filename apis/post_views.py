@@ -1,3 +1,5 @@
+from django.contrib.auth.models import User
+from django.core.mail import mail_admins
 from django.shortcuts import render
 from rest_framework.parsers import JSONParser, FormParser, MultiPartParser
 from apis.permissions import HasAPIKey
@@ -13,6 +15,25 @@ from rest_framework.views import APIView
 
 class HundredPerDayThrottle(UserRateThrottle):
     rate = '100/day'
+
+    def allow_request(self, request, view):
+        if self.rate is None:
+            return True
+        self.key = self.get_cache_key(request, view)
+        if self.key is None:
+            return True
+        self.history = self.cache.get(self.key, [])
+        self.now = self.timer()
+        email_list = []
+        superusers = User.objects.filter(is_superuser=True)
+        for user in superusers:
+            email_list.append(user.email)
+        while self.history and self.history[-1] <= self.now - self.duration:
+            self.history.pop()
+        if len(self.history) >= self.num_requests:
+            send_mail(subject="PGSCM rate limit exceeded", message=f"{self.get_ident(request)} exceeded the rate limit.", from_email='pgscm.uiowa@gmail.com', recipient_list=email_list, fail_silently=False, auth_user=None, auth_password=None, connection=None, html_message=None)
+            return self.throttle_failure()
+        return self.throttle_success()
 
 
 class CreateStudents(APIView):
