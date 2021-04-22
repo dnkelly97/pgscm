@@ -8,6 +8,8 @@ from factories import SavedQueryFactory, PipelineFactory
 from pipeline.models import Pipeline, SavedQuery
 from django.template.loader import render_to_string
 import json
+from pipeline.management.dispatch.dispatch_requests import *
+from pytest_httpserver import httpserver
 
 
 @pytest.fixture
@@ -75,26 +77,33 @@ class TestPipelineViews:
         assert not response_dict['success']
         assert not response_dict['html']
 
-    def test_ajax_get_stages(self, rf, user):
+    def test_ajax_get_stages(self, rf, user, httpserver):
         request = rf.get('/pipeline/get_stages')
         request.user = user
         request.GET = {'num_stages': 3}
+
+        httpserver.expect_request("/templates/").respond_with_json(["http://127.0.0.1:8001/templates/1"])
+        httpserver.expect_request("/templates/1").respond_with_json({'name': 'yourmom'})
+
         response = ajax_get_stages(request)
         response_dict = json.loads(response.content)
         assert response.status_code == 200
         assert "Stage 3" in response_dict['html']
+        assert "yourmom" in response_dict['html']
 
     def test_create_pipeline(self, rf, user):
         request = rf.get('/pipeline/create')
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None']}
+                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], '1_content_123': ['hello']}
         response = create_pipeline(request)
         assert response.status_code == 200
         assert json.loads(response.content)['success']
         assert Pipeline.objects.get(name="pipeline name")
         assert Stage.objects.get(name='stage 1 name')
+        assert Stage.objects.all().filter(name='stage 1 name')[0].placeholders == {'content': 'hello'}
+        assert Stage.objects.all().filter(name='stage 1 name')[0].template_url == "http://127.0.0.1:8001/templates/123"
 
     def test_create_pipeline_bad_pipeline(self, rf, user):
         request = rf.get('/pipeline/create')
