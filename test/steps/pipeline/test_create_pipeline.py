@@ -5,7 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from factories import PipelineFactory, SavedQueryFactory
-
+from pytest_httpserver import httpserver
 
 @pytest.fixture
 def savedquery():
@@ -24,7 +24,9 @@ def test_change_num_stages(logged_in_browser):
 
 
 @when("I change the number of stages")
-def change_num_stages(logged_in_browser):
+def change_num_stages(logged_in_browser, httpserver):
+    httpserver.expect_request("/templates/").respond_with_json(["http://127.0.0.1:8001/templates/1"])
+    httpserver.expect_request("/templates/1").respond_with_json({'name': 'yourmom'})
     logged_in_browser.find_element_by_id("id_num_stages").send_keys('2')
     logged_in_browser.find_element_by_id("id_name").click()  # click elsewhere on the page to produce change event on num_stages
 
@@ -61,7 +63,9 @@ def fill_out_name(browser, name, savedquery):
 
 
 @when("I fill out number of stages: <num_stages>")
-def fill_out_num_stages(logged_in_browser, num_stages):
+def fill_out_num_stages(logged_in_browser, num_stages,httpserver):
+    httpserver.expect_request("/templates/").respond_with_json(["http://127.0.0.1:8001/templates/1"])
+    httpserver.expect_request("/templates/1").respond_with_json({'name': 'Basic Template', 'content':'<@placeholder name="content" type="richtext" />' ,'id': '123'})
     logged_in_browser.find_element_by_id('id_num_stages').send_keys(num_stages)
     logged_in_browser.find_element_by_id("id_name").click()  # click elsewhere on the page to produce change event on num_stages
 
@@ -88,7 +92,11 @@ def test_create_pipeline_with_existing_name(logged_in_browser, pipeline, savedqu
 
 
 @when("I fill out a pipeline name that exists")
-def fill_out_existing_name(logged_in_browser, pipeline, savedquery):
+def fill_out_existing_name(logged_in_browser, pipeline, savedquery ,httpserver):
+    httpserver.expect_request("/templates/").respond_with_json(["http://127.0.0.1:8001/templates/1"])
+    httpserver.expect_request("/templates/1").respond_with_json(
+        {'name': 'Basic Template', 'content': '<@placeholder name="content" type="richtext" />', 'id': '123'})
+
     logged_in_browser.find_element_by_id('id_name').send_keys(pipeline.name)
     logged_in_browser.find_element_by_id('id_sources').click()
     logged_in_browser.find_element_by_id('id_num_stages').send_keys(1)
