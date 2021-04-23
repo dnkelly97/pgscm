@@ -44,7 +44,7 @@ def dispatch_campaign_post(pipeline_id, pipeline_name):
                          data=data)
 
 
-def dispatch_communication_post(campaign_id, stage_id, name, placeholders, template, campaign):
+def dispatch_communication_post(campaign_id, stage_id, name, placeholders, template):
     email = {'fromAddress': 'dontmatter@gmail.com', 'fromName': 'you mom. hah.', 'subject': 'this one is a bit of a problem...'}
     destinations = [
         {
@@ -64,7 +64,6 @@ def dispatch_communication_post(campaign_id, stage_id, name, placeholders, templ
             'placeholders': placeholders,
             'template': template,
             'notificationAddresses': [user.email for user in User.objects.filter(is_superuser=True)],
-            'campaign': campaign,
             }
     return requests.post(DISPATCH_URL+'/campaigns/' + str(campaign_id) + '/communications',
                          headers={'Authorization': 'x-dispatch-api-key ' + DISPATCH_AUTH},

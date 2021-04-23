@@ -60,8 +60,7 @@ def test_valid_communications_post():
     name = 'my stage'
     placeholders = {'content': 'hello amigo'}
     template = 'http://fake.template.url.com/templates/789'
-    campaign = "http://unimportant.campaign.url.com/campaigns/700"
-    response = dispatch_communication_post(pipeline_id, stage_id, name, placeholders, template, campaign)
+    response = dispatch_communication_post(pipeline_id, stage_id, name, placeholders, template)
     assert response.status_code == 201
     assert json.loads(response.content) == "http://127.0.0.1:8001/communications/" + str(stage_id)
 
@@ -73,8 +72,7 @@ def test_invalid_communications_post():
     name = 'my stage'
     placeholders = {'content': 'hello amigo'}
     template = 'http://fake.template.url.com/templates/789'
-    campaign = "http://unimportant.campaign.url.com/campaigns/700"
-    response = dispatch_communication_post(bad_pipeline_id, stage_id, name, placeholders, template, campaign)
+    response = dispatch_communication_post(bad_pipeline_id, stage_id, name, placeholders, template)
     assert response.status_code == 400
     assert json.loads(response.content) == "Bad Request"
 
