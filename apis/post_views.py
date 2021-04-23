@@ -29,7 +29,7 @@ class HundredPerDayThrottle(UserRateThrottle):
         if len(self.history) >= self.num_requests:
             for user in superusers:
                 email_list.append(user.email)
-            send_mail(subject="PGSCM rate limit exceeded", message=f"{self.get_ident(request)} exceeded the rate limit.", from_email='pgscm.uiowa@gmail.com', recipient_list=email_list, fail_silently=False, auth_user=None, auth_password=None, connection=None, html_message=None)
+            send_mail(subject="PGSCM rate limit exceeded", message=f"{self.get_ident(request)} exceeded the rate limit.", from_email=settings.EMAIL_HOST_USER, recipient_list=email_list, fail_silently=False, auth_user=None, auth_password=None, connection=None, html_message=None)
             naughty_key = APIKey.objects.get_from_key(request.META["HTTP_AUTHORIZATION"].split()[1])
             naughty_key.revoked = True
             naughty_key.save()
