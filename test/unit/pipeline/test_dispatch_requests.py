@@ -51,47 +51,62 @@ def test_jsononify_placeholders_invalid():
     assert jsonify_placeholders(keys,values) == "Invalid"
 
 
-@pytest.mark.django_db
-def test_valid_communications_post():
-    pipeline_id = random.randint(1, 2147483646)  # this is not deterministic so this test may fail bc of duplication of keys, but it is very unlikely
-    pipeline_name = 'Test Pipeline'
-    response = dispatch_campaign_post(pipeline_id, pipeline_name)
-    stage_id = random.randint(1, 2147483646)
-    name = 'my stage'
-    placeholders = {'content': 'hello amigo'}
-    template = 'http://fake.template.url.com/templates/789'
-    response = dispatch_communication_post(pipeline_id, stage_id, name, placeholders, template)
-    assert response.status_code == 201
-    assert json.loads(response.content) == "http://127.0.0.1:8001/communications/" + str(stage_id)
+def test_campaign_post(httpserver, authorization_header):
+    response = ["http://127.0.0.1:8001/campaigns/1"]
+    httpserver.expect_request("/campaigns/", headers=authorization_header).respond_with_json(response)
+    assert dispatch_campaign_post(pipeline_id=1, pipeline_name='test pipeline').json() == response
 
 
 @pytest.mark.django_db
-def test_invalid_communications_post():
-    bad_pipeline_id = 2147483647  # id reserved for failure case
-    stage_id = random.randint(1, 2147483646)
+def test_communications_post(httpserver, authorization_header):
+    response = ["http://127.0.0.1:8001/communications/1"]
+    httpserver.expect_request("/campaigns/233/communications", headers=authorization_header).respond_with_json(response)
+    pipeline_id = 233
+    stage_id = 1
     name = 'my stage'
     placeholders = {'content': 'hello amigo'}
     template = 'http://fake.template.url.com/templates/789'
-    response = dispatch_communication_post(bad_pipeline_id, stage_id, name, placeholders, template)
-    assert response.status_code == 400
-    assert json.loads(response.content) == "Bad Request"
+    assert dispatch_communication_post(pipeline_id, stage_id, name, placeholders, template).json() == response
 
 
-def test_valid_campaign_post():
-    pipeline_id = random.randint(1, 2147483646)  # this is not deterministic so this test may fail bc of duplication of keys, but it is very unlikely
-    pipeline_name = 'Test Pipeline'
-    response = dispatch_campaign_post(pipeline_id, pipeline_name)
-    assert response.status_code == 201
-    assert json.loads(response.content) == 'http://127.0.0.1:8001/campaigns/' + str(pipeline_id)
-    # todo: delete the campaign created? for db cleanliness
-    # todo: can I hardcode the development dispatch url into this test? How will this work in our CI?
-
-
-def test_invalid_campaign_post():
-    pipeline_id = random.randint(1, 2147483646)  # this is not deterministic so this test may fail bc of duplication of keys, but it is very unlikely
-    pipeline_name = 'Test Pipeline'
-    dispatch_campaign_post(pipeline_id, pipeline_name)
-    response = dispatch_campaign_post(pipeline_id, pipeline_name)
-    assert response.status_code == 400
-    assert json.loads(response.content) == 'Bad Request'
-    # todo: delete the campaign created? for db cleanliness
+# @pytest.mark.django_db
+# def test_valid_communications_post():
+#     pipeline_id = random.randint(1, 2147483646)  # this is not deterministic so this test may fail bc of duplication of keys, but it is very unlikely
+#     pipeline_name = 'Test Pipeline'
+#     response = dispatch_campaign_post(pipeline_id, pipeline_name)
+#     stage_id = random.randint(1, 2147483646)
+#     name = 'my stage'
+#     placeholders = {'content': 'hello amigo'}
+#     template = 'http://fake.template.url.com/templates/789'
+#     response = dispatch_communication_post(pipeline_id, stage_id, name, placeholders, template)
+#     assert response.status_code == 201
+#     assert json.loads(response.content) == "http://127.0.0.1:8001/communications/" + str(stage_id)
+#
+#
+# @pytest.mark.django_db
+# def test_invalid_communications_post():
+#     bad_pipeline_id = 2147483647  # id reserved for failure case
+#     stage_id = random.randint(1, 2147483646)
+#     name = 'my stage'
+#     placeholders = {'content': 'hello amigo'}
+#     template = 'http://fake.template.url.com/templates/789'
+#     response = dispatch_communication_post(bad_pipeline_id, stage_id, name, placeholders, template)
+#     assert response.status_code == 400
+#     assert json.loads(response.content) == "Bad Request"
+#
+#
+# def test_valid_campaign_post():
+#     pipeline_id = random.randint(1, 2147483646)  # this is not deterministic so this test may fail bc of duplication of keys, but it is very unlikely
+#     pipeline_name = 'Test Pipeline'
+#     response = dispatch_campaign_post(pipeline_id, pipeline_name)
+#     assert response.status_code == 201
+#     assert json.loads(response.content) == 'http://127.0.0.1:8001/campaigns/' + str(pipeline_id)
+#
+#
+# def test_invalid_campaign_post():
+#     pipeline_id = random.randint(1, 2147483646)  # this is not deterministic so this test may fail bc of duplication of keys, but it is very unlikely
+#     pipeline_name = 'Test Pipeline'
+#     dispatch_campaign_post(pipeline_id, pipeline_name)
+#     response = dispatch_campaign_post(pipeline_id, pipeline_name)
+#     assert response.status_code == 400
+#     assert json.loads(response.content) == 'Bad Request'
