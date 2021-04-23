@@ -63,3 +63,14 @@ def user(db):
     password = 'tompass123'
     email = 'tom@uiowa.edu'
     return User.objects.create_user(username, email, password)
+
+@pytest.fixture(scope="session")
+def httpserver_listen_address():
+    return ("127.0.0.1", 8001)
+
+@pytest.fixture()
+def authorization_header():
+    header = {
+        'Authorization': ('x-dispatch-api-key ""')
+    }
+    return header

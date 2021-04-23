@@ -7,10 +7,7 @@ from django.template.loader import render_to_string
 from django.template import RequestContext
 from django.http import JsonResponse
 import pdb
-
-
-# Create your views here.
-
+from pipeline.management.dispatch.dispatch_requests import *
 
 @login_required(login_url='/login/')
 def dashboard(request):
@@ -24,15 +21,15 @@ def build_pipeline_page(request):
     context = {'form': CreatePipelineForm}
     return render(request, 'create_pipeline.html', context)
 
-
 @login_required(login_url='login')
 def ajax_get_stages(request):
     num_stages = int(request.GET['num_stages'])
     stage_forms = []
+    templates = get_all_template_data()
     for i in range(num_stages):
         stage = Stage(name="Stage " + str(i + 1))
         stage_forms.append(UpdateStageForm(instance=stage))
-    partial = render_to_string('define_stages.html', {'forms': stage_forms})
+    partial = render_to_string('define_stages.html', {'forms': stage_forms, 'templates': templates})
     return JsonResponse({'success': True, 'html': partial})
 
 
@@ -43,6 +40,7 @@ def create_pipeline(request):
                      'num_stages': post['num_stages'][0]}
     pipeline_form = CreatePipelineForm(pipeline_info)
     if pipeline_form.is_valid():
+        stage_errors = ""
         pipeline = pipeline_form.save()
         stages = Stage.objects.filter(pipeline=pipeline.id)
         for i in range(len(stages)):
@@ -50,10 +48,25 @@ def create_pipeline(request):
                       'advancement_condition': post['advancement_condition'][i], 'pipeline': pipeline.id}
             stage_form = UpdateStageForm(fields, instance=stages[i])
             if stage_form.is_valid():
-                stage_form.save()
+                obj = stage_form.save()
+                values = [val for key, val in post.items() if str(i + 1)+'_' in key]
+                keys = [key for key, val in post.items() if str(i + 1)+'_' in key]
+                possible_new_content = jsonify_placeholders(keys, values)
+                if (len(keys) == 0): #check if template was specified
+                    stage_errors+="Stage "+ str(i+1) + " does not have a template selected\n"
+                elif (possible_new_content == "Invalid"): #check if values were valid
+                    stage_errors+="Stage "+ str(i+1) + " does not have it's template content filled out\n"
+                else:
+                    obj.placeholders = possible_new_content
+                    obj.template_url = get_template_url(keys[0]) #only assign template if template was selected
+                    obj.save()
             else:
                 pipeline.delete()
                 return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
+
+        if stage_errors != "": #return stage errors for templates
+            pipeline.delete()
+            return JsonResponse({'success': False, 'message': stage_errors})
         return JsonResponse({'success': True})
     message = ''
     for fields, error in pipeline_form.errors.items():

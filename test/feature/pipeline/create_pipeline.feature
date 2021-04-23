@@ -12,6 +12,8 @@ Feature: Administrator Create Pipeline Form
         Given I am on the create pipeline page
         When I fill out a name: <name>
         When I fill out number of stages: <num_stages>
+        And I select a template for each of the <num_stages>
+        And I fill in content for of the <num_stages> templates
         And I click the create pipeline submit button
         Then I should be on the dashboard
 
@@ -20,3 +22,18 @@ Feature: Administrator Create Pipeline Form
         When I fill out a pipeline name that exists
         When I click the create pipeline submit button
         Then I should see an alert saying a pipeline with that name already exists
+
+    Scenario: I try to create a pipeline with selecting a template
+        Given I am on the create pipeline page
+        When I fill out a name: <name>
+        When I fill out number of stages: <num_stages>
+        And I click the create pipeline submit button
+        Then I should see an alert saying the stage does not have a template specified
+
+    Scenario: I try to create a pipeline without specifying input for a selected template
+        Given I am on the create pipeline page
+        When I fill out a name: <name>
+        When I fill out number of stages: <num_stages>
+        And I select a template for each of the <num_stages>
+        And I click the create pipeline submit button
+        Then I should see an alert saying the stage does not have its template data filled out
