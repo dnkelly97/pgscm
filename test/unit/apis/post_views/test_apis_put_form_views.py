@@ -177,8 +177,14 @@ def test_api_add_student_with_some_extended_fields():
         'last_name': 'saggs',
         'school_year': 'SR',
         'research_interests': ['{AI, Machine Learning}'],
+        'university': 'University of Iowa',
+        'degree': 'Electrical Engineering',
+        'gender': 'M',
+        'country': 'US',
+        'ethnicity': 'A',
         'gpa': 4.2,
-        'military': True
+        'military': True,
+        'us_citizenship': False
     }
 
     response = client.put(reverse('create_student_form'), data)
@@ -190,13 +196,13 @@ def test_api_add_student_with_some_extended_fields():
     assert new_student.email == "yes@gmail.com"
     assert new_student.school_year == "SR"
     assert new_student.research_interests == ['AI', 'Machine Learning']
-    assert new_student.degree == ""
+    assert new_student.degree == "Electrical Engineering"
     assert new_student.gpa == 4.2
     assert new_student.military
-    assert new_student.gender == 'U'
-    assert new_student.ethnicity == 'U'
-    assert new_student.country == ""
+    assert new_student.gender == 'M'
+    assert new_student.ethnicity == 'A'
+    assert new_student.country == "US"
     assert not new_student.first_generation
-    assert new_student.university == ""
+    assert new_student.university == "University of Iowa"
     assert not new_student.us_citizenship
 
