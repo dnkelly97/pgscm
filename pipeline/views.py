@@ -42,6 +42,10 @@ def create_pipeline(request):
     if pipeline_form.is_valid():
         stage_errors = ""
         pipeline = pipeline_form.save()
+        response = dispatch_campaign_post(pipeline.id, pipeline.name)
+        if response.status_code != 201:
+            pipeline.delete()
+            return JsonResponse({'success': False, 'message': 'While creating this pipeline a problem occurred with Dispatch.'})
         stages = Stage.objects.filter(pipeline=pipeline.id)
         for i in range(len(stages)):
             fields = {'name': post['name'][i], 'stage_number': i + 1, 'time_window': post['time_window'][i],
@@ -49,6 +53,10 @@ def create_pipeline(request):
             stage_form = UpdateStageForm(fields, instance=stages[i])
             if stage_form.is_valid():
                 obj = stage_form.save()
+                response = dispatch_communication_post(pipeline.id, obj.id, obj.name, obj.placeholders, obj.template_url)
+                if response.status_code != 201:
+                    pipeline.delete()
+                    return JsonResponse({'success': False, 'message': 'While creating this pipeline a problem occurred with Dispatch.'})
                 values = [val for key, val in post.items() if str(i + 1)+'_' in key]
                 keys = [key for key, val in post.items() if str(i + 1)+'_' in key]
                 possible_new_content = jsonify_placeholders(keys, values)
