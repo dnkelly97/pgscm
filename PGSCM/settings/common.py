@@ -52,15 +52,7 @@ MIDDLEWARE = [
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         "apis.permissions.HasAPIKey",
-    ],
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/day',
-        'user': '1000/day'
-    }
+    ]
 
 }
 
@@ -131,3 +123,10 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# cache configuration required for rate limiting API requests
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    }
+}
