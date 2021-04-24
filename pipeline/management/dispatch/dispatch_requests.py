@@ -15,11 +15,11 @@ def get_all_template_data():
     return template_objects
 
 def get_templates():
-    template_urls = requests.get(DISPATCH_URL+'/templates/' , headers={'Authorization': 'x-dispatch-api-key DISPATCH_AUTH'}).json()
+    template_urls = requests.get(DISPATCH_URL+'/templates/' , headers={'Authorization': 'x-dispatch-api-key '+DISPATCH_AUTH}).json()
     return template_urls
 
 def get_template(url):
-    return requests.get(url, headers={'Authorization': 'x-dispatch-api-key DISPATCH_AUTH'}).json()
+    return requests.get(url, headers={'Authorization': 'x-dispatch-api-key '+DISPATCH_AUTH}).json()
 
 def get_template_url(key):
     id = key.split('_')[2]
