@@ -91,7 +91,11 @@ class TestPipelineViews:
         assert "Stage 3" in response_dict['html']
         assert "test" in response_dict['html']
 
-    def test_create_pipeline(self, rf, user):
+    def test_create_pipeline(self, rf, user, httpserver, authorization_header):
+        response = ["http://127.0.0.1:8001/campaigns/1"]
+        httpserver.expect_request("/campaigns/", headers=authorization_header).respond_with_json(response)
+        response = ["http://127.0.0.1:8001/communications/1"]
+        httpserver.expect_request("/campaigns/233/communications", headers=authorization_header).respond_with_json(response)
         request = rf.get('/pipeline/create')
         request.user = user
         saved_query = SavedQueryFactory.create()
@@ -146,7 +150,11 @@ class TestPipelineViews:
         except Pipeline.DoesNotExist:
             assert True
 
-    def test_create_pipeline_bad_stage(self, rf, user):
+    def test_create_pipeline_bad_stage(self, rf, user, httpserver, authorization_header):
+        response = ["http://127.0.0.1:8001/campaigns/1"]
+        httpserver.expect_request("/campaigns/", headers=authorization_header).respond_with_json(response)
+        response = ["http://127.0.0.1:8001/communications/1"]
+        httpserver.expect_request("/campaigns/233/communications", headers=authorization_header).respond_with_json(response)
         request = rf.get('/pipeline/create')
         request.user = user
         saved_query = SavedQueryFactory.create()
