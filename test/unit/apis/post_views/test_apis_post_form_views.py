@@ -3,7 +3,7 @@ from apis.models import APIKey
 from django.urls import reverse
 from student.models import Student
 from rest_framework.test import APIRequestFactory, APIClient
-from apis.post_views import form_view
+from apis.post_views import CreateStudents
 from PIL import Image
 import tempfile
 
@@ -31,7 +31,7 @@ def test_student_portal_valid_form():
                            data=data)
     request.META['HTTP_AUTHORIZATION'] = 'Api-Key ' + key
 
-    response = form_view(request)
+    response = CreateStudents.form_view(request)
 
     assert response.status_code == 201
     assert 1 == length+1
@@ -50,7 +50,7 @@ def test_student_portal_false_api():
                            data=data)
     request.META['HTTP_AUTHORIZATION'] = 'Api-Key ' + '12345678.ascdfbcjashfksndascdfbcjashfksnd'
 
-    response = form_view(request)
+    response = CreateStudents.form_view(request)
 
     assert response.status_code == 403
 
@@ -67,7 +67,7 @@ def test_student_portal_no_api():
     request = factory.post(reverse('create_student_form'),
                            data=data)
 
-    response = form_view(request)
+    response = CreateStudents.form_view(request)
 
     assert response.status_code == 403
 
@@ -107,7 +107,7 @@ def test_student_portal_invalid(email,first_name,last_name,code):
                            data=data)
     request.META['HTTP_AUTHORIZATION'] = 'Api-Key ' + key
 
-    response = form_view(request)
+    response = CreateStudents.form_view(request)
 
     assert response.status_code == code
 
