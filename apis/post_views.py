@@ -28,7 +28,7 @@ class HundredPerDayThrottle(UserRateThrottle):
         superusers = User.objects.filter(is_superuser=True)
         while self.history and self.history[-1] <= self.now - self.duration:
             self.history.pop()
-        if len(self.history) >= self.num_requests:
+        if len(self.history) >= self.num_requests:  # pragma: no cover
             for user in superusers:
                 email_list.append(user.email)
             send_mail(subject="PGSCM rate limit exceeded", message=f"{self.get_ident(request)} exceeded the rate limit.", from_email=settings.EMAIL_HOST_USER, recipient_list=email_list, fail_silently=False, auth_user=None, auth_password=None, connection=None, html_message=None)

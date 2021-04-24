@@ -34,7 +34,8 @@ def test_student_portal_valid_form():
     response = CreateStudents.form_view(request)
 
     assert response.status_code == 201
-    assert 1 == length+1
+    assert 1 == length + 1
+
 
 @pytest.mark.django_db
 def test_student_portal_false_api():
@@ -54,6 +55,7 @@ def test_student_portal_false_api():
 
     assert response.status_code == 403
 
+
 @pytest.mark.django_db
 def test_student_portal_no_api():
     factory = APIRequestFactory()
@@ -71,19 +73,19 @@ def test_student_portal_no_api():
 
     assert response.status_code == 403
 
-@pytest.mark.django_db
-@pytest.mark.parametrize(
-   'email, first_name, last_name, code', [
-       ('test@gmail.com', 'first', 'last', 400),
-       ('hello@gmail.com', 'first', '', 400),
-       ('hello@gmail.com', '', 'last', 400),
-       ('hello3', 'first', 'last', 400),
-       ('', 'first', 'last', 400)
-   ]
-)
 
 @pytest.mark.django_db
-def test_student_portal_invalid(email,first_name,last_name,code):
+@pytest.mark.parametrize(
+    'email, first_name, last_name, code', [
+        ('test@gmail.com', 'first', 'last', 400),
+        ('hello@gmail.com', 'first', '', 400),
+        ('hello@gmail.com', '', 'last', 400),
+        ('hello3', 'first', 'last', 400),
+        ('', 'first', 'last', 400)
+    ]
+)
+@pytest.mark.django_db
+def test_student_portal_invalid(email, first_name, last_name, code):
     factory = APIRequestFactory()
 
     student = Student.objects.create(email="test@gmail.com", first_name="first", last_name="second")
@@ -249,3 +251,22 @@ def test_bad_file_upload():
     }
     response = client.post(reverse('create_student_form'), data, format='multipart')
     assert response.status_code == 400
+
+
+# @pytest.mark.django_db()
+# def test_student_form_api_throttle():
+#     factory = APIRequestFactory()
+#     obj = APIKey(name="testy", email="testy@uiowa.edu", )
+#     key = APIKey.objects.assign_key(obj)
+#     obj.save()
+#     for i in range(101):
+#         data = {
+#             'email': f'test{i}@gmail.com',
+#             'first_name': f'first{i}',
+#             'last_name': f'last{i}'
+#         }
+#         request = factory.post(reverse('create_student_form'), data=data)
+#         request.META['HTTP_AUTHORIZATION'] = 'Api-Key ' + key
+#         response = CreateStudents.form_view(request)
+#     assert response.status_code == 403
+
