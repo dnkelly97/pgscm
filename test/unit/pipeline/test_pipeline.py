@@ -5,11 +5,13 @@ from pytest_django.asserts import assertTemplateUsed
 from django.test import TestCase, Client
 from django.contrib.auth.models import User
 from factories import SavedQueryFactory, PipelineFactory
-from pipeline.models import Pipeline, SavedQuery
+from pipeline.models import Pipeline, SavedQuery, StudentStage
+from student.models import Student
 from django.template.loader import render_to_string
 import json
 from pipeline.management.dispatch.dispatch_requests import *
 from pytest_httpserver import httpserver
+import datetime
 
 
 @pytest.fixture
@@ -21,6 +23,15 @@ def pipeline_with_sources(db):
     pipeline.sources.add(queries[0])
     pipeline.sources.add(queries[1])
     return pipeline
+
+
+@pytest.fixture
+def student_stage(db):
+    pipeline = Pipeline.objects.create(name='test_pipeline', num_stages=1)
+    stage = Stage.objects.create(name='test_stage', stage_number=1, pipeline=pipeline)
+    student = Student.objects.create(first_name='harry', last_name='malkovich', email='F@gmail.com')
+    student_stage = StudentStage.objects.create(student=student, stage=stage, date_joined=datetime.date.today())
+    return student_stage
 
 
 @pytest.mark.django_db
@@ -249,3 +260,20 @@ class TestUpdatePipelineForm:
                 assert True
             else:
                 assert False
+
+
+class TestStudentStage:
+
+    @pytest.mark.parametrize('receiptDate, expected', [(str(datetime.datetime.today()), True), (None, False), ("", False)])
+    def test_email_was_read(self, student_stage, httpserver, authorization_header, receiptDate, expected):
+        student_stage.member_id = '1a'
+        response = {'receiptDate': receiptDate}
+        httpserver.expect_request("/messages/" + student_stage.member_id, headers=authorization_header).respond_with_json(response)
+        assert student_stage.email_was_read() == expected
+
+    def test_time_window_has_passed(self, student_stage):
+        student_stage.stage.time_window = 10
+        student_stage.date_joined = datetime.date.today()
+        assert not student_stage.time_window_has_passed()
+        student_stage.date_joined = datetime.date(2018, 1, 12)
+        assert student_stage.time_window_has_passed()
