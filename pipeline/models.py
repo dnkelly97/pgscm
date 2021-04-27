@@ -61,7 +61,7 @@ class SavedQueryForm(ModelForm):
 class Stage(models.Model):
     pipeline = models.ForeignKey(Pipeline, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    students = models.ManyToManyField(Student)
+    students = models.ManyToManyField(Student, through='StudentStage')
     stage_number = models.IntegerField(
         validators=[
             MinValueValidator(1)
@@ -86,3 +86,11 @@ class Stage(models.Model):
         choices=ConditionsForAdvancement.choices,
         default=ConditionsForAdvancement.NONE
     )
+
+
+class StudentStage(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    stage = models.ForeignKey(Stage, on_delete=models.CASCADE)
+    date_joined = models.DateField()
+    batch_id = models.IntegerField(blank=True, null=True)  # if form received is advancement condition, we may not need to use dispatch (?)
+    member_id = models.CharField(max_length=100, blank=True)
