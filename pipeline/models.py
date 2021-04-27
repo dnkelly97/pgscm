@@ -7,6 +7,7 @@ from student.models import Student
 from django.contrib.postgres.fields import JSONField
 import json
 from pipeline.management.dispatch.dispatch_requests import *
+import datetime
 
 
 class SavedQuery(models.Model):
@@ -97,9 +98,14 @@ class StudentStage(models.Model):
     batch_id = models.IntegerField(blank=True, null=True)  # if form received is advancement condition, we may not need to use dispatch (?)
     member_id = models.CharField(max_length=100, blank=True)
 
-    def evaluate_email_read(self):
+    def email_was_read(self):
         response = json.loads(dispatch_message_get(self.member_id).content)
         if response['receiptDate']:
             return True
         return False
+
+    def time_window_has_passed(self):
+        time_passed = datetime.date.today() - self.date_joined
+        days_passed = time_passed.days
+        return days_passed >= self.stage.time_window
 
