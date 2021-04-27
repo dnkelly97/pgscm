@@ -7,7 +7,8 @@ import json
 from django.urls import reverse
 from factories import SavedQueryFactory
 from pipeline.models import SavedQuery
-
+from PIL import Image
+import tempfile
 
 class StudentView(TestCase):
     def setUp(self):
@@ -52,12 +53,27 @@ class StudentView(TestCase):
 
     @pytest.mark.django_db
     def test_create_student_submit_valid(self):
+
+        image = Image.new('RGB', (100, 100))
+        tmp_file = tempfile.NamedTemporaryFile(suffix='.jpg')
+        image.save(tmp_file)
+        tmp_file.seek(0)
+        tmp_file2 = tempfile.NamedTemporaryFile(suffix='.txt')
+        tmp_file2.write(b'plz hire me')
+        tmp_file2.seek(0)
+        tmp_file3 = tempfile.NamedTemporaryFile(suffix='.txt')
+        tmp_file3.write(b'all As bb')
+        tmp_file3.seek(0)
+
         values = {"email": "hello1@gmail.com", "first_name": 'first', "last_name": 'second',
                   "school_year": Student.YearInSchool.UNKNOWN,
-                  "ethnicity": Student.Ethnicity.UNKNOWN, "gender": Student.Gender.UNKNOWN}
+                  "ethnicity": Student.Ethnicity.UNKNOWN, "gender": Student.Gender.UNKNOWN,
+                  'profile_image': tmp_file, 'resume': tmp_file2, 'transcript': tmp_file3
+                  }
         self.student = Student.objects.create(email="hello1@gmail.com", first_name="first", last_name="second")
         self.student.save()
         url = reverse('create_student')
+
         self.data = {
             'email': values["email"],
             'first_name': values["first_name"],
