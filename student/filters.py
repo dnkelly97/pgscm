@@ -1,6 +1,6 @@
 import django_filters
 from django.db.models import Q
-from django_filters import CharFilter
+from django_filters import CharFilter, NumberFilter
 
 from .models import Student
 
@@ -26,6 +26,8 @@ class StudentFilter(django_filters.FilterSet):
     research_interests = CharFilter(method=query_interest, label="Research of Interest")
     university = CharFilter(method=query_uni, label="University")
     degree = CharFilter(method=query_degree, label="Degree")
+    gpa_start = NumberFilter(field_name="gpa", lookup_expr='gte')
+    gpa_end = NumberFilter(field_name="gpa", lookup_expr='lte')
 
     class Meta:
         model = Student
@@ -34,7 +36,8 @@ class StudentFilter(django_filters.FilterSet):
                   'degree',
                   'university',
                   'research_interests',
-                  'gpa',
+                  'gpa_start',
+                  'gpa_end',
                   'ethnicity',
                   'gender',
                   'country',
