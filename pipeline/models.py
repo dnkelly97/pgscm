@@ -100,9 +100,15 @@ class StudentStage(models.Model):
 
     def email_was_read(self):
         response = json.loads(dispatch_message_get(self.member_id).content)
-        if response['receiptDate']:
-            return True
-        return False
+        try:
+            if response['receiptDate']:
+                return True
+            return False
+        except KeyError:
+            return False
+        # todo: I couldn't find out from the API documentation what is returned for 'receiptDate' if the email hasn't
+        #  been read. I assumed the key would either not be included or the string would be empty. Both cases are
+        #  supported, but if the response is different this will not work. Both cases are tested for
 
     def time_window_has_passed(self):
         time_passed = datetime.date.today() - self.date_joined
