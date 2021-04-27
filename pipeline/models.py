@@ -25,6 +25,7 @@ class Pipeline(models.Model):
             MinValueValidator(1)
         ]
     )
+    active = models.BooleanField(default=False)
 
     def add_sources(self, source_list):
         for source_str in source_list:
