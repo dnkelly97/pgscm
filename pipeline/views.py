@@ -113,6 +113,19 @@ def delete_pipeline(request):
         success = False
     return JsonResponse({'success': success, 'html': partial})
 
+@login_required(login_url='login')
+def update_pipeline_stage(request):
+    try:
+        pipeline = Pipeline.objects.get(name=request.POST['selected_pipeline'])
+        pipeline.active = not pipeline.active
+        pipeline.save()
+        context = {'pipelines': Pipeline.objects.all()}
+        success = True
+        partial = render_to_string('pipeline_menu.html', context, request)
+    except Pipeline.DoesNotExist:
+        partial = None
+        success = False
+    return JsonResponse({'success': success, 'html': partial})
 
 @login_required(login_url='login')
 def update_pipeline(request, pipeline_name):
