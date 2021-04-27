@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 from student.models import Student
 from django.contrib.postgres.fields import JSONField
+import json
+from pipeline.management.dispatch.dispatch_requests import *
 
 
 class SavedQuery(models.Model):
@@ -94,3 +96,10 @@ class StudentStage(models.Model):
     date_joined = models.DateField()
     batch_id = models.IntegerField(blank=True, null=True)  # if form received is advancement condition, we may not need to use dispatch (?)
     member_id = models.CharField(max_length=100, blank=True)
+
+    def evaluate_email_read(self):
+        response = json.loads(dispatch_message_get(self.member_id).content)
+        if response['receiptDate']:
+            return True
+        return False
+
