@@ -11,4 +11,5 @@ urlpatterns = [
     path('delete_query/', delete_query, name="delete_query"),
     path('delete_pipeline/', delete_pipeline, name="delete_pipeline"),
     path('edit_pipeline/<str:pipeline_name>', update_pipeline, name="update_pipeline"),
+    path('update_pipeline_stage/', update_pipeline_stage, name="update_pipeline_stage"),
 ]
