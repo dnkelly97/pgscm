@@ -34,7 +34,8 @@ class ResearchForm(ModelForm):
             'research_interests',
             'degree',
             'university',
-            'gpa'
+            'gpa',
+            'scale'
         ]
 
 
