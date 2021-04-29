@@ -35,6 +35,7 @@ class Student(models.Model):
     university = models.CharField(max_length=255, blank=True)
     gpa = models.FloatField(blank=True, null=True)
     scale = models.FloatField(blank=True, null=True)
+    normal_gpa = models.FloatField(blank=True, null=True)
 
     # demographic info
     # https://usg.uiowa.edu/assets/Documents/Reports-Guides-and-Plans/UISG-2018-2019-Fall-Demographics-Report.pdf
