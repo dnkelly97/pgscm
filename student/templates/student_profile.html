@@ -4,6 +4,14 @@
         width: 100%;
         height: 12vw;
     }
+    .my-custom-scrollbar {
+        position: relative;
+        height: 650px;
+        overflow: auto;
+    }
+    .table-wrapper-scroll-y {
+        display: block;
+    }
 </style>
 
 {% extends "home.html" %}
@@ -13,21 +21,23 @@
 {%  block content1 %}
     <div class="card">
         <h5 class="card-header">Students</h5><br>
-        <table class="table table-sm">
-            <tr>
-                <th>&nbsp;&nbsp;First Name</th>
-                <th>&nbsp;&nbsp;Last Name</th>
-                <th></th>
-            </tr>
+        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+            <table class="table table-sm">
+                <tr>
+                    <th>&nbsp;&nbsp;First Name</th>
+                    <th>&nbsp;&nbsp;Last Name</th>
+                    <th></th>
+                </tr>
 
-            {% for student in students %}
-            <tr>
-                <td>&nbsp;&nbsp;{{student.first_name}}</td>
-                <td>&nbsp;&nbsp;{{student.last_name}}</td>
-                <td><a class="btn btn-sm btn-info" href="{% url 'student_profile' student.id %}">View</a></td>
-            </tr>
-            {% endfor %}
-        </table>
+                {% for student in students %}
+                <tr>
+                    <td>&nbsp;&nbsp;{{student.first_name}}</td>
+                    <td>&nbsp;&nbsp;{{student.last_name}}</td>
+                    <td><a class="btn btn-sm btn-info" href="{% url 'student_profile' student.id %}">View</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
     </div>
 {% endblock %}
 
@@ -89,7 +99,24 @@
                                     <div class="input-group-append">
                                         <p><strong>Research Interest:</strong> {% for i in student.research_interests %} &nbsp; <span class="badge badge badge-pill  badge-info"> {{ i }} </span> {% endfor %} </p>
                                     </div>
-                                    <p><strong>GPA:</strong>  {{ student.gpa }} </p>
+                                    <p><strong>GPA:</strong>
+                                        {% if student.gpa == None or student.scale == None %}
+                                            <span class="badge badge-danger"> Missing </span>
+                                        {% else %}
+                                            <span class="badge badge-info"> {{ student.gpa }} </span> out of <span class="badge badge-info"> {{ student.scale }} </span>
+                                        {% endif %}
+                                    </p>
+                                    <p><strong>Normalized GPA:</strong>
+                                        {% if student.normal_gpa >= 3.6 %}
+                                            <span class="badge badge-success"> {{ student.normal_gpa }} </span>
+                                        {% elif student.normal_gpa >= 3 %}
+                                            <span class="badge badge-info"> {{ student.normal_gpa }} </span>
+                                        {% elif student.normal_gpa < 3 %}
+                                            <span class="badge badge-danger"> {{ student.normal_gpa }} </span>
+                                        {% else %}
+                                            <span class="badge badge-danger"> Missing </span>
+                                        {% endif %}
+                                    </p>
                                     <div class="mt-auto">
                                         <small class="float-sm-left">
                                             <form method="post" action="{% url 'student_profile' student.id %}">
