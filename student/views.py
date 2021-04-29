@@ -26,12 +26,11 @@ def createPage(response):
 
         if form.is_valid():
 
-            # form.gpa = (response.POST.get('gpa') / response.POST.get('scale')) * 4.0
             form.save()
 
             if response.POST.get('gpa') != '' and response.POST.get('scale') != '':
                 student = Student.objects.get(email=response.POST.get('email'))
-                student.gpa = (float(response.POST.get('gpa')) / float(response.POST.get('scale'))) * 4.0
+                student.normal_gpa = (float(response.POST.get('gpa')) / float(response.POST.get('scale'))) * 4.0
                 student.save()
 
             uploaded_image = response.FILES['profile_image'] if 'profile_image' in response.FILES else None
@@ -151,6 +150,10 @@ def updateStudent(request, key):
         if form.is_valid():
             form.save()
 
+            if request.POST.get('gpa') != '' and request.POST.get('scale') != '':
+                student.normal_gpa = (float(request.POST.get('gpa')) / float(request.POST.get('scale'))) * 4.0
+                student.save()
+
             uploaded_image = request.FILES['profile_image'] if 'profile_image' in request.FILES else None
             uploaded_file = request.FILES['resume'] if 'resume' in request.FILES else None
             uploaded_file_1 = request.FILES['transcript'] if 'transcript' in request.FILES else None
@@ -245,6 +248,13 @@ def form_email(response):
 
         if form.is_valid():
             form.save()
+
+            if response.POST.get('gpa') != '' and response.POST.get('scale') != '':
+                student = Student.objects.get(email=response.POST.get('email'))
+                student.normal_gpa = (float(response.POST.get('gpa')) / float(response.POST.get('scale'))) * 4.0
+                student.save()
+
+
             messages.success(response, 'Creation successful...')
 
             context = {'form': form}
@@ -271,6 +281,10 @@ def research_interests_form(request, key):
 
             if form.is_valid():
                 form.save()
+
+                if request.POST.get('gpa') != '' and request.POST.get('scale') != '':
+                    student.normal_gpa = (float(request.POST.get('gpa')) / float(request.POST.get('scale'))) * 4.0
+
                 student.submitted = True
                 student.save()
                 messages.success(request, 'Thank you for updating this...')
