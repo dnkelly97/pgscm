@@ -40,4 +40,4 @@ class UpdatePipelineForm(ModelForm):
 class UpdateStageForm(ModelForm):
     class Meta:
         model = Stage
-        fields = ['name', 'stage_number', 'time_window', 'advancement_condition', 'pipeline']
+        fields = ['name', 'stage_number', 'time_window', 'advancement_condition', 'pipeline', 'form']

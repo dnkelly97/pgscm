@@ -91,6 +91,13 @@ class Stage(models.Model):
         default=ConditionsForAdvancement.NONE
     )
 
+    class FormOptions(models.TextChoices):
+        NONE = 'None', _('None')
+        DEMOGRAPHICS_FORM = 'DF', _('Demographics Form')
+        RESEARCH_INTERESTS_FORM = 'RIF', _('Research Interests Form')
+
+    form = models.CharField(max_length=4, choices=FormOptions.choices, default=FormOptions.NONE)
+
 
 class StudentStage(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
