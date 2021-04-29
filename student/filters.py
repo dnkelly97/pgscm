@@ -26,8 +26,8 @@ class StudentFilter(django_filters.FilterSet):
     research_interests = CharFilter(method=query_interest, label="Research of Interest")
     university = CharFilter(method=query_uni, label="University")
     degree = CharFilter(method=query_degree, label="Degree")
-    gpa_start = NumberFilter(field_name="gpa", lookup_expr='gte')
-    gpa_end = NumberFilter(field_name="gpa", lookup_expr='lte')
+    gpa_start = NumberFilter(field_name="normal_gpa", lookup_expr='gte')
+    gpa_end = NumberFilter(field_name="normal_gpa", lookup_expr='lte')
 
     class Meta:
         model = Student
