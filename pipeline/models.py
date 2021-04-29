@@ -5,6 +5,9 @@ from django.utils.translation import gettext_lazy as _
 # Create your models here.
 from student.models import Student
 from django.contrib.postgres.fields import JSONField
+import json
+from pipeline.management.dispatch.dispatch_requests import *
+import datetime
 
 
 class SavedQuery(models.Model):
@@ -25,6 +28,7 @@ class Pipeline(models.Model):
             MinValueValidator(1)
         ]
     )
+    active = models.BooleanField(default=False)
 
     def add_sources(self, source_list):
         for source_str in source_list:
@@ -61,7 +65,7 @@ class SavedQueryForm(ModelForm):
 class Stage(models.Model):
     pipeline = models.ForeignKey(Pipeline, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
-    students = models.ManyToManyField(Student)
+    students = models.ManyToManyField(Student, through='StudentStage')
     stage_number = models.IntegerField(
         validators=[
             MinValueValidator(1)
@@ -86,3 +90,29 @@ class Stage(models.Model):
         choices=ConditionsForAdvancement.choices,
         default=ConditionsForAdvancement.NONE
     )
+
+
+class StudentStage(models.Model):
+    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    stage = models.ForeignKey(Stage, on_delete=models.CASCADE)
+    date_joined = models.DateField()
+    batch_id = models.IntegerField(blank=True, null=True)  # if form received is advancement condition, we may not need to use dispatch (?)
+    member_id = models.CharField(max_length=100, blank=True)
+
+    def email_was_read(self):
+        response = json.loads(dispatch_message_get(self.member_id).content)
+        try:
+            if response['receiptDate']:
+                return True
+            return False
+        except KeyError:
+            return False
+        # todo: I couldn't find out from the API documentation what is returned for 'receiptDate' if the email hasn't
+        #  been read. I assumed the key would either not be included or the string would be empty. Both cases are
+        #  supported, but if the response is different this will not work. Both cases are tested for
+
+    def time_window_has_passed(self):
+        time_passed = datetime.date.today() - self.date_joined
+        days_passed = time_passed.days
+        return days_passed >= self.stage.time_window
+

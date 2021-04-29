@@ -1,11 +1,18 @@
 {% csrf_token %}
 {% for pipeline in pipelines %}
-<div class="row">
-    <div class="col-11">
-        <p>{{ pipeline.name }}</p>
+    <div class="row">
+        <div class="col-3">
+            {% if pipeline.active %}
+                <p class = "active" style="color: #5cb85c">Active</p>
+            {% else %}
+                <p class = "active" style="color: #d9534f">Inactive</p>
+            {% endif %}
+        </div>
+        <div class="col-8">
+            <p>{{ pipeline.name }}</p>
+        </div>
+        <div class="col-1">
+            <input class="form-check-input" type="radio" name="selected_pipeline" value="{{pipeline.name}}" id="{{pipeline.name}} radio button">
+        </div>
     </div>
-    <div class="col-1">
-        <input class="form-check-input" type="radio" name="selected_pipeline" value="{{pipeline.name}}" id="{{pipeline.name}} radio button">
-    </div>
-</div>
 {% endfor %}
