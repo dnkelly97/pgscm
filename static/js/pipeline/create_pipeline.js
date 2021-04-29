@@ -45,16 +45,13 @@ $(document).ready(function() {
                         document.getElementById("define_stages").style = "display: block;";
                         document.getElementById("create_pipeline_submit_button").style = "display: block;";
                         console.log('ready freddy');
-                        $("#id_advancement_condition").on('change', function(event){
-                            console.log(event.target.parentNode.nextElementSibling);
-                            if(event.target.value == 'FR'){
-                                event.target.parentNode.nextElementSibling.style = 'display: block;';
-                            }
-                            else{
-                                event.target.parentNode.nextElementSibling.childNodes[3].value = "None";
-                                event.target.parentNode.nextElementSibling.style = 'display: none;';
-                            }
-                        });
+                        var form_selects = document.evaluate("//select[@name='advancement_condition']", document, null, XPathResult.ANY_TYPE, null);
+                        var node = null;
+                        while(node = form_selects.iterateNext()) {
+                            console.log('woof');
+                            console.log(node);
+                            node.addEventListener('change', showForm);
+                        }
                     },
                     error: function (request, status, error) {
                          console.log(request.responseText);
@@ -70,6 +67,12 @@ $(document).ready(function() {
         });
 });
 
-$(document).ready(function(){
-
-});
+function showForm(event){
+    if(event.target.value == 'FR'){
+        event.target.parentNode.nextElementSibling.style = 'display: block;';
+    }
+    else{
+        event.target.parentNode.nextElementSibling.childNodes[3].value = "None";
+        event.target.parentNode.nextElementSibling.style = 'display: none;';
+    }
+}
