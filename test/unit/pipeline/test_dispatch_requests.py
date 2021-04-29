@@ -69,6 +69,18 @@ def test_communications_post(httpserver, authorization_header):
     assert dispatch_communication_post(pipeline_id, stage_id, name, placeholders, template).json() == response
 
 
+def test_message_request(httpserver, authorization_header):
+    response = {'receiptDate': 'today'}
+    httpserver.expect_request("/messages/12-aq1", headers=authorization_header).respond_with_json(response)
+    assert json.loads(dispatch_message_get('12-aq1').content) == response
+
+
+def test_batch_request(httpserver, authorization_header):
+    response = {'members': []}
+    httpserver.expect_request("/batches/12-aq1", headers=authorization_header).respond_with_json(response)
+    assert json.loads(dispatch_batch_get('12-aq1').content) == response
+
+
 # @pytest.mark.django_db
 # def test_valid_communications_post():
 #     pipeline_id = random.randint(1, 2147483646)  # this is not deterministic so this test may fail bc of duplication of keys, but it is very unlikely

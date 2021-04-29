@@ -68,3 +68,15 @@ def dispatch_communication_post(campaign_id, stage_id, name, placeholders, templ
     return requests.post(DISPATCH_URL+'/campaigns/' + str(campaign_id) + '/communications',
                          headers={'Authorization': 'x-dispatch-api-key ' + DISPATCH_AUTH},
                          json=data)
+
+
+def dispatch_batch_get(batch_id):
+    return requests.get(DISPATCH_URL + '/batches/' + str(batch_id),
+                        headers={'Authorization': 'x-dispatch-api-key ' + DISPATCH_AUTH}
+                        )
+# todo- write tests for the above and the below
+
+def dispatch_message_get(member_id):
+    return requests.get(DISPATCH_URL + '/messages/' + member_id,
+                        headers={'Authorization': 'x-dispatch-api-key ' + DISPATCH_AUTH}
+                        )
