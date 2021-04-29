@@ -38,7 +38,7 @@ def test_student_serializer(email,first_name,last_name,valid):
 
 
 @pytest.mark.parametrize('email, first_name, last_name, school_year, research_interests, degree, '
-                         'university, gpa, ethnicity, gender, country, us_citizenship, first_generation,'
+                         'university, normal_gpa, ethnicity, gender, country, us_citizenship, first_generation,'
                          'military, valid', [
                                                 ('mymail@gmail.com', 'tuck', 'dickson', 'NOT_A_YEAR', None, "", "", None, "U", "U", None, None, None, None, False),
                                                 ('mymail@gmail.com', 'tuck', 'dickson', 'FR', None, "", "", None, "U", "U", None, None, None, None, True),
@@ -58,7 +58,7 @@ def test_student_serializer(email,first_name,last_name,valid):
 @pytest.mark.django_db
 # this doesn't include testing for the file and image fields, these fields have separate tests below
 def test_extended_student_serializer(email, first_name, last_name, school_year, research_interests, degree,
-                                     university, gpa, ethnicity, gender, country, us_citizenship, first_generation,
+                                     university, normal_gpa, ethnicity, gender, country, us_citizenship, first_generation,
                                      military, valid):
     data = {
         'email': email,
@@ -68,7 +68,7 @@ def test_extended_student_serializer(email, first_name, last_name, school_year, 
         'research_interests': research_interests,
         'degree': degree,
         'university': university,
-        'gpa': gpa,
+        'normal_gpa': normal_gpa,
         'ethnicity': ethnicity,
         'gender': gender,
         'country': country,
@@ -87,7 +87,7 @@ def test_extend_serializer_with_incomplete_field_info():
         'first_name': 'boz',
         'last_name': 'scaggs',
         'school_year': 'SR',
-        'gpa': 4.1,
+        'normal_gpa': 4.1,
         'military': True
     }
     serializer = StudentSerializer(data=data)
