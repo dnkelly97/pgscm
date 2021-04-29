@@ -26,7 +26,13 @@ def createPage(response):
 
         if form.is_valid():
 
+            # form.gpa = (response.POST.get('gpa') / response.POST.get('scale')) * 4.0
             form.save()
+
+            if response.POST.get('gpa') != '' and response.POST.get('scale') != '':
+                student = Student.objects.get(email=response.POST.get('email'))
+                student.gpa = (float(response.POST.get('gpa')) / float(response.POST.get('scale'))) * 4.0
+                student.save()
 
             uploaded_image = response.FILES['profile_image'] if 'profile_image' in response.FILES else None
             uploaded_file = response.FILES['resume'] if 'resume' in response.FILES else None
