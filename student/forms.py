@@ -14,6 +14,7 @@ class CreateForm(ModelForm):
                   'degree',
                   'university',
                   'gpa',
+                  'scale',
                   'ethnicity',
                   'gender',
                   'country',
