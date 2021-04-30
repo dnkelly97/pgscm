@@ -9,6 +9,7 @@ from django.http import JsonResponse
 import pdb
 from pipeline.management.dispatch.dispatch_requests import *
 
+
 @login_required(login_url='/login/')
 def dashboard(request):
     pipelines = Pipeline.objects.all()
@@ -20,6 +21,7 @@ def dashboard(request):
 def build_pipeline_page(request):
     context = {'form': CreatePipelineForm}
     return render(request, 'create_pipeline.html', context)
+
 
 @login_required(login_url='login')
 def ajax_get_stages(request):
@@ -113,6 +115,7 @@ def delete_pipeline(request):
         success = False
     return JsonResponse({'success': success, 'html': partial})
 
+
 @login_required(login_url='login')
 def update_pipeline_stage(request):
     try:
@@ -126,6 +129,7 @@ def update_pipeline_stage(request):
         partial = None
         success = False
     return JsonResponse({'success': success, 'html': partial})
+
 
 @login_required(login_url='login')
 def update_pipeline(request, pipeline_name):
