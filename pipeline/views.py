@@ -49,7 +49,7 @@ def create_pipeline(request):
         stages = Stage.objects.filter(pipeline=pipeline.id)
         for i in range(len(stages)):
             fields = {'name': post['name'][i], 'stage_number': i + 1, 'time_window': post['time_window'][i],
-                      'advancement_condition': post['advancement_condition'][i], 'pipeline': pipeline.id}
+                      'advancement_condition': post['advancement_condition'][i], 'form': post['form'][i], 'pipeline': pipeline.id}
             stage_form = UpdateStageForm(fields, instance=stages[i])
             if stage_form.is_valid():
                 obj = stage_form.save()
