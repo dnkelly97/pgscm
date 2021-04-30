@@ -277,3 +277,12 @@ class TestStudentStage:
         assert not student_stage.time_window_has_passed()
         student_stage.date_joined = datetime.date(2018, 1, 12)
         assert student_stage.time_window_has_passed()
+
+    @pytest.mark.parametrize('form, received', [('RIF', False), ('RIF', True), ('DF', False), ('DF', True), ('None', True)])
+    def test_form_received(self, student_stage, form, received):
+        student_stage.stage.form = form
+        if form == 'RIF':
+            student_stage.student.submitted = received
+        elif form == 'DF':
+            student_stage.student.submit_demo = received
+        assert student_stage.form_received() == received

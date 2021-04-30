@@ -123,3 +123,11 @@ class StudentStage(models.Model):
         days_passed = time_passed.days
         return days_passed >= self.stage.time_window
 
+    def form_received(self):
+        if self.stage.form == 'RIF':
+            return self.student.submitted
+        elif self.stage.form == 'DF':
+            return self.student.submit_demo
+        else:
+            return True
+
