@@ -286,3 +286,32 @@ class TestStudentStage:
         elif form == 'DF':
             student_stage.student.submit_demo = received
         assert student_stage.form_received() == received
+
+    @pytest.mark.parametrize('advancement_condition, form, form_received, email_read, time_window, expected', [
+        ('None', 'None', False, False, 100, False),  # time window failing test
+        ('None', 'None', False, False, 0, True),
+        ('ER', 'None', False, True, 0, True),
+        ('ER', 'None', False, False, 0, False),
+        ('FR', 'RIF', True, False, 0, True),
+        ('FR', 'RIF', False, False, 0, False),
+        ('FR', 'DF', True, False, 0, True),
+        ('FR', 'DF', False, False, 0, False),
+    ])
+    def test_should_advance(self, student_stage, httpserver, authorization_header, advancement_condition, form,
+                            form_received, email_read, time_window, expected):
+        student_stage.stage.time_window = time_window
+        student_stage.stage.advancement_condition = advancement_condition
+        student_stage.stage.form = form
+        if form == 'RIF':
+            student_stage.student.submitted = form_received
+        elif form == 'DF':
+            student_stage.student.submit_demo = form_received
+        if advancement_condition == 'ER':
+            student_stage.member_id = '1a'
+            if email_read:
+                response = {'receiptDate': str(datetime.datetime.today())}
+            else:
+                response = {}
+            httpserver.expect_request("/messages/" + student_stage.member_id,
+                                      headers=authorization_header).respond_with_json(response)
+        assert student_stage.should_advance() == expected

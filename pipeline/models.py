@@ -106,6 +106,16 @@ class StudentStage(models.Model):
     batch_id = models.IntegerField(blank=True, null=True)  # if form received is advancement condition, we may not need to use dispatch (?)
     member_id = models.CharField(max_length=100, blank=True)
 
+    def should_advance(self):
+        if self.time_window_has_passed():
+            if self.stage.advancement_condition == 'ER':
+                return self.email_was_read()
+            elif self.stage.advancement_condition == 'FR':
+                return self.form_received()
+            else:
+                return True
+        return False
+
     def email_was_read(self):
         response = json.loads(dispatch_message_get(self.member_id).content)
         try:
