@@ -108,11 +108,11 @@
                                     </p>
                                     <p><strong>Normalized GPA:</strong>
                                         {% if student.normal_gpa >= 3.6 %}
-                                            <span class="badge badge-success"> {{ student.normal_gpa }} </span>
+                                            <span class="badge badge-success"> {{ student.normal_gpa|floatformat:2 }} </span>
                                         {% elif student.normal_gpa >= 3 %}
-                                            <span class="badge badge-info"> {{ student.normal_gpa }} </span>
+                                            <span class="badge badge-info"> {{ student.normal_gpa|floatformat:2 }} </span>
                                         {% elif student.normal_gpa < 3 %}
-                                            <span class="badge badge-danger"> {{ student.normal_gpa }} </span>
+                                            <span class="badge badge-danger"> {{ student.normal_gpa|floatformat:2 }} </span>
                                         {% else %}
                                             <span class="badge badge-danger"> Missing </span>
                                         {% endif %}
