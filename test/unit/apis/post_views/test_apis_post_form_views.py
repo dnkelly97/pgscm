@@ -130,7 +130,7 @@ def test_api_add_student_with_some_extended_fields():
         'last_name': 'scaggs',
         'school_year': 'SR',
         'research_interests': ['AI', 'Medical Imaging', 'Art of Dance'],
-        'gpa': 4.1,
+        'normal_gpa': 4.1,
         'military': True
     }
     response = client.post(reverse('create_student_form'), data)
@@ -142,7 +142,7 @@ def test_api_add_student_with_some_extended_fields():
     assert new_student.school_year == "SR"
     assert new_student.research_interests == ['AI', 'Medical Imaging', 'Art of Dance']
     assert new_student.degree == ""
-    assert new_student.gpa == 4.1
+    assert new_student.normal_gpa == 4.1
     assert new_student.military
     assert new_student.gender == 'U'
     assert new_student.ethnicity == 'U'
@@ -173,7 +173,7 @@ def test_image_and_data_post():
         'last_name': 'scaggs',
         'school_year': 'SR',
         'research_interests': ['AI', 'Medical Imaging', 'Art of Dance'],
-        'gpa': 4.1,
+        'normal_gpa': 4.1,
         'military': True,
         'profile_image': tmp_file
     }
@@ -210,7 +210,7 @@ def test_multiple_file_upload():
         'last_name': 'scaggs',
         'school_year': 'SR',
         'research_interests': ['AI', 'Medical Imaging', 'Art of Dance'],
-        'gpa': 4.1,
+        'normal_gpa': 4.1,
         'military': True,
         'profile_image': tmp_file,
         'resume': tmp_file2,
@@ -245,7 +245,7 @@ def test_bad_file_upload():
         'last_name': 'scaggs',
         'school_year': 'SR',
         'research_interests': ['AI', 'Medical Imaging', 'Art of Dance'],
-        'gpa': 4.1,
+        'normal_gpa': 4.1,
         'military': True,
         'resume': tmp_file
     }

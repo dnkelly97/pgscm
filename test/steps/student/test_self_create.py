@@ -81,12 +81,18 @@ def submit_with_info(browser):
     browser.find_element_by_id("id_first_name").send_keys("Test")
     browser.find_element_by_id("id_last_name").send_keys("Test")
     browser.find_element_by_id("id_email").send_keys("test@uiowa.edu")
+    browser.find_element_by_id("id_gpa").send_keys(2)
+    browser.find_element_by_id("id_scale").send_keys(5)
     browser.find_element_by_id("update_student_submit_button").click()
 
 
 @then("I should see a success message")
-def check_success(browser):
+def check_success(live_server, browser):
     assert "Creation successful..." in browser.page_source
+    login_as_administrator(live_server, browser)
+    browser.get(live_server + reverse('student'))
+    browser.find_element_by_link_text("View").click()
+    assert '1.6' in browser.page_source
 
 
 @when("I try to submit use the same email")

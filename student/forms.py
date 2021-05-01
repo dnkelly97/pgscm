@@ -2,6 +2,7 @@ from django.forms import ModelForm
 from student.models import Student
 from django import forms
 
+
 class CreateForm(ModelForm):
     class Meta:
         model = Student
@@ -13,6 +14,7 @@ class CreateForm(ModelForm):
                   'degree',
                   'university',
                   'gpa',
+                  'scale',
                   'ethnicity',
                   'gender',
                   'country',
@@ -32,7 +34,8 @@ class ResearchForm(ModelForm):
             'research_interests',
             'degree',
             'university',
-            'gpa'
+            'gpa',
+            'scale'
         ]
 
 

@@ -13,7 +13,7 @@ class StudentSerializer(CountryFieldMixin, serializers.ModelSerializer):
                   'research_interests',
                   'degree',
                   'university',
-                  'gpa',
+                  'normal_gpa',
                   'ethnicity',
                   'gender',
                   'country',

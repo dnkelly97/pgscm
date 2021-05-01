@@ -1,3 +1,9 @@
+<style>
+    #id_gpa, #id_scale {
+        width: 70px;
+    }
+</style>
+
 {% extends "home.html" %}
 
 {% load static %}
@@ -70,7 +76,7 @@
             <div class="input-group-append">
                 <span class="input-group-text">{{form.gpa.label}}</span>
             </div>
-            {{form.gpa}}
+            &nbsp;{{form.gpa}} &nbsp; out of &nbsp; {{form.scale}}
         </div>
         <div class="input-group mb-3">
             <div class="input-group-append">

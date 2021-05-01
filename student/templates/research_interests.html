@@ -1,5 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
+<style>
+    #id_gpa, #id_scale {
+        width: 70px;
+    }
+</style>
 {% load static %}
 <head>
     <meta charset="UTF-8">
@@ -86,7 +91,7 @@
                             <div class="input-group-append">
                                 <span class="input-group-text">{{form.gpa.label}}</span>
                             </div>
-                            {{form.gpa}}
+                            &nbsp;{{form.gpa}} &nbsp; out of &nbsp; {{form.scale}}
                         </div>
                         <button id="update_student_submit_button" class="btn btn-primary" type="submit">Update</button>
                     </form>

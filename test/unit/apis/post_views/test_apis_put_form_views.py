@@ -165,7 +165,7 @@ def test_api_add_student_with_some_extended_fields():
         'last_name': 'scaggs',
         'school_year': 'SR',
         'research_interests': ['{AI}'],
-        'gpa': 4.1,
+        'normal_gpa': 4.1,
         'military': True
     }
 
@@ -182,7 +182,7 @@ def test_api_add_student_with_some_extended_fields():
         'gender': 'M',
         'country': 'US',
         'ethnicity': 'A',
-        'gpa': 4.2,
+        'normal_gpa': 4.2,
         'military': True,
         'us_citizenship': False
     }
@@ -197,7 +197,7 @@ def test_api_add_student_with_some_extended_fields():
     assert new_student.school_year == "SR"
     assert new_student.research_interests == ['AI', 'Machine Learning']
     assert new_student.degree == "Electrical Engineering"
-    assert new_student.gpa == 4.2
+    assert new_student.normal_gpa == 4.2
     assert new_student.military
     assert new_student.gender == 'M'
     assert new_student.ethnicity == 'A'
