@@ -17,27 +17,33 @@
                          {% csrf_token %}
                          <div class="input-group mb-3">
                             <div class="input-group-append">
-                                 <span class="input-group-text">{{form.sources.label}}</span>
+                                 <span class="input-group-text">{{form.sources.label}}
+                                     &nbsp;<i data-content="Select a created query to send information to students within
+                                                    that query" class="fa fa-question-circle"></i>
+                                 </span>
                             </div>
-                            {{form.sources}}
+                            &nbsp;{{form.sources}}
                          </div>
                          <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text">{{form.name.label}}</span>
                             </div>
-                            {{form.name}}
+                            &nbsp;{{form.name}}
                          </div>
                          <div class="input-group mb-3">
                              <div class="input-group-append">
                                 <span class="input-group-text">{{form.description.label}}</span>
                              </div>
-                            {{form.description}}
+                            &nbsp;{{form.description}}
                          </div>
                          <div class="input-group mb-3">
                              <div class="input-group-append">
-                                 <span class="input-group-text">{{form.num_stages.label}}</span>
+                                 <span class="input-group-text">{{form.num_stages.label}}
+                                     &nbsp;<i data-content="This will specify how many times a student will be contacted
+                                                over some space of time." class="fa fa-question-circle"></i>
+                                 </span>
                              </div>
-                             {{form.num_stages}}
+                             &nbsp;{{form.num_stages}}
                          </div>
                         <div id="define_stages"></div>
                         <button id="create_pipeline_submit_button" name="create_pipeline_submit" class="btn btn-dark btn-block" style="display: none;" type="submit">Create</button>
