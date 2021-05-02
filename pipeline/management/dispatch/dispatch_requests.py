@@ -44,8 +44,8 @@ def dispatch_campaign_post(pipeline_id, pipeline_name):
                          data=data)
 
 
-def dispatch_communication_post(campaign_id, stage_id, name, placeholders, template):
-    email = {'fromAddress': 'dontmatter@gmail.com', 'fromName': 'you mom. hah.', 'subject': 'this one is a bit of a problem...'}
+def dispatch_communication_post(campaign_id, subject, stage_id, name, placeholders, template):
+    email = {'fromAddress': 'dontmatter@gmail.com', 'fromName': 'you mom. hah.', 'subject': subject}
     destinations = [
         {
           "bounceAddress": "bounce-to-here@uiowa.edu",
