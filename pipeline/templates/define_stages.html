@@ -1,3 +1,9 @@
+<style>
+    #id_subject {
+        width: 470px;
+    }
+</style>
+
 {% load static %}
 
 <div class="card card-body" style="border: none;">
@@ -8,6 +14,12 @@
             <span class="input-group-text">{{form.name.label}}</span>
         </div>
         {{ form.name }}
+    </div>
+    <div class="input-group mb-3">
+        <div class="input-group-append">
+            <span class="input-group-text">{{form.subject.label}}</span>
+        </div>
+        {{ form.subject }}
     </div>
     <div class="btn-group" style="margin-bottom: 16px">
       <button type="button" class="btn btn-warning dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id = "Stage_{{ forloop.counter }}_dropdown_initalizer">
