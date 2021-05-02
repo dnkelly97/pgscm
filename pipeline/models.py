@@ -65,6 +65,7 @@ class SavedQueryForm(ModelForm):
 class Stage(models.Model):
     pipeline = models.ForeignKey(Pipeline, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
+    subject = models.CharField(max_length=100, null=True)
     students = models.ManyToManyField(Student, through='StudentStage')
     stage_number = models.IntegerField(
         validators=[
