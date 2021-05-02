@@ -136,13 +136,17 @@ class CreateStudents(APIView):
         api_key = APIKey.objects.get_from_key(key)
         if request.method == 'POST':
             if api_key != None:
-                serializer = StudentSerializer(data=request.data)
-                if serializer.is_valid():
-                    serializer.save()
-                    return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-                return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                student = get_object(request.data['email'])
+                if student:
+                    return JsonResponse("Student with that email already exists", safe=False, status=status.HTTP_409_CONFLICT)
+                else:
+                    serializer = StudentSerializer(data=request.data)
+                    if serializer.is_valid():
+                        serializer.save()
+                        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+                    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("No API In Database", status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
 
         elif request.method == 'PUT':
             if api_key is not None:
