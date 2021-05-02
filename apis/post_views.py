@@ -11,6 +11,7 @@ from student.models import Student
 from rest_framework import status
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
+from enum import Enum
 
 
 class HundredPerDayThrottle(UserRateThrottle):
@@ -60,16 +61,18 @@ class CreateStudents(APIView):
     @api_view(['POST', 'PUT'])
     @parser_classes([JSONParser])
     @permission_classes([HasAPIKey])
-    @throttle_classes([HundredPerDayThrottle])
+    # @throttle_classes([HundredPerDayThrottle])
     def json_view(request, format=None):
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
         api_key = APIKey.objects.get_from_key(key)
         if request.method == 'POST':
-            if api_key != None:
-                serializer = StudentSerializer(data=request.data, many=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    return JsonResponse(serializer.data, safe=False, status=status.HTTP_201_CREATED)
+            if api_key is not None:
+                for student in request.data:
+                    serializer = StudentSerializer(data=request.data, many=True)
+                    if serializer.is_valid():
+                        serializer.save()
+                        return JsonResponse(serializer.data, safe=False, status=status.HTTP_201_CREATED)
+                print(serializer.errors)
                 return JsonResponse(serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
@@ -127,7 +130,7 @@ class CreateStudents(APIView):
     @api_view(['POST', 'PUT'])
     @parser_classes([FormParser, MultiPartParser])
     @permission_classes([HasAPIKey])
-    @throttle_classes([HundredPerDayThrottle])
+    # @throttle_classes([HundredPerDayThrottle])
     def form_view(request, format=None):
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
         api_key = APIKey.objects.get_from_key(key)
@@ -144,46 +147,15 @@ class CreateStudents(APIView):
         elif request.method == 'PUT':
             if api_key is not None:
                 data = request.data
-                instances = []
-
-                validate_email(data['email'])
                 student = get_object(data['email'])
 
                 if student:
-                    if 'first_name' in data:
-                        student.first_name = data['first_name']
-                    if 'last_name' in data:
-                        student.last_name = data['last_name']
-                    if 'school_year' in data:
-                        student.school_year = data['school_year']
-                    if 'research_interests' in data:
-                        student.research_interests = data['research_interests']
-                    if 'degree' in data:
-                        student.degree = data['degree']
-                    if 'university' in data:
-                        student.university = data['university']
-                    if 'normal_gpa' in data:
-                        student.normal_gpa = data['normal_gpa']
-                    if 'ethnicity' in data:
-                        student.ethnicity = data['ethnicity']
-                    if 'gender' in data:
-                        student.gender = data['gender']
-                    if 'country' in data:
-                        student.country = data['country']
-                    if 'us_citizenship' in data:
-                        student.us_citizenship = data['us_citizenship']
-                    if 'first_generation' in data:
-                        student.first_generation = data['first_generation']
-                    if 'military' in data:
-                        student.military = data['military']
-
-                    student.save()
-
+                    serializer = StudentSerializer(student, data=request.data)
+                    if serializer.is_valid():
+                        serializer.save()
+                        return JsonResponse(serializer.data,status=status.HTTP_200_OK)
+                    return JsonResponse(serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return JsonResponse("User not in database", safe=False, status=status.HTTP_400_BAD_REQUEST)
-
-                serializer = StudentSerializer(student)
-                return JsonResponse(serializer.data, safe=False)
-
+                    return JsonResponse("Student not found.", safe=False, status=status.HTTP_404_NOT_FOUND)
             else:
                 return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
