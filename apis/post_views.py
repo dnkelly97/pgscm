@@ -6,7 +6,7 @@ from rest_framework.decorators import api_view, throttle_classes
 from rest_framework.decorators import parser_classes, permission_classes
 from .models import *
 from django.http.response import JsonResponse
-from .serializers import StudentSerializer
+from .serializers import StudentSerializer, JSONStudentSerializer
 from student.models import Student
 from rest_framework import status
 from rest_framework.throttling import UserRateThrottle
@@ -55,8 +55,66 @@ def validate_email(email_list):
             return False
     return True
 
+def json_data_formatter(student, errors=None):
+    if errors:
+        return {
+            "errors": errors,
+            "student": student
+        }
+    else:
+        return {
+            "student": student
+        }
 
 class CreateStudents(APIView):
+
+    @staticmethod
+    def return_result(data, type):
+        bad_request = 400
+        if type == 'POST':
+            responses = {
+                201: [],
+                400: [],
+                409: []
+            }
+            success = 201
+            invalid = 409
+        else:
+            responses = {
+                204: [],
+                400: [],
+                404: []
+            }
+            success = 204
+            invalid = 404
+
+        for student in data['students']:
+            json_serializer = JSONStudentSerializer(data=student)
+            if json_serializer.is_valid():
+                student_serializer = StudentSerializer(data=student)
+                if student_serializer.is_valid() and 'save_valid' in request.data and request.data['save_valid']:
+                    student_serializer.save()
+                    responses[success].append(json_data_formatter(student_serializer.data))
+                else:
+                    responses[invalid].append(json_data_formatter(student_serializer.data, student_serializer.errors))
+            else:
+                responses[bad_request].append(json_data_formatter(json_serializer.data, json_serializer.errors))
+
+        if 'save_valid' in data and data['save_valid']:
+            if responses[bad_request] == [] and responses[invalid] == []:
+                return JsonResponse(responses[success], safe=False, status=status.HTTP_201_CREATED)
+            else:
+                return JsonResponse(responses, safe=False, status=status.HTTP_207_MULTI_STATUS)
+        else:
+            if responses[bad_request] == [] and responses[invalid] == []:
+                serializer = StudentSerializer(data['students'], many=True)
+                serializer.is_valid()
+                serializer.save()
+                responses[success] = serializer.data
+                return JsonResponse(responses[success], safe=False, status=status.HTTP_201_CREATED)
+            else:
+                del responses[success]
+                return JsonResponse(responses, safe=False, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['POST', 'PUT'])
     @parser_classes([JSONParser])
@@ -67,15 +125,14 @@ class CreateStudents(APIView):
         api_key = APIKey.objects.get_from_key(key)
         if request.method == 'POST':
             if api_key is not None:
-                for student in request.data:
-                    serializer = StudentSerializer(data=request.data, many=True)
-                    if serializer.is_valid():
-                        serializer.save()
-                        return JsonResponse(serializer.data, safe=False, status=status.HTTP_201_CREATED)
-                print(serializer.errors)
-                return JsonResponse(serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST)
+                if 'students' not in request.data:
+                    return JsonResponse("You did not specify any students for the request.",
+                                        safe=False,
+                                        status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    return CreateStudents.return_result(request.data, 'POST')
             else:
-                return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse("No valid credentials were provided", safe=False, status=status.HTTP_401_UNAUTHORIZED)
 
         elif request.method == 'PUT':
             if api_key is not None:
