@@ -52,6 +52,9 @@
         $(function () {
             $('.fa').popover({trigger: "hover"});
         })
+        $(function () {
+          $('[data-toggle="tooltip"]').tooltip()
+        })
     </script>
     {% block javascript %}{% endblock %}
 </body>
