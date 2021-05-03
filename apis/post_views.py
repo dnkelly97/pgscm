@@ -46,15 +46,6 @@ def get_object(email):
     except (Student.DoesNotExist, ValidationError):
         return False
 
-
-def validate_email(email_list):
-    for email in email_list:
-        try:
-            Student.objects.get(email=email)
-        except (Student.DoesNotExist, ValidationError):
-            return False
-    return True
-
 def json_data_formatter(student,status_code, errors=None):
     if errors:
         return {
@@ -154,6 +145,7 @@ class CreateStudents(APIView):
                                                     {"email": ["email was not provided."]}))
                         else:
                             update_student = get_object(student['email'])
+                            print(student['email'])
                             if update_student:
                                 student_serializer = StudentSerializer(update_student,data=student,partial=True)
                                 if student_serializer.is_valid():
@@ -161,7 +153,7 @@ class CreateStudents(APIView):
                                         student_serializer.save()
                                     valid.append(json_data_formatter(student_serializer.data, success))
                                 else:
-                                    invalid.append(json_data_formatter(json_serializer.data, bad_request, json_serializer.errors))
+                                    invalid.append(json_data_formatter(student_serializer.errors, bad_request, student_serializer.errors))
                             else:
                                 invalid.append(
                                     json_data_formatter(student, not_found, {"email": ["student with this email does not exist."]}))
@@ -172,21 +164,18 @@ class CreateStudents(APIView):
                             return JsonResponse(valid + invalid, safe=False, status=status.HTTP_207_MULTI_STATUS)
                     else:
                         if not invalid:
-                            data = [student['student'] for student in valid]
-                            for person in data:
-                                update_student = get_object(person['email'])
-                                serializer = StudentSerializer(update_student, data=person)
+                            for student in data['students']:
+                                update_student = get_object(student['email'])
+                                serializer = StudentSerializer(update_student, data=student,partial=True)
                                 serializer.is_valid()
                                 serializer.save()
                             return JsonResponse(valid, safe=False, status=status.HTTP_200_OK)
                         else:
                             return JsonResponse(invalid, safe=False, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("Invalid credentials.", safe=False,
-                                    status=status.HTTP_401_UNAUTHORIZED)
+                return JsonResponse("Invalid credentials.", safe=False,status=status.HTTP_401_UNAUTHORIZED)
         else:
-            return JsonResponse("Method not allowed.", safe=False,
-                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return JsonResponse("Method not allowed.", safe=False,status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @api_view(['POST', 'PUT'])
     @parser_classes([FormParser, MultiPartParser])
@@ -207,8 +196,7 @@ class CreateStudents(APIView):
                     return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
                 return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("Invalid credentials.", safe=False,
-                                status=status.HTTP_401_UNAUTHORIZED)
+                return JsonResponse("Invalid credentials.", safe=False,status=status.HTTP_401_UNAUTHORIZED)
 
         elif request.method == 'PUT':
             if api_key is not None:
@@ -229,5 +217,4 @@ class CreateStudents(APIView):
                 return JsonResponse("Invalid credentials.", safe=False,status=status.HTTP_401_UNAUTHORIZED)
 
         else:
-            return JsonResponse("Method not allowed.", safe=False,
-                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
+            return JsonResponse("Method not allowed.", safe=False,status=status.HTTP_405_METHOD_NOT_ALLOWED)
