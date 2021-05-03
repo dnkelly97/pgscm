@@ -81,3 +81,22 @@ def dispatch_message_get(member_id):
     return requests.get(DISPATCH_URL + '/messages/' + member_id,
                         headers={'Authorization': 'x-dispatch-api-key ' + DISPATCH_AUTH}
                         )
+
+
+def dispatch_adhoc_communications_post(communication_id, members):
+    '''
+
+    :param communication_id: the id of the communication in Dispatch, which is also the id of the stage associated with the communication
+    :param members: a list of StudentStage objects that should be communicated with
+    :return: response of the adhocs post request
+    '''
+    member_json = {'members': [], 'includeBatchResponse': True}
+    for member in members:
+        data = {'toName': member.student.first_name + " " + member.student.last_name,
+                'toAddress': member.student.email,
+                'form': ''}  # TODO: form fillout
+        member_json['members'].append(data)
+    return requests.post(DISPATCH_URL + f'/communications/{communication_id}/adhocs',
+                         headers={'Authorization': 'x-dispatch-api-key ' + DISPATCH_AUTH},
+                         json=member_json
+                         )

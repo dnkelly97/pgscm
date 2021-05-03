@@ -1,6 +1,8 @@
 import pytest
 from pytest_httpserver import httpserver
 from pipeline.management.dispatch.dispatch_requests import *
+from pipeline.models import Stage, StudentStage
+from student.models import Student
 import json
 import random
 
@@ -80,6 +82,17 @@ def test_batch_request(httpserver, authorization_header):
     httpserver.expect_request("/batches/12-aq1", headers=authorization_header).respond_with_json(response)
     assert json.loads(dispatch_batch_get('12-aq1').content) == response
 
+
+def test_adhoc_communications_request(httpserver, authorization_header):
+    response = ['http://url.to.batch.net/fun']
+    stage = Stage(name='my stage')
+    student1 = Student(first_name='george', last_name='jorge', email='george@jorge.com')
+    student2 = Student(first_name='william', last_name='guillermo', email='william@guillermo.com')
+    student_stage1 = StudentStage(student=student1, stage=stage)
+    student_stage2 = StudentStage(student=student2, stage=stage)
+    members = [student_stage1, student_stage2]
+    httpserver.expect_request("/communications/12-aq1/adhocs", headers=authorization_header).respond_with_json(response)
+    assert json.loads(dispatch_adhoc_communications_post('12-aq1', members).content) == response
 
 # @pytest.mark.django_db
 # def test_valid_communications_post():
