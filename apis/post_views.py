@@ -126,7 +126,7 @@ class CreateStudents(APIView):
                         else:
                             return JsonResponse(invalid, safe=False, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("No valid credentials were provided", safe=False, status=status.HTTP_401_UNAUTHORIZED)
+                return JsonResponse("Invalid credentials.", safe=False, status=status.HTTP_401_UNAUTHORIZED)
 
         elif request.method == 'PUT':
             if api_key is not None:
@@ -183,7 +183,7 @@ class CreateStudents(APIView):
                         else:
                             return JsonResponse(invalid, safe=False, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("No valid credentials were provided", safe=False,
+                return JsonResponse("Invalid credentials.", safe=False,
                                     status=status.HTTP_401_UNAUTHORIZED)
         else:
             return JsonResponse("Method not allowed.", safe=False,
@@ -200,7 +200,7 @@ class CreateStudents(APIView):
             if api_key != None:
                 student = get_object(request.data['email'])
                 if student:
-                    return JsonResponse("Student with that email already exists", safe=False, status=status.HTTP_409_CONFLICT)
+                    return JsonResponse("Student with that email already exists.", safe=False, status=status.HTTP_409_CONFLICT)
                 else:
                     serializer = StudentSerializer(data=request.data)
                     if serializer.is_valid():
@@ -208,7 +208,8 @@ class CreateStudents(APIView):
                         return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
                     return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse("Invalid credentials.", safe=False,
+                                status=status.HTTP_401_UNAUTHORIZED)
 
         elif request.method == 'PUT':
             if api_key is not None:
@@ -224,7 +225,7 @@ class CreateStudents(APIView):
                 else:
                     return JsonResponse("Student not found.", safe=False, status=status.HTTP_404_NOT_FOUND)
             else:
-                return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse("Invalid credentials.", safe=False,status=status.HTTP_401_UNAUTHORIZED)
 
         else:
             return JsonResponse("Method not allowed.", safe=False,
