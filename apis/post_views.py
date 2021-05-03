@@ -225,3 +225,7 @@ class CreateStudents(APIView):
                     return JsonResponse("Student not found.", safe=False, status=status.HTTP_404_NOT_FOUND)
             else:
                 return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+
+        else:
+            return JsonResponse("Method not allowed.", safe=False,
+                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
