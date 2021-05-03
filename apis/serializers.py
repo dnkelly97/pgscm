@@ -3,6 +3,11 @@ from student.models import Student
 from django_countries.serializers import CountryFieldMixin
 
 
+class JSONStudentSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    first_name = serializers.CharField(max_length=50)
+    last_name = serializers.CharField(max_length=50)
+
 class StudentSerializer(CountryFieldMixin, serializers.ModelSerializer):
     class Meta:
         model = Student
