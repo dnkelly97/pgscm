@@ -64,7 +64,7 @@ class CreateStudents(APIView):
     @api_view(['POST', 'PUT'])
     @parser_classes([JSONParser])
     @permission_classes([HasAPIKey])
-    # @throttle_classes([HundredPerDayThrottle])
+    @throttle_classes([HundredPerDayThrottle])
     def json_view(request, format=None):
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
         api_key = APIKey.objects.get_from_key(key)
@@ -180,7 +180,7 @@ class CreateStudents(APIView):
     @api_view(['POST', 'PUT'])
     @parser_classes([FormParser, MultiPartParser])
     @permission_classes([HasAPIKey])
-    # @throttle_classes([HundredPerDayThrottle])
+    @throttle_classes([HundredPerDayThrottle])
     def form_view(request, format=None):
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
         api_key = APIKey.objects.get_from_key(key)
