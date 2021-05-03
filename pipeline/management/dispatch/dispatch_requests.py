@@ -1,6 +1,7 @@
 import requests
 import os
 from django.contrib.auth.models import User
+from django.conf import settings
 
 
 DISPATCH_URL = os.environ.get('DISPATCH_URL') if 'WEBSITE_HOSTNAME' in os.environ else "http://127.0.0.1:8001" #make sure dispatch runs on port 8001
@@ -45,7 +46,7 @@ def dispatch_campaign_post(pipeline_id, pipeline_name):
 
 
 def dispatch_communication_post(campaign_id, subject, stage_id, name, placeholders, template):
-    email = {'fromAddress': 'dontmatter@gmail.com', 'fromName': 'you mom. hah.', 'subject': subject}
+    email = {'fromAddress': settings.EMAIL_HOST_USER, 'fromName': 'PGSCM', 'subject': subject}
     destinations = [
         {
           "bounceAddress": "bounce-to-here@uiowa.edu",

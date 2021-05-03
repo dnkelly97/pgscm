@@ -64,9 +64,10 @@ def test_communications_post(httpserver, authorization_header):
     pipeline_id = 233
     stage_id = 1
     name = 'my stage'
+    subject = 'Some subject line'
     placeholders = {'content': 'hello amigo'}
     template = 'http://fake.template.url.com/templates/789'
-    assert dispatch_communication_post(pipeline_id, stage_id, name, placeholders, template).json() == response
+    assert dispatch_communication_post(pipeline_id, subject, stage_id, name, placeholders, template).json() == response
 
 
 def test_message_request(httpserver, authorization_header):
