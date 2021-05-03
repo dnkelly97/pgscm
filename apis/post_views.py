@@ -148,11 +148,14 @@ class CreateStudents(APIView):
                         save_valid = False
 
                     for student in data['students']:
-                        json_serializer = JSONStudentSerializer(data=student)
-                        if json_serializer.is_valid():
+                        if 'email' not in student:
+                            invalid.append(
+                                json_data_formatter(student, bad_request,
+                                                    {"email": ["email was not provided."]}))
+                        else:
                             update_student = get_object(student['email'])
                             if update_student:
-                                student_serializer = StudentSerializer(update_student,data=student)
+                                student_serializer = StudentSerializer(update_student,data=student,partial=True)
                                 if student_serializer.is_valid():
                                     if save_valid:
                                         student_serializer.save()
@@ -162,10 +165,6 @@ class CreateStudents(APIView):
                             else:
                                 invalid.append(
                                     json_data_formatter(student, not_found, {"email": ["student with this email does not exist."]}))
-                        else:
-                            invalid.append(
-                                json_data_formatter(json_serializer.data, bad_request, json_serializer.errors))
-
                     if save_valid:
                         if not invalid:
                             return JsonResponse(valid, safe=False, status=status.HTTP_200_OK)
@@ -198,15 +197,15 @@ class CreateStudents(APIView):
         api_key = APIKey.objects.get_from_key(key)
         if request.method == 'POST':
             if api_key != None:
-                student = get_object(request.data['email'])
-                if student:
-                    return JsonResponse("Student with that email already exists.", safe=False, status=status.HTTP_409_CONFLICT)
-                else:
-                    serializer = StudentSerializer(data=request.data)
-                    if serializer.is_valid():
-                        serializer.save()
-                        return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
-                    return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+                if 'email' in request.data:
+                    student = get_object(request.data['email'])
+                    if student:
+                        return JsonResponse("Student with that email already exists.", safe=False, status=status.HTTP_409_CONFLICT)
+                serializer = StudentSerializer(data=request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
+                return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return JsonResponse("Invalid credentials.", safe=False,
                                 status=status.HTTP_401_UNAUTHORIZED)
@@ -214,10 +213,12 @@ class CreateStudents(APIView):
         elif request.method == 'PUT':
             if api_key is not None:
                 data = request.data
-                student = get_object(data['email'])
+                if 'email' not in data:
+                    return JsonResponse("Email is required.", safe=False, status=status.HTTP_400_BAD_REQUEST)
 
+                student = get_object(data['email'])
                 if student:
-                    serializer = StudentSerializer(student, data=request.data)
+                    serializer = StudentSerializer(student, data=request.data,partial=True)
                     if serializer.is_valid():
                         serializer.save()
                         return JsonResponse(serializer.data,status=status.HTTP_200_OK)
