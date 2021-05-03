@@ -2,6 +2,8 @@ from django.forms import forms
 from pipeline.models import Pipeline, Stage, SavedQuery
 from django.forms import ModelForm, Textarea, widgets, ModelMultipleChoiceField
 from django.db.models import Q
+from django.core.exceptions import ValidationError
+
 
 class CreatePipelineForm(ModelForm):
     sources = ModelMultipleChoiceField(widget=widgets.CheckboxSelectMultiple(),
@@ -40,4 +42,12 @@ class UpdatePipelineForm(ModelForm):
 class UpdateStageForm(ModelForm):
     class Meta:
         model = Stage
-        fields = ['name', 'stage_number', 'time_window', 'advancement_condition', 'pipeline']
+        fields = ['name', 'stage_number', 'time_window', 'advancement_condition', 'pipeline', 'form']
+
+    def clean(self):
+        cleaned_data = super().clean()
+        form = cleaned_data.get("form")
+        advancement_condition = cleaned_data.get("advancement_condition")
+
+        if advancement_condition == "FR" and form is None:
+            raise ValidationError("Form cannot be none if advancement condition is 'Form Read'")

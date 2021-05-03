@@ -91,6 +91,13 @@ class Stage(models.Model):
         default=ConditionsForAdvancement.NONE
     )
 
+    class FormOptions(models.TextChoices):
+        NONE = 'None', _('None')
+        DEMOGRAPHICS_FORM = 'DF', _('Demographics Form')
+        RESEARCH_INTERESTS_FORM = 'RIF', _('Research Interests Form')
+
+    form = models.CharField(max_length=4, choices=FormOptions.choices, default=FormOptions.NONE)
+
 
 class StudentStage(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -98,6 +105,16 @@ class StudentStage(models.Model):
     date_joined = models.DateField()
     batch_id = models.IntegerField(blank=True, null=True)  # if form received is advancement condition, we may not need to use dispatch (?)
     member_id = models.CharField(max_length=100, blank=True)
+
+    def should_advance(self):
+        if self.time_window_has_passed():
+            if self.stage.advancement_condition == 'ER':
+                return self.email_was_read()
+            elif self.stage.advancement_condition == 'FR':
+                return self.form_received()
+            else:
+                return True
+        return False
 
     def email_was_read(self):
         response = json.loads(dispatch_message_get(self.member_id).content)
@@ -115,4 +132,12 @@ class StudentStage(models.Model):
         time_passed = datetime.date.today() - self.date_joined
         days_passed = time_passed.days
         return days_passed >= self.stage.time_window
+
+    def form_received(self):
+        if self.stage.form == 'RIF':
+            return self.student.submitted
+        elif self.stage.form == 'DF':
+            return self.student.submit_demo
+        else:
+            return True
 

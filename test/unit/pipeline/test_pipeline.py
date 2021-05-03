@@ -111,7 +111,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], '1_content_123': ['hello']}
+                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None'], '1_content_123': ['hello']}
         response = create_pipeline(request)
         assert response.status_code == 200
         assert json.loads(response.content)['success']
@@ -125,7 +125,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], '1_content_123': ['']}
+                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None'], '1_content_123': ['']}
         response = create_pipeline(request)
         assert response.status_code == 200
         content = json.loads(response.content)
@@ -137,7 +137,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None']}
+                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
         content = json.loads(response.content)
@@ -149,7 +149,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['0'], 'time_window': ['30'], 'advancement_condition': ['None']}
+                        'num_stages': ['0'], 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
         content = json.loads(response.content)
@@ -170,7 +170,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['1'], 'time_window': ['-1'], 'advancement_condition': ['None']}
+                        'num_stages': ['1'], 'time_window': ['-1'], 'advancement_condition': ['None'], 'form': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
         content = json.loads(response.content)
@@ -277,3 +277,41 @@ class TestStudentStage:
         assert not student_stage.time_window_has_passed()
         student_stage.date_joined = datetime.date(2018, 1, 12)
         assert student_stage.time_window_has_passed()
+
+    @pytest.mark.parametrize('form, received', [('RIF', False), ('RIF', True), ('DF', False), ('DF', True), ('None', True)])
+    def test_form_received(self, student_stage, form, received):
+        student_stage.stage.form = form
+        if form == 'RIF':
+            student_stage.student.submitted = received
+        elif form == 'DF':
+            student_stage.student.submit_demo = received
+        assert student_stage.form_received() == received
+
+    @pytest.mark.parametrize('advancement_condition, form, form_received, email_read, time_window, expected', [
+        ('None', 'None', False, False, 100, False),  # time window failing test
+        ('None', 'None', False, False, 0, True),
+        ('ER', 'None', False, True, 0, True),
+        ('ER', 'None', False, False, 0, False),
+        ('FR', 'RIF', True, False, 0, True),
+        ('FR', 'RIF', False, False, 0, False),
+        ('FR', 'DF', True, False, 0, True),
+        ('FR', 'DF', False, False, 0, False),
+    ])
+    def test_should_advance(self, student_stage, httpserver, authorization_header, advancement_condition, form,
+                            form_received, email_read, time_window, expected):
+        student_stage.stage.time_window = time_window
+        student_stage.stage.advancement_condition = advancement_condition
+        student_stage.stage.form = form
+        if form == 'RIF':
+            student_stage.student.submitted = form_received
+        elif form == 'DF':
+            student_stage.student.submit_demo = form_received
+        if advancement_condition == 'ER':
+            student_stage.member_id = '1a'
+            if email_read:
+                response = {'receiptDate': str(datetime.datetime.today())}
+            else:
+                response = {}
+            httpserver.expect_request("/messages/" + student_stage.member_id,
+                                      headers=authorization_header).respond_with_json(response)
+        assert student_stage.should_advance() == expected

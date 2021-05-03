@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 DISPATCH_URL = os.environ.get('DISPATCH_URL') if 'WEBSITE_HOSTNAME' in os.environ else "http://127.0.0.1:8001" #make sure dispatch runs on port 8001
 DISPATCH_AUTH = os.environ.get('DISPATCH_AUTH') if 'WEBSITE_HOSTNAME' in os.environ else "" #your developing client key, leave blank for testing # d3juGGzfHpBVtK1ZmrND
 
+
 def get_all_template_data():
     templates = get_templates()
     template_objects = []
@@ -74,7 +75,7 @@ def dispatch_batch_get(batch_id):
     return requests.get(DISPATCH_URL + '/batches/' + str(batch_id),
                         headers={'Authorization': 'x-dispatch-api-key ' + DISPATCH_AUTH}
                         )
-# todo- write tests for the above and the below
+
 
 def dispatch_message_get(member_id):
     return requests.get(DISPATCH_URL + '/messages/' + member_id,
