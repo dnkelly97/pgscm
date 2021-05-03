@@ -55,66 +55,20 @@ def validate_email(email_list):
             return False
     return True
 
-def json_data_formatter(student, errors=None):
+def json_data_formatter(student,status_code, errors=None):
     if errors:
         return {
+            "code": status_code,
             "errors": errors,
             "student": student
         }
     else:
         return {
+            "code": status_code,
             "student": student
         }
 
 class CreateStudents(APIView):
-
-    @staticmethod
-    def return_result(data, type):
-        bad_request = 400
-        if type == 'POST':
-            responses = {
-                201: [],
-                400: [],
-                409: []
-            }
-            success = 201
-            invalid = 409
-        else:
-            responses = {
-                204: [],
-                400: [],
-                404: []
-            }
-            success = 204
-            invalid = 404
-
-        for student in data['students']:
-            json_serializer = JSONStudentSerializer(data=student)
-            if json_serializer.is_valid():
-                student_serializer = StudentSerializer(data=student)
-                if student_serializer.is_valid() and 'save_valid' in request.data and request.data['save_valid']:
-                    student_serializer.save()
-                    responses[success].append(json_data_formatter(student_serializer.data))
-                else:
-                    responses[invalid].append(json_data_formatter(student_serializer.data, student_serializer.errors))
-            else:
-                responses[bad_request].append(json_data_formatter(json_serializer.data, json_serializer.errors))
-
-        if 'save_valid' in data and data['save_valid']:
-            if responses[bad_request] == [] and responses[invalid] == []:
-                return JsonResponse(responses[success], safe=False, status=status.HTTP_201_CREATED)
-            else:
-                return JsonResponse(responses, safe=False, status=status.HTTP_207_MULTI_STATUS)
-        else:
-            if responses[bad_request] == [] and responses[invalid] == []:
-                serializer = StudentSerializer(data['students'], many=True)
-                serializer.is_valid()
-                serializer.save()
-                responses[success] = serializer.data
-                return JsonResponse(responses[success], safe=False, status=status.HTTP_201_CREATED)
-            else:
-                del responses[success]
-                return JsonResponse(responses, safe=False, status=status.HTTP_400_BAD_REQUEST)
 
     @api_view(['POST', 'PUT'])
     @parser_classes([JSONParser])
@@ -130,59 +84,110 @@ class CreateStudents(APIView):
                                         safe=False,
                                         status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return CreateStudents.return_result(request.data, 'POST')
+                    bad_request = 400
+                    success = 201
+                    conflict = 409
+                    data = request.data
+                    valid = []
+                    invalid = []
+
+                    if 'save_valid' in data:
+                        save_valid = data['save_valid']
+                    else:
+                        save_valid = False
+
+                    for student in data['students']:
+                        json_serializer = JSONStudentSerializer(data=student)
+                        if json_serializer.is_valid():
+                            student_serializer = StudentSerializer(data=student)
+                            if student_serializer.is_valid():
+                                if save_valid:
+                                    student_serializer.save()
+                                valid.append(json_data_formatter(student_serializer.data,success))
+                            else:
+                                invalid.append(
+                                    json_data_formatter(student_serializer.data,conflict, student_serializer.errors))
+                        else:
+                            invalid.append(
+                                json_data_formatter(json_serializer.data, bad_request, json_serializer.errors))
+
+                    if save_valid:
+                        if not invalid:
+                            return JsonResponse(valid, safe=False, status=status.HTTP_201_CREATED)
+                        else:
+                            return JsonResponse(valid+invalid, safe=False, status=status.HTTP_207_MULTI_STATUS)
+                    else:
+                        if not invalid:
+                            data = [ student['student'] for student in valid ]
+                            serializer = StudentSerializer(data=data, many=True)
+                            serializer.is_valid()
+                            serializer.save()
+                            return JsonResponse(valid, safe=False, status=status.HTTP_201_CREATED)
+                        else:
+                            return JsonResponse(invalid, safe=False, status=status.HTTP_400_BAD_REQUEST)
             else:
                 return JsonResponse("No valid credentials were provided", safe=False, status=status.HTTP_401_UNAUTHORIZED)
 
         elif request.method == 'PUT':
             if api_key is not None:
-                data = request.data
-                email_list = [i['email'] for i in data]
-                validate_email(email_list)
-                instances = []
-                for d in data:
-                    email = d['email']
-                    student = get_object(email)
+                if 'students' not in request.data:
+                    return JsonResponse("You did not specify any students for the request.",
+                                        safe=False,
+                                        status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    bad_request = 400
+                    success = 200
+                    not_found = 404
+                    data = request.data
+                    valid = []
+                    invalid = []
 
-                    if student:
-                        if 'first_name' in d:
-                            student.first_name = d['first_name']
-                        if 'last_name' in d:
-                            student.last_name = d['last_name']
-                        if 'school_year' in d:
-                            student.school_year = d['school_year']
-                        if 'research_interests' in d:
-                            student.research_interests = d['research_interests']
-                        if 'degree' in d:
-                            student.degree = d['degree']
-                        if 'university' in d:
-                            student.university = d['university']
-                        if 'normal_gpa' in d:
-                            student.normal_gpa = d['normal_gpa']
-                        if 'ethnicity' in d:
-                            student.ethnicity = d['ethnicity']
-                        if 'gender' in d:
-                            student.gender = d['gender']
-                        if 'country' in d:
-                            student.country = d['country']
-                        if 'us_citizenship' in d:
-                            student.us_citizenship = d['us_citizenship']
-                        if 'first_generation' in d:
-                            student.first_generation = d['first_generation']
-                        if 'military' in d:
-                            student.military = d['military']
-
-                        student.save()
-                        instances.append(student)
-
+                    if 'save_valid' in data:
+                        save_valid = data['save_valid']
                     else:
-                        return JsonResponse("User not in database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+                        save_valid = False
 
-                serializer = StudentSerializer(instances, many=True)
-                return JsonResponse(serializer.data, safe=False)
+                    for student in data['students']:
+                        json_serializer = JSONStudentSerializer(data=student)
+                        if json_serializer.is_valid():
+                            update_student = get_object(student['email'])
+                            if update_student:
+                                student_serializer = StudentSerializer(update_student,data=student)
+                                if student_serializer.is_valid():
+                                    if save_valid:
+                                        student_serializer.save()
+                                    valid.append(json_data_formatter(student_serializer.data, success))
+                                else:
+                                    invalid.append(json_data_formatter(json_serializer.data, bad_request, json_serializer.errors))
+                            else:
+                                invalid.append(
+                                    json_data_formatter(student, not_found, {"email": ["student with this email does not exist."]}))
+                        else:
+                            invalid.append(
+                                json_data_formatter(json_serializer.data, bad_request, json_serializer.errors))
 
+                    if save_valid:
+                        if not invalid:
+                            return JsonResponse(valid, safe=False, status=status.HTTP_200_OK)
+                        else:
+                            return JsonResponse(valid + invalid, safe=False, status=status.HTTP_207_MULTI_STATUS)
+                    else:
+                        if not invalid:
+                            data = [student['student'] for student in valid]
+                            for person in data:
+                                update_student = get_object(person['email'])
+                                serializer = StudentSerializer(update_student, data=person)
+                                serializer.is_valid()
+                                serializer.save()
+                            return JsonResponse(valid, safe=False, status=status.HTTP_200_OK)
+                        else:
+                            return JsonResponse(invalid, safe=False, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse("No valid credentials were provided", safe=False,
+                                    status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return JsonResponse("Method not allowed.", safe=False,
+                                status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @api_view(['POST', 'PUT'])
     @parser_classes([FormParser, MultiPartParser])
