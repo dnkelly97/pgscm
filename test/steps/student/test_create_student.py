@@ -45,6 +45,8 @@ def fill_out_last_name(browser, last_name):
 
 @when("I click the create student submit button")
 def create_student_submit(browser):
+    browser.find_element_by_id('id_gpa').send_keys(2)
+    browser.find_element_by_id('id_scale').send_keys(5)
     browser.find_element_by_id('create_student_submit_button').click()
 
 

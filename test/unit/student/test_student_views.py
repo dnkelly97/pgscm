@@ -36,7 +36,7 @@ class StudentView(TestCase):
     @pytest.mark.django_db
     def test_create_student_submit_invalid(self):
         values = {"email": "hello@gmail.com", "first_name": 'first', "last_name": 'last', "school_year": Student.YearInSchool.UNKNOWN,
-                  "ethnicity": Student.Ethnicity.UNKNOWN, "gender": Student.Gender.UNKNOWN}
+                  "ethnicity": Student.Ethnicity.UNKNOWN, "gender": Student.Gender.UNKNOWN, "gpa": 2, "scale": 5}
         self.student = Student.objects.create(email="hello1@gmail.com", first_name="first", last_name="second")
         self.student.save()
         url = reverse('create_student')
@@ -46,7 +46,9 @@ class StudentView(TestCase):
             'last_name': values["last_name"],
             'school_year': values["school_year"],
             'ethnicity': values["ethnicity"],
-            'gender': values["gender"]
+            'gender': values["gender"],
+            'gpa': values["gpa"],
+            'scale': values["scale"]
         }
         response = self.client.post(url, data=self.data)
         assert response.status_code == 302

@@ -32,6 +32,8 @@ def create_student(live_server, browser):
     browser.find_element_by_id('id_university').send_keys('test@uiowa.edu')
     browser.find_element_by_id('id_degree').send_keys('engineering')
     browser.find_element_by_id('id_research_interests').send_keys('imaging')
+    browser.find_element_by_id('id_gpa').send_keys(2)
+    browser.find_element_by_id('id_scale').send_keys(5)
     browser.find_element_by_id('create_student_submit_button').click()
 
 
@@ -40,6 +42,7 @@ def click_to_update(live_server, browser):
     assert browser.find_element_by_id('create_student_button')
     assert "test_first" in browser.page_source
     browser.find_element_by_link_text("View").click()
+    assert '1.6' in browser.page_source
     browser.find_element_by_link_text("Update").click()
 
 

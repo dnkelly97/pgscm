@@ -97,8 +97,8 @@ class CreateStudents(APIView):
                             student.degree = d['degree']
                         if 'university' in d:
                             student.university = d['university']
-                        if 'gpa' in d:
-                            student.gpa = d['gpa']
+                        if 'normal_gpa' in d:
+                            student.normal_gpa = d['normal_gpa']
                         if 'ethnicity' in d:
                             student.ethnicity = d['ethnicity']
                         if 'gender' in d:
@@ -162,8 +162,8 @@ class CreateStudents(APIView):
                         student.degree = data['degree']
                     if 'university' in data:
                         student.university = data['university']
-                    if 'gpa' in data:
-                        student.gpa = data['gpa']
+                    if 'normal_gpa' in data:
+                        student.normal_gpa = data['normal_gpa']
                     if 'ethnicity' in data:
                         student.ethnicity = data['ethnicity']
                     if 'gender' in data:

@@ -68,12 +68,17 @@ def go_to_form(live_server, browser):
 
 @when("I submit the form as is")
 def submit_form(browser):
+    browser.find_element_by_id("id_gpa").send_keys(2)
+    browser.find_element_by_id("id_scale").send_keys(5)
     browser.find_element_by_id("update_student_submit_button").click()
 
 
 @then("I should get a confirmation message")
-def get_message(browser):
+def get_message(live_server, browser):
     assert "Thank you for updating this..." in browser.page_source
+    browser.get(live_server + reverse('student'))
+    browser.find_element_by_link_text("View").click()
+    assert '1.6' in browser.page_source
 
 
 @then("I should no longer be able to access this page")
