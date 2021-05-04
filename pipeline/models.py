@@ -98,6 +98,10 @@ class Stage(models.Model):
 
     form = models.CharField(max_length=4, choices=FormOptions.choices, default=FormOptions.NONE)
 
+    def is_last_stage_in_pipeline(self):
+        pipeline = Pipeline.objects.get(id=self.pipeline.id)
+        return pipeline.num_stages == self.stage_number
+
 
 class StudentStage(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -106,7 +110,17 @@ class StudentStage(models.Model):
     batch_id = models.IntegerField(blank=True, null=True)  # if form received is advancement condition, we may not need to use dispatch (?)
     member_id = models.CharField(max_length=100, blank=True)
 
+    def advance_student(self):  # IMPORTANT: This function should only be called if should_advance() has been called and evaluated to True
+        next_stage_id = self.stage.id + 1
+        next_stage = Stage.objects.get(id=next_stage_id)
+        self.stage = next_stage
+        self.member_id = ''
+        self.batch_id = None
+        self.date_joined = datetime.date.today()
+
     def should_advance(self):
+        if self.stage.is_last_stage_in_pipeline():
+            return False
         if self.time_window_has_passed():
             if self.stage.advancement_condition == 'ER':
                 return self.email_was_read()
