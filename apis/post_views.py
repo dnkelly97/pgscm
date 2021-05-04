@@ -6,11 +6,12 @@ from rest_framework.decorators import api_view, throttle_classes
 from rest_framework.decorators import parser_classes, permission_classes
 from .models import *
 from django.http.response import JsonResponse
-from .serializers import StudentSerializer
+from .serializers import StudentSerializer, JSONStudentSerializer
 from student.models import Student
 from rest_framework import status
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
+from enum import Enum
 
 
 class HundredPerDayThrottle(UserRateThrottle):
@@ -45,15 +46,18 @@ def get_object(email):
     except (Student.DoesNotExist, ValidationError):
         return False
 
-
-def validate_email(email_list):
-    for email in email_list:
-        try:
-            Student.objects.get(email=email)
-        except (Student.DoesNotExist, ValidationError):
-            return False
-    return True
-
+def json_data_formatter(student,status_code, errors=None):
+    if errors:
+        return {
+            "code": status_code,
+            "errors": errors,
+            "student": student
+        }
+    else:
+        return {
+            "code": status_code,
+            "student": student
+        }
 
 class CreateStudents(APIView):
 
@@ -65,64 +69,113 @@ class CreateStudents(APIView):
         key = request.META["HTTP_AUTHORIZATION"].split()[1]
         api_key = APIKey.objects.get_from_key(key)
         if request.method == 'POST':
-            if api_key != None:
-                serializer = StudentSerializer(data=request.data, many=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    return JsonResponse(serializer.data, safe=False, status=status.HTTP_201_CREATED)
-                return JsonResponse(serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST)
+            if api_key is not None:
+                if 'students' not in request.data:
+                    return JsonResponse("You did not specify any students for the request.",
+                                        safe=False,
+                                        status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    bad_request = 400
+                    success = 201
+                    conflict = 409
+                    data = request.data
+                    valid = []
+                    invalid = []
+
+                    if 'save_valid' in data:
+                        save_valid = data['save_valid']
+                    else:
+                        save_valid = False
+
+                    for student in data['students']:
+                        json_serializer = JSONStudentSerializer(data=student)
+                        if json_serializer.is_valid():
+                            student_serializer = StudentSerializer(data=student)
+                            if student_serializer.is_valid():
+                                if save_valid:
+                                    student_serializer.save()
+                                valid.append(json_data_formatter(student_serializer.data,success))
+                            else:
+                                invalid.append(
+                                    json_data_formatter(student_serializer.data,conflict, student_serializer.errors))
+                        else:
+                            invalid.append(
+                                json_data_formatter(json_serializer.data, bad_request, json_serializer.errors))
+
+                    if save_valid:
+                        if not invalid:
+                            return JsonResponse(valid, safe=False, status=status.HTTP_201_CREATED)
+                        else:
+                            return JsonResponse(valid+invalid, safe=False, status=status.HTTP_207_MULTI_STATUS)
+                    else:
+                        if not invalid:
+                            data = [ student['student'] for student in valid ]
+                            serializer = StudentSerializer(data=data, many=True)
+                            serializer.is_valid()
+                            serializer.save()
+                            return JsonResponse(valid, safe=False, status=status.HTTP_201_CREATED)
+                        else:
+                            return JsonResponse(invalid, safe=False, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse("Invalid credentials.", safe=False, status=status.HTTP_401_UNAUTHORIZED)
 
         elif request.method == 'PUT':
             if api_key is not None:
-                data = request.data
-                email_list = [i['email'] for i in data]
-                validate_email(email_list)
-                instances = []
-                for d in data:
-                    email = d['email']
-                    student = get_object(email)
+                if 'students' not in request.data:
+                    return JsonResponse("You did not specify any students for the request.",
+                                        safe=False,
+                                        status=status.HTTP_400_BAD_REQUEST)
+                else:
+                    bad_request = 400
+                    success = 200
+                    not_found = 404
+                    data = request.data
+                    valid = []
+                    invalid = []
 
-                    if student:
-                        if 'first_name' in d:
-                            student.first_name = d['first_name']
-                        if 'last_name' in d:
-                            student.last_name = d['last_name']
-                        if 'school_year' in d:
-                            student.school_year = d['school_year']
-                        if 'research_interests' in d:
-                            student.research_interests = d['research_interests']
-                        if 'degree' in d:
-                            student.degree = d['degree']
-                        if 'university' in d:
-                            student.university = d['university']
-                        if 'normal_gpa' in d:
-                            student.normal_gpa = d['normal_gpa']
-                        if 'ethnicity' in d:
-                            student.ethnicity = d['ethnicity']
-                        if 'gender' in d:
-                            student.gender = d['gender']
-                        if 'country' in d:
-                            student.country = d['country']
-                        if 'us_citizenship' in d:
-                            student.us_citizenship = d['us_citizenship']
-                        if 'first_generation' in d:
-                            student.first_generation = d['first_generation']
-                        if 'military' in d:
-                            student.military = d['military']
-
-                        student.save()
-                        instances.append(student)
-
+                    if 'save_valid' in data:
+                        save_valid = data['save_valid']
                     else:
-                        return JsonResponse("User not in database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+                        save_valid = False
 
-                serializer = StudentSerializer(instances, many=True)
-                return JsonResponse(serializer.data, safe=False)
-
+                    for student in data['students']:
+                        if 'email' not in student:
+                            invalid.append(
+                                json_data_formatter(student, bad_request,
+                                                    {"email": ["email was not provided."]}))
+                        else:
+                            update_student = get_object(student['email'])
+                            print(student['email'])
+                            if update_student:
+                                student_serializer = StudentSerializer(update_student,data=student,partial=True)
+                                if student_serializer.is_valid():
+                                    if save_valid:
+                                        student_serializer.save()
+                                    valid.append(json_data_formatter(student_serializer.data, success))
+                                else:
+                                    invalid.append(json_data_formatter(student_serializer.errors, bad_request, student_serializer.errors))
+                            else:
+                                invalid.append(
+                                    json_data_formatter(student, not_found, {"email": ["student with this email does not exist."]}))
+                    if save_valid:
+                        if not invalid:
+                            return JsonResponse(valid, safe=False, status=status.HTTP_200_OK)
+                        else:
+                            return JsonResponse(valid + invalid, safe=False, status=status.HTTP_207_MULTI_STATUS)
+                    else:
+                        if not invalid:
+                            for student in data['students']:
+                                update_student = get_object(student['email'])
+                                serializer = StudentSerializer(update_student, data=student,partial=True)
+                                serializer.is_valid()
+                                serializer.save()
+                            return JsonResponse(valid, safe=False, status=status.HTTP_200_OK)
+                        else:
+                            return JsonResponse(invalid, safe=False, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse("Invalid credentials.", safe=False,status=status.HTTP_401_UNAUTHORIZED)
+        else:
+            return JsonResponse("Method not allowed.", safe=False,status=status.HTTP_405_METHOD_NOT_ALLOWED)
 
     @api_view(['POST', 'PUT'])
     @parser_classes([FormParser, MultiPartParser])
@@ -133,57 +186,35 @@ class CreateStudents(APIView):
         api_key = APIKey.objects.get_from_key(key)
         if request.method == 'POST':
             if api_key != None:
+                if 'email' in request.data:
+                    student = get_object(request.data['email'])
+                    if student:
+                        return JsonResponse("Student with that email already exists.", safe=False, status=status.HTTP_409_CONFLICT)
                 serializer = StudentSerializer(data=request.data)
                 if serializer.is_valid():
                     serializer.save()
                     return JsonResponse(serializer.data, status=status.HTTP_201_CREATED)
                 return JsonResponse(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             else:
-                return JsonResponse("No API In Database", status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse("Invalid credentials.", safe=False,status=status.HTTP_401_UNAUTHORIZED)
 
         elif request.method == 'PUT':
             if api_key is not None:
                 data = request.data
-                instances = []
+                if 'email' not in data:
+                    return JsonResponse("Email is required.", safe=False, status=status.HTTP_400_BAD_REQUEST)
 
-                validate_email(data['email'])
                 student = get_object(data['email'])
-
                 if student:
-                    if 'first_name' in data:
-                        student.first_name = data['first_name']
-                    if 'last_name' in data:
-                        student.last_name = data['last_name']
-                    if 'school_year' in data:
-                        student.school_year = data['school_year']
-                    if 'research_interests' in data:
-                        student.research_interests = data['research_interests']
-                    if 'degree' in data:
-                        student.degree = data['degree']
-                    if 'university' in data:
-                        student.university = data['university']
-                    if 'normal_gpa' in data:
-                        student.normal_gpa = data['normal_gpa']
-                    if 'ethnicity' in data:
-                        student.ethnicity = data['ethnicity']
-                    if 'gender' in data:
-                        student.gender = data['gender']
-                    if 'country' in data:
-                        student.country = data['country']
-                    if 'us_citizenship' in data:
-                        student.us_citizenship = data['us_citizenship']
-                    if 'first_generation' in data:
-                        student.first_generation = data['first_generation']
-                    if 'military' in data:
-                        student.military = data['military']
-
-                    student.save()
-
+                    serializer = StudentSerializer(student, data=request.data,partial=True)
+                    if serializer.is_valid():
+                        serializer.save()
+                        return JsonResponse(serializer.data,status=status.HTTP_200_OK)
+                    return JsonResponse(serializer.errors, safe=False, status=status.HTTP_400_BAD_REQUEST)
                 else:
-                    return JsonResponse("User not in database", safe=False, status=status.HTTP_400_BAD_REQUEST)
-
-                serializer = StudentSerializer(student)
-                return JsonResponse(serializer.data, safe=False)
-
+                    return JsonResponse("Student not found.", safe=False, status=status.HTTP_404_NOT_FOUND)
             else:
-                return JsonResponse("No API In Database", safe=False, status=status.HTTP_400_BAD_REQUEST)
+                return JsonResponse("Invalid credentials.", safe=False,status=status.HTTP_401_UNAUTHORIZED)
+
+        else:
+            return JsonResponse("Method not allowed.", safe=False,status=status.HTTP_405_METHOD_NOT_ALLOWED)

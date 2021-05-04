@@ -1,6 +1,6 @@
 import pytest
 from apis.models import APIKey
-from apis.serializers import StudentSerializer
+from apis.serializers import StudentSerializer, JSONStudentSerializer
 from student.models import Student
 from PIL import Image
 import tempfile
@@ -111,3 +111,27 @@ def test_file_and_image_upload(resume, transcript, profile_image, expected):
     }
     serializer = StudentSerializer(data=data)
     assert serializer.is_valid() == expected
+
+@pytest.mark.django_db
+@pytest.mark.parametrize(
+   'email, first_name, last_name, valid', [
+       ('hello@gmail.com', 'first', 'last', True),
+       ('hello@gmail.com', 'first', '', False),
+       ('hello@gmail.com', '', 'last', False),
+       ('hello3', 'first', 'last', False),
+       ('', 'first', 'last', False),
+       (None, None, None, False)
+   ]
+)
+
+@pytest.mark.django_db
+def test_json_student_serializer(email,first_name,last_name,valid):
+    data = {
+        'email': email,
+        'first_name': first_name,
+        'last_name': last_name
+    }
+
+    serializer = JSONStudentSerializer(data=data)
+
+    assert valid == serializer.is_valid()

@@ -21,11 +21,12 @@ def test_student_portal_valid():
     client = APIClient()
     client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
 
-    data = [{
+    data = {
+        "students": [{
         'email': 'test@gmail.com',
         'first_name': 'first',
         'last_name': 'last'
-    }]
+    }]}
 
     response = client.post(reverse('create_student_json'),
                            data, format='json')
@@ -47,7 +48,7 @@ def test_student_portal_multiple_valid():
     client = APIClient()
     client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
 
-    data = [
+    data = {"students":[
         {
             'email': 'test@gmail.com',
             'first_name': 'first',
@@ -58,12 +59,32 @@ def test_student_portal_multiple_valid():
             'first_name': 'first1',
             'last_name': 'last1'
         }
-    ]
+    ]}
 
     response = client.post(reverse('create_student_json'),
                            data, format='json')
     assert response.status_code == 201
     assert len(Student.objects.all()) == length+2
+
+@pytest.mark.django_db
+def test_student_portal_no_students():
+    obj = APIKey(
+        name="tester",
+        email="tester@uiowa.edu",
+
+    )
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    data = {}
+
+    response = client.post(reverse('create_student_json'),
+                           data, format='json')
+    assert response.status_code == 400
+    assert len(Student.objects.all()) == 0
 
 @pytest.mark.django_db
 def test_student_portal_multiple_invalid():
@@ -74,28 +95,74 @@ def test_student_portal_multiple_invalid():
     key = APIKey.objects.assign_key(obj)
     obj.save()
 
-    length = len(Student.objects.all())
-
     client = APIClient()
     client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
 
-    data = [
-        {
-            'email': 'tester@uiowa.edu',
-            'first_name': 'first',
-            'last_name': 'last'
-        },
-        {
-            'email': 'test1@gmail.com',
-            'first_name': 'first1',
-            'last_name': 'last1'
-        }
-    ]
+    data = {
+        "students":[
+            {
+                'email': 'tester@uiowa.edu',
+                'first_name': 'first',
+                'last_name': 'last'
+            },
+            {
+                'email': 'test1@gmail.com',
+                'first_name': 'first1',
+                'last_name': 'last1'
+            }
+        ]}
 
     response = client.post(reverse('create_student_json'),
                            data, format='json')
     assert response.status_code == 400
-    assert len(Student.objects.all()) == length
+    assert len(Student.objects.all()) == 1
+
+@pytest.mark.django_db
+def test_student_portal_multiple_save_valid():
+    student = Student.objects.create(email="tester@uiowa.edu", first_name="first", last_name="second")
+    student.save()
+    obj = APIKey(name="tester",email="tester@uiowa.edu")
+
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    data = {
+        "save_valid": True,
+        "students":[
+            {
+                'email': 'tester@uiowa.edu',
+                'first_name': 'first',
+                'last_name': 'last'
+            },
+            {
+                'email': 'test1@gmail.com',
+                'first_name': 'first1',
+                'last_name': 'last1'
+            }
+        ]}
+
+    response = client.post(reverse('create_student_json'),
+                           data, format='json')
+    assert response.status_code == 207
+    assert len(Student.objects.all()) == 2
+
+@pytest.mark.django_db
+def test_not_allowed_method():
+    obj = APIKey(name="tester",email="tester@uiowa.edu")
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    data = {}
+
+    response = client.get(reverse('create_student_json'),
+                           data, format='json')
+    assert response.status_code == 405
 
 @pytest.mark.django_db
 def test_student_portal_false_api():
@@ -128,17 +195,17 @@ def test_student_portal_no_api():
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
-   'email, first_name, last_name, code', [
-       ('test@gmail.com', 'first', 'last', 400),
-       ('hello@gmail.com', 'first', '', 400),
-       ('hello@gmail.com', '', 'last', 400),
-       ('hello3', 'first', 'last', 400),
-       ('', 'first', 'last', 400)
+   'email, first_name, last_name, code, student_code', [
+       ('test@gmail.com', 'first', 'last', 400, 409),
+       ('hello@gmail.com', 'first', '', 400, 400),
+       ('hello@gmail.com', '', 'last', 400, 400),
+       ('hello3', 'first', 'last', 400, 400),
+       ('', 'first', 'last', 400, 400)
    ]
 )
 
 @pytest.mark.django_db
-def test_student_portal_invalid(email,first_name,last_name,code):
+def test_student_portal_invalid(email,first_name,last_name,code,student_code):
     student = Student.objects.create(email="test@gmail.com", first_name="first", last_name="second")
     student.save()
     obj = APIKey(
@@ -153,15 +220,16 @@ def test_student_portal_invalid(email,first_name,last_name,code):
     client = APIClient()
     client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
 
-    data = [{
+    data = {"students": [{
         'email': email,
         'first_name': first_name,
         'last_name': last_name
-    }]
+    }]}
 
     response = client.post(reverse('create_student_json'),
                            data, format='json')
 
+    assert str(student_code) in response.content.decode("utf-8")
     assert response.status_code == code
 
 
@@ -175,7 +243,7 @@ def test_api_add_student_with_some_extended_fields():
     obj.save()
     client = APIClient()
     client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
-    data = [{
+    data = {"students":[{
         'email': 'yes@gmail.com',
         'first_name': 'boz',
         'last_name': 'scaggs',
@@ -183,7 +251,7 @@ def test_api_add_student_with_some_extended_fields():
         'research_interests': ['AI', 'Medical Imaging', 'Art of Dance'],
         'normal_gpa': 4.1,
         'military': True
-    }]
+    }]}
     response = client.post(reverse('create_student_json'),
                            data, format='json')
     assert response.status_code == 201
@@ -218,7 +286,7 @@ def test_multiple_file_upload():
     tmp_file = tempfile.NamedTemporaryFile(suffix='.txt')
     tmp_file.write(b'plz hire me')
     tmp_file.seek(0)
-    data = [{
+    data = {"students":[{
         'email': 'yes@gmail.com',
         'first_name': 'boz',
         'last_name': 'scaggs',
@@ -227,7 +295,7 @@ def test_multiple_file_upload():
         'normal_gpa': 4.1,
         'military': True,
         'resume': tmp_file
-    }]
+    }]}
     response = client.post(reverse('create_student_json'), data, format='json')
     assert response.status_code == 400
 

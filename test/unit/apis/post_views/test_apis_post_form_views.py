@@ -73,11 +73,25 @@ def test_student_portal_no_api():
 
     assert response.status_code == 403
 
+@pytest.mark.django_db
+def test_not_allowed_method():
+    obj = APIKey(name="tester",email="tester@uiowa.edu")
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    data = {}
+
+    response = client.get(reverse('create_student_form'),
+                           data, format='json')
+    assert response.status_code == 405
 
 @pytest.mark.django_db
 @pytest.mark.parametrize(
     'email, first_name, last_name, code', [
-        ('test@gmail.com', 'first', 'last', 400),
+        ('test@gmail.com', 'first', 'last', 409),
         ('hello@gmail.com', 'first', '', 400),
         ('hello@gmail.com', '', 'last', 400),
         ('hello3', 'first', 'last', 400),
