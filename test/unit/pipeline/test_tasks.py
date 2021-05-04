@@ -24,6 +24,9 @@ def pipeline_setup(db):
     pipeline = Pipeline.objects.create(name='executor pytest pipeline', num_stages=3, active=True)
     stage1 = Stage.objects.get(pipeline=pipeline.id, name='Stage 1')
     stage2 = Stage.objects.get(pipeline=pipeline.id, name='Stage 2')
+    stage2.advancement_condition = 'FR'
+    stage2.form = 'RIF'
+    stage2.save()
     student1 = Student.objects.create(first_name='david', last_name='gilmour', email='dg@gmail.com')
     student2 = Student.objects.create(first_name='jeff', last_name='beck', email='jb@gmail.com')
     student3 = Student.objects.create(first_name='jimmy', last_name='page', email='jp@gmail.com')
@@ -39,8 +42,8 @@ def test_pipeline_executor_dispatch_requests(pipeline_setup, httpserver, authori
     communication_id_2 = student_stage3.stage.id + 1
     expected_data_1 = {
         'members': [
-            {'toName': 'david gilmour', 'toAddress': 'dg@gmail.com'},
-            {'toName': 'jeff beck', 'toAddress': 'jb@gmail.com'},
+            {'toName': 'david gilmour', 'toAddress': 'dg@gmail.com', 'form': 'http://127.0.0.1:8001/student/research_interests/dg@gmail.com'},
+            {'toName': 'jeff beck', 'toAddress': 'jb@gmail.com', 'form': 'http://127.0.0.1:8001/student/research_interests/jb@gmail.com'},
             # {'toName': 'jimmy page', 'toAddress': 'jp@gmail.com'}
         ],
         'includeBatchResponse': True

@@ -15,16 +15,20 @@ def get_all_template_data():
         template_objects.append(template_data)
     return template_objects
 
+
 def get_templates():
     template_urls = requests.get(DISPATCH_URL+'/templates/' , headers={'Authorization': 'x-dispatch-api-key '+DISPATCH_AUTH}).json()
     return template_urls
 
+
 def get_template(url):
     return requests.get(url, headers={'Authorization': 'x-dispatch-api-key '+DISPATCH_AUTH}).json()
+
 
 def get_template_url(key):
     id = key.split('_')[2]
     return DISPATCH_URL+'/templates/'+id
+
 
 def jsonify_placeholders(keys,values):
     placeholders = {}
@@ -71,8 +75,8 @@ def dispatch_communication_post(campaign_id, stage_id, name, placeholders, templ
                          json=data)
 
 
-def dispatch_batch_get(batch_id):
-    return requests.get(DISPATCH_URL + '/batches/' + str(batch_id),
+def dispatch_batch_get(batch_url):
+    return requests.get(batch_url,
                         headers={'Authorization': 'x-dispatch-api-key ' + DISPATCH_AUTH}
                         )
 
@@ -92,9 +96,14 @@ def dispatch_adhoc_communications_post(communication_id, members):
     '''
     member_json = {'members': [], 'includeBatchResponse': True}
     for member in members:
-        data = {'toName': member.student.first_name + " " + member.student.last_name,
-                'toAddress': member.student.email,
-                'form': ''}  # TODO: form fillout
+        data = {
+            'toName': member.student.first_name + " " + member.student.last_name,
+            'toAddress': member.student.email,
+        }
+        if member.stage.advancement_condition == 'FR':
+            forms = {'RIF': 'research_interests', 'DF': 'demographics'}
+            url = DISPATCH_URL + f"/student/{forms[member.stage.form]}/{member.student.email}"
+            data['form'] = url
         member_json['members'].append(data)
     return requests.post(DISPATCH_URL + f'/communications/{communication_id}/adhocs',
                          headers={'Authorization': 'x-dispatch-api-key ' + DISPATCH_AUTH},
