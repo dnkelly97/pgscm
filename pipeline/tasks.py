@@ -19,10 +19,20 @@ def pipeline_executor():
             if batch:
                 batch_url = json.loads(dispatch_adhoc_communications_post(stage.id + 1, batch).content)
                 batch_response = json.loads(dispatch_batch_get(batch_url).content)
+                update_batch_with_response_info(batch, batch_response)
                 # TODO: use batch response to add batch id and member id to each student_stage in batch
 
+            # if next stage advancement condition is form read, make sure the student's form read field gets set to false --> look at amar's code for sending form and see what steps he takes, then recreate them here
+            # any other book keeping?
 
-            # get batch and update each student's member id in the student_stage
-            # for each student in batch, update their student_stage relationship to
-            # advance to next stage... anything else need to be updated?
-            # if next stage advancement condition is form read, make sure the student's form read field gets set to false
+def update_batch_with_response_info(batch, batch_response):
+    '''
+    Updates batch of StudentStage objects to give each one a batch_id and member_id from Dispatch
+    '''
+    batch_id = batch_response['id']
+    for member in batch_response['members']:
+        for student_stage in batch:
+            if student_stage.student.email == member['toAddress']:
+                student_stage.batch_id = batch_id
+                student_stage.member_id = member['id']
+                student_stage.save()

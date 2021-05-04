@@ -51,11 +51,29 @@ def test_pipeline_executor_dispatch_requests(pipeline_setup, httpserver, authori
         ],
         'includeBatchResponse': True
     }
-    batch_response_1 = {}  # TODO
-    batch_response_2 = {}  # TODO
+    batch_response_1 = {'id': '100', 'members': [
+            {'toName': 'david gilmour', 'toAddress': 'dg@gmail.com', 'id': 'floyd'},
+            {'toName': 'jeff beck', 'toAddress': 'jb@gmail.com', 'id': 'bird'},
+            # {'toName': 'jimmy page', 'toAddress': 'jp@gmail.com', 'id': 'zep'}
+        ]}
+    batch_response_2 = {'id': '101', 'members': [
+            {'toName': 'jimmy page', 'toAddress': 'jp@gmail.com', 'id': 'zep'}
+        ]}
     httpserver.expect_request(f"/communications/{communication_id_1}/adhocs", headers=authorization_header, json=expected_data_1).respond_with_json("http://127.0.0.1:8001/batches/5")
     httpserver.expect_request("/batches/5", headers=authorization_header).respond_with_json(batch_response_1)
     httpserver.expect_request(f"/communications/{communication_id_2}/adhocs", headers=authorization_header, json=expected_data_2).respond_with_json("http://127.0.0.1:8001/batches/6")
     httpserver.expect_request("/batches/6", headers=authorization_header).respond_with_json(batch_response_2)
     pipeline_executor()
     httpserver.check_assertions()
+    student_stage1 = StudentStage.objects.get(id=student_stage1.id)
+    student_stage2 = StudentStage.objects.get(id=student_stage2.id)
+    student_stage3 = StudentStage.objects.get(id=student_stage3.id)
+    assert student_stage1.member_id == 'floyd'
+    assert student_stage1.batch_id == int('100')
+    assert student_stage2.member_id == 'bird'
+    assert student_stage2.batch_id == int('100')
+    assert student_stage3.member_id == 'zep'
+    assert student_stage3.batch_id == int('101')
+    assert student_stage1.stage.id == communication_id_1
+    assert student_stage2.stage.id == communication_id_1
+    assert student_stage3.stage.id == communication_id_2
