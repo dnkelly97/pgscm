@@ -12,6 +12,7 @@ import json
 from pipeline.management.dispatch.dispatch_requests import *
 from pytest_httpserver import httpserver
 import datetime
+from pipeline.models import StudentStage
 
 
 @pytest.fixture
@@ -229,10 +230,54 @@ class TestPipelineViews:
         assert updated_pipeline.description == 'asdf'
 
 
+@pytest.fixture
+def loadable_pipeline(db):
+    pipeline = Pipeline.objects.create(name="loadable pipeline", num_stages=2)
+    query1 = {'name': 'raphael', 'degree': '', 'gender': '', 'country': '', 'gpa_end': '', 'military': 'unknown',
+              'ethnicity': '', 'gpa_start': '', 'university': '', 'school_year': '', 'us_citizenship': 'unknown',
+              'first_generation': 'unknown', 'research_interests': ''}
+
+    query2 = {'name': 'kellen', 'degree': '', 'gender': '', 'country': '', 'gpa_end': '', 'military': 'unknown',
+              'ethnicity': '', 'gpa_start': '', 'university': '', 'school_year': '', 'us_citizenship': 'unknown',
+              'first_generation': 'unknown', 'research_interests': ''}
+
+    saved_query_1 = SavedQuery.objects.create(query_name='test source 1', query=query1)
+    saved_query_2 = SavedQuery.objects.create(query_name='test source 2', query=query2)
+    pipeline.sources.add(saved_query_1)
+    pipeline.sources.add(saved_query_2)
+    student1 = Student.objects.create(first_name='connor', last_name='mcgregor', email='concon@mma.com')
+    student2 = Student.objects.create(first_name='raphael', last_name='turtle', email='turtle1@tmnt.net')
+    student3 = Student.objects.create(first_name='kellen', last_name="kel", email='kellen.kel@gmail.com')
+    yield pipeline, student1, student2, student3
+
+
 class TestPipelineModel:
 
     def test_name_field(self):
         assert hasattr(Pipeline, 'name')
+
+    def test_load_pipeline(self, loadable_pipeline):
+        pipeline, student1, student2, student3 = loadable_pipeline
+        pipeline.load_pipeline()
+        stage0 = Stage.objects.get(pipeline=pipeline.id, name='Stage 0')
+        try:
+            StudentStage.objects.get(stage=stage0, student=student2)
+            StudentStage.objects.get(stage=stage0, student=student3)
+            assert True
+        except StudentStage.DoesNotExist:
+            assert False
+        try:
+            StudentStage.objects.get(stage=stage0, student=student1)
+            assert False
+        except StudentStage.DoesNotExist:
+            assert True
+
+    def test_load_pipeline_twice(self, loadable_pipeline):
+        pipeline, student1, student2, student3 = loadable_pipeline
+        stage0 = Stage.objects.get(pipeline=pipeline.id, name='Stage 0')
+        pipeline.load_pipeline()
+        pipeline.load_pipeline()
+        assert len(StudentStage.objects.filter(stage=stage0, student=student2)) == 1
 
 
 class TestSavedQueryModel:

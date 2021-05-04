@@ -8,6 +8,7 @@ from django.contrib.postgres.fields import JSONField
 import json
 from pipeline.management.dispatch.dispatch_requests import *
 import datetime
+from student.filters import StudentFilter
 
 
 class SavedQuery(models.Model):
@@ -31,7 +32,27 @@ class Pipeline(models.Model):
     active = models.BooleanField(default=False)
 
     def load_pipeline(self):
-        pass
+        '''
+        Loads eligible students into stage 0 of the pipeline. Eligible students are those returned by the pipeline's
+        source queries that are not already somewhere in the pipeline
+        '''
+        stage0 = Stage.objects.get(pipeline=self.id, name='Stage 0')
+        for source in self.sources.all():
+            saved_query = source.query
+            students = Student.objects.all()
+            student_filter = StudentFilter(saved_query, queryset=students)
+            sourced_students = student_filter.qs
+            for student in sourced_students:
+                student_in_pipeline = False
+                for stage in Stage.objects.filter(pipeline=self.id):
+                    try:
+                        StudentStage.objects.get(stage=stage, student=student)
+                        student_in_pipeline = True
+                        break
+                    except StudentStage.DoesNotExist:
+                        pass
+                if not student_in_pipeline:
+                    StudentStage.objects.create(stage=stage0, student=student, date_joined=datetime.date.today())
 
     def add_sources(self, source_list):
         for source_str in source_list:
