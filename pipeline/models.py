@@ -30,6 +30,9 @@ class Pipeline(models.Model):
     )
     active = models.BooleanField(default=False)
 
+    def load_pipeline(self):
+        pass
+
     def add_sources(self, source_list):
         for source_str in source_list:
             self.add_source(int(source_str))
@@ -51,6 +54,7 @@ class Pipeline(models.Model):
         created = not self.pk
         super().save(*args, **kwargs)
         if created:
+            Stage.objects.create(name="Stage 0", stage_number=0, pipeline=self, advancement_condition='none', time_window=0)
             for i in range(self.num_stages):
                 Stage.objects.create(name="Stage " + str(i + 1), stage_number=i, pipeline=self,
                                      advancement_condition='none').save()
