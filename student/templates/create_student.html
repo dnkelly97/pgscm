@@ -52,13 +52,19 @@
         </div>
         <div class="input-group mb-3">
             <div class="input-group-append">
-                <span class="input-group-text">{{form.research_interests.label}}</span>
+                <span class="input-group-text">{{form.research_interests.label}}
+                    &nbsp;<i data-content="Particular research interests student
+                        might have" class="fa fa-question-circle"></i>
+                </span>
             </div>
             &nbsp;{{form.research_interests}}
         </div>
         <div class="input-group mb-3">
             <div class="input-group-append">
-                <span class="input-group-text">GPA</span>
+                <span class="input-group-text">GPA
+                    &nbsp;<i data-content="Please indicate student GPA as well as the scale
+                        it is measured with" class="fa fa-question-circle"></i>
+                </span>
             </div>
             &nbsp;{{form.gpa}} &nbsp; out of &nbsp; {{form.scale}}
         </div>
