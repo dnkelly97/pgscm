@@ -117,6 +117,12 @@ class StudentStage(models.Model):
         self.member_id = ''
         self.batch_id = None
         self.date_joined = datetime.date.today()
+        if self.stage.advancement_condition == 'FR':
+            if self.stage.form == 'DF':
+                self.student.submit_demo = False
+            elif self.stage.form == 'RIF':
+                self.student.submitted = False
+        self.save()
 
     def should_advance(self):
         if self.stage.is_last_stage_in_pipeline():

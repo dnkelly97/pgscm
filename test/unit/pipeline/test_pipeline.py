@@ -324,6 +324,26 @@ class TestStudentStage:
         old_stage_id = student_stage.stage.id
         student_stage.advance_student()
         assert student_stage.stage.id == old_stage_id + 1
+        # assert student_stage.student.submit_demo
+        # assert student_stage.student.submitted
+
+    def test_advance_student_demo_form(self, student_stage):
+        next_stage = Stage.objects.get(id=student_stage.stage.id + 1)
+        next_stage.advancement_condition = 'FR'
+        next_stage.form = 'DF'
+        next_stage.save()
+        student_stage.advance_student()
+        assert student_stage.stage.id == next_stage.id
+        assert not student_stage.student.submit_demo
+
+    def test_advance_student_research_interests_form(self, student_stage):
+        next_stage = Stage.objects.get(id=student_stage.stage.id + 1)
+        next_stage.advancement_condition = 'FR'
+        next_stage.form = 'RIF'
+        next_stage.save()
+        student_stage.advance_student()
+        assert student_stage.stage.id == next_stage.id
+        assert not student_stage.student.submitted
 
 
 class TestStage:
