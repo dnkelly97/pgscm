@@ -80,3 +80,73 @@ def test_pipeline_executor_dispatch_requests(pipeline_setup, httpserver, authori
     assert student_stage1.stage.id == communication_id_1
     assert student_stage2.stage.id == communication_id_1
     assert student_stage3.stage.id == communication_id_2
+
+
+@pytest.fixture
+def empty_pipeline_with_sources_setup(db):
+    active_pipelines = Pipeline.objects.filter(active=True)
+    for pipeline in active_pipelines:
+        pipeline.active = False
+        pipeline.save()
+    pipeline = Pipeline.objects.create(name='executor pytest pipeline', num_stages=2, active=True)
+    stage1 = Stage.objects.get(pipeline=pipeline.id, name='Stage 1')
+    stage2 = Stage.objects.get(pipeline=pipeline.id, name='Stage 2')
+    query1 = {'name': 'david', 'degree': '', 'gender': '', 'country': '', 'gpa_end': '', 'military': 'unknown',
+              'ethnicity': '', 'gpa_start': '', 'university': '', 'school_year': '', 'us_citizenship': 'unknown',
+              'first_generation': 'unknown', 'research_interests': ''}
+
+    query2 = {'name': 'jeff', 'degree': '', 'gender': '', 'country': '', 'gpa_end': '', 'military': 'unknown',
+              'ethnicity': '', 'gpa_start': '', 'university': '', 'school_year': '', 'us_citizenship': 'unknown',
+              'first_generation': 'unknown', 'research_interests': ''}
+
+    saved_query_1 = SavedQuery.objects.create(query_name='test source 1', query=query1)
+    saved_query_2 = SavedQuery.objects.create(query_name='test source 2', query=query2)
+    pipeline.sources.add(saved_query_1)
+    pipeline.sources.add(saved_query_2)
+    pipeline.save()
+    # stage2.advancement_condition = 'FR'
+    # stage2.form = 'RIF'
+    # stage2.save()
+    student1 = Student.objects.create(first_name='david', last_name='gilmour', email='dg@gmail.com')
+    student2 = Student.objects.create(first_name='jeff', last_name='beck', email='jb@gmail.com')
+    student3 = Student.objects.create(first_name='jimmy', last_name='page', email='jp@gmail.com')
+    yield pipeline, student1, student2, student3
+
+
+def test_pipeline_executor_with_sources(empty_pipeline_with_sources_setup, httpserver, authorization_header):
+    pipeline, student1, student2, student3 = empty_pipeline_with_sources_setup
+    stage0 = Stage.objects.get(pipeline=pipeline.id, name='Stage 0')
+    communication_id_1 = stage0.id + 1
+    expected_data_1 = {
+        'members': [
+            {'toName': 'david gilmour', 'toAddress': 'dg@gmail.com',
+             'form': 'http://127.0.0.1:8001/student/research_interests/dg@gmail.com'},
+            {'toName': 'jeff beck', 'toAddress': 'jb@gmail.com',
+             'form': 'http://127.0.0.1:8001/student/research_interests/jb@gmail.com'},
+        ],
+        'includeBatchResponse': True
+    }
+    batch_response_1 = {'id': '100', 'members': [
+        {'toName': 'david gilmour', 'toAddress': 'dg@gmail.com', 'id': 'floyd'},
+        {'toName': 'jeff beck', 'toAddress': 'jb@gmail.com', 'id': 'bird'},
+    ]}
+    httpserver.expect_request(f"/communications/{communication_id_1}/adhocs", headers=authorization_header,
+                              json=expected_data_1).respond_with_json("http://127.0.0.1:8001/batches/5")
+    httpserver.expect_request("/batches/5", headers=authorization_header).respond_with_json(batch_response_1)
+    pipeline_executor()
+    try:
+        StudentStage.objects.get(student=student1, stage=stage0)
+        StudentStage.objects.get(student=student2, stage=stage0)
+        StudentStage.objects.get(student=student3, stage=stage0)
+        assert False
+    except StudentStage.DoesNotExist:
+        pass
+    stage1 = Stage.objects.get(id=stage0.id + 1)
+    StudentStage.objects.get(student=student1, stage=stage1)
+    StudentStage.objects.get(student=student2, stage=stage1)
+    try:
+        StudentStage.objects.get(student=student3, stage=stage1)
+        assert False
+    except StudentStage.DoesNotExist:
+        pass
+
