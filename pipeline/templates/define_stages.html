@@ -53,6 +53,12 @@
         </div>
         &nbsp;{{ form.advancement_condition }}
     </div>
+    <div class="input-group mb-3" style="display: none;">
+        <div class="input-group-append">
+            <span class="input-group-text">{{ form.form.label }}</span>
+        </div>
+        {{ form.form }}
+    </div>
     <hr/>
     {% endfor %}
 </div>

@@ -5,8 +5,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from factories import PipelineFactory, SavedQueryFactory
+from pipeline.models import Pipeline, Stage
 from pytest_httpserver import httpserver
 from selenium.webdriver.support.select import Select
+import time
+
 
 @pytest.fixture
 def savedquery():
@@ -157,3 +160,72 @@ def assert_error_message_displayed_for_no_template_data(logged_in_browser):
     WebDriverWait(logged_in_browser, 10).until(
         EC.visibility_of_element_located((By.ID, "message")))
     assert "Stage 1 does not have it's template content filled out" in logged_in_browser.page_source
+
+
+# Scenario: I select a form to be sent with a stage when creating a pipeline
+#         Given I am on the create pipeline page
+#         And I have filled out a pipeline's required fields
+#         When I change the advancement condition of a stage to 'Form Read'
+#         Then I should see an option to select the demographics form or the research interests form
+
+@scenario("../../feature/pipeline/select_form.feature", "I select a form to be sent with a stage when creating a pipeline")
+def test_add_form_to_stage(live_server, logged_in_browser):
+    pass
+
+
+@given("I have filled out a pipeline's required fields")
+def fill_out_pipeline_fields(logged_in_browser, httpserver, authorization_header):
+    logged_in_browser.find_element_by_id('id_name').send_keys("pipelinus")
+    logged_in_browser.find_element_by_id('id_sources').click()
+    httpserver.expect_request("/templates/", headers=authorization_header).respond_with_json(
+        ["http://127.0.0.1:8001/templates/1"])
+    httpserver.expect_request("/templates/1", headers=authorization_header).respond_with_json(
+        {'name': 'Basic Template', 'content': '<@placeholder name="content" type="richtext" />', 'id': '123'})
+    logged_in_browser.find_element_by_id('id_num_stages').send_keys(1)
+    logged_in_browser.find_element_by_id("id_name").click()
+
+
+@when("I change the advancement condition of a stage to 'Form Received'")
+def make_advancement_condition_form_read(logged_in_browser):
+    logged_in_browser.find_element_by_xpath("//select[@name='advancement_condition']/option[text()='Form Received']").click()
+
+
+@then("I should see an option to select the demographics form or the research interests form")
+def assert_form_select_present(logged_in_browser):
+    logged_in_browser.find_element_by_id("id_form").is_displayed()
+
+
+    # Scenario: I create a pipeline with 'Form Read' advancement condition
+    #     Given I create a pipeline with a stage that has 'Form Read' as the advancement condition
+    #     Then that stage should have the correct form associated with it
+@scenario("../../feature/pipeline/select_form.feature", "I create a pipeline with 'Form Received' advancement condition")
+def test_create_form_received_stage(live_server, logged_in_browser, saved_query):
+    pass
+
+
+@given("I create a pipeline with a stage that has 'Form Received' as the advancement condition")
+def create_pipeline_with_form_received_stage(live_server, logged_in_browser, httpserver, authorization_header):
+    logged_in_browser.get(live_server + reverse('build_pipeline'))
+    logged_in_browser.find_element_by_id('id_name').send_keys("pipelinus")
+    logged_in_browser.find_element_by_id('id_sources').click()
+    httpserver.expect_request("/templates/", headers=authorization_header).respond_with_json(
+        ["http://127.0.0.1:8001/templates/1"])
+    httpserver.expect_request("/templates/1", headers=authorization_header).respond_with_json(
+        {'name': 'Basic Template', 'content': '<@placeholder name="content" type="richtext" />', 'id': '123'})
+    logged_in_browser.find_element_by_id('id_num_stages').send_keys(1)
+    logged_in_browser.find_element_by_id("id_name").click()
+    logged_in_browser.find_element_by_xpath(
+        "//select[@name='advancement_condition']/option[text()='Form Received']").click()
+    logged_in_browser.find_element_by_xpath("//select[@name='form']/option[text()='Demographics Form']").click()
+    logged_in_browser.find_element_by_id('Stage_1_dropdown_initalizer').click()
+    logged_in_browser.find_element_by_xpath("//button[@class='dropdown-item']").click()
+    logged_in_browser.find_element_by_xpath("//textarea[@class='form-control']").send_keys('pipelinus content')
+    logged_in_browser.find_element_by_id('id_subject').send_keys('test')
+    logged_in_browser.find_element_by_id('create_pipeline_submit_button').click()
+
+@pytest.mark.django_db
+@then("that stage should have the correct form associated with it")
+def assert_stage_has_correct_form(logged_in_browser):
+    time.sleep(1)
+    pipeline = Pipeline.objects.get(name='pipelinus')
+    assert Stage.objects.get(pipeline=pipeline.id).form == 'DF'
