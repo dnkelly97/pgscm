@@ -77,6 +77,7 @@ def fill_out_num_stages(logged_in_browser, num_stages,httpserver,authorization_h
 
 @when("I click the create pipeline submit button")
 def create_pipeline_submit(logged_in_browser):
+    logged_in_browser.find_element_by_id('id_subject').send_keys('test')
     logged_in_browser.find_element_by_id('create_pipeline_submit_button').click()
 
 
@@ -219,6 +220,7 @@ def create_pipeline_with_form_received_stage(live_server, logged_in_browser, htt
     logged_in_browser.find_element_by_id('Stage_1_dropdown_initalizer').click()
     logged_in_browser.find_element_by_xpath("//button[@class='dropdown-item']").click()
     logged_in_browser.find_element_by_xpath("//textarea[@class='form-control']").send_keys('pipelinus content')
+    logged_in_browser.find_element_by_id('id_subject').send_keys('test')
     logged_in_browser.find_element_by_id('create_pipeline_submit_button').click()
 
 @pytest.mark.django_db
