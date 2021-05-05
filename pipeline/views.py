@@ -72,7 +72,7 @@ def create_pipeline(request):
                     obj.save()
             else:
                 pipeline.delete()
-                return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
+                return JsonResponse({'success': False, 'message': f'Stage {i} invalid'})
 
         if stage_errors != "": #return stage errors for templates
             pipeline.delete()

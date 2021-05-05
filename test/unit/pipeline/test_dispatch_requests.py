@@ -80,7 +80,7 @@ def test_message_request(httpserver, authorization_header):
 def test_batch_request(httpserver, authorization_header):
     response = {'members': []}
     httpserver.expect_request("/batches/12-aq1", headers=authorization_header).respond_with_json(response)
-    assert json.loads(dispatch_batch_get('12-aq1').content) == response
+    assert json.loads(dispatch_batch_get('http://127.0.0.1:8001/batches/12-aq1').content) == response
 
 
 def test_adhoc_communications_request(httpserver, authorization_header):

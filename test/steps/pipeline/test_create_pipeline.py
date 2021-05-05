@@ -226,4 +226,4 @@ def create_pipeline_with_form_received_stage(live_server, logged_in_browser, htt
 def assert_stage_has_correct_form(logged_in_browser):
     time.sleep(1)
     pipeline = Pipeline.objects.get(name='pipelinus')
-    assert Stage.objects.get(pipeline=pipeline.id).form == 'DF'
+    assert Stage.objects.filter(pipeline=pipeline.id)[1].form == 'DF'

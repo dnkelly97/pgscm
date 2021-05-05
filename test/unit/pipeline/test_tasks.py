@@ -119,10 +119,8 @@ def test_pipeline_executor_with_sources(empty_pipeline_with_sources_setup, https
     communication_id_1 = stage0.id + 1
     expected_data_1 = {
         'members': [
-            {'toName': 'david gilmour', 'toAddress': 'dg@gmail.com',
-             'form': 'http://127.0.0.1:8001/student/research_interests/dg@gmail.com'},
-            {'toName': 'jeff beck', 'toAddress': 'jb@gmail.com',
-             'form': 'http://127.0.0.1:8001/student/research_interests/jb@gmail.com'},
+            {'toName': 'david gilmour', 'toAddress': 'dg@gmail.com'},
+            {'toName': 'jeff beck', 'toAddress': 'jb@gmail.com'}
         ],
         'includeBatchResponse': True
     }
