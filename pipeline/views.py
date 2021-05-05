@@ -55,7 +55,7 @@ def create_pipeline(request):
             stage_form = UpdateStageForm(fields, instance=stages[i])
             if stage_form.is_valid():
                 obj = stage_form.save()
-                response = dispatch_communication_post(pipeline.id, post['subject'][i], obj.id, obj.name, obj.placeholders, obj.template_url)
+                response = dispatch_communication_post(pipeline.id, post['subject'][i - 1], obj.id, obj.name, obj.placeholders, obj.template_url)
                 # if response.status_code != 201:
                 #     pipeline.delete()
                 #     return JsonResponse({'success': False, 'message': 'While creating this pipeline a problem occurred with Dispatch.'})
