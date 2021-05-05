@@ -145,8 +145,10 @@ class StudentStage(models.Model):
         if self.stage.advancement_condition == 'FR':
             if self.stage.form == 'DF':
                 self.student.submit_demo = False
+                self.student.save()
             elif self.stage.form == 'RIF':
                 self.student.submitted = False
+                self.student.save()
         self.save()
 
     def should_advance(self):
