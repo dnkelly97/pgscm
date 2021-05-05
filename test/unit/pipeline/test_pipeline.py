@@ -113,7 +113,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None'], '1_content_123': ['hello']}
+                        'num_stages': ['1'], 'subject': 'Some subject', 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None'], '1_content_123': ['hello']}
         response = create_pipeline(request)
         assert response.status_code == 200
         assert json.loads(response.content)['success']
@@ -127,7 +127,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None'], '1_content_123': ['']}
+                        'num_stages': ['1'], 'subject': 'Some subject', 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None'], '1_content_123': ['']}
         response = create_pipeline(request)
         assert response.status_code == 200
         content = json.loads(response.content)
@@ -139,7 +139,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['1'], 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None']}
+                        'num_stages': ['1'], 'subject': 'Some subject', 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
         content = json.loads(response.content)
@@ -151,7 +151,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['0'], 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None']}
+                        'num_stages': ['0'], 'subject': 'Some subject', 'time_window': ['30'], 'advancement_condition': ['None'], 'form': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
         content = json.loads(response.content)
@@ -172,7 +172,7 @@ class TestPipelineViews:
         request.user = user
         saved_query = SavedQueryFactory.create()
         request.POST = {'csrf_token': 'fake_token', 'sources': [str(saved_query.id)], 'name': ['pipeline name', 'stage 1 name'], 'description': [""],
-                        'num_stages': ['1'], 'time_window': ['-1'], 'advancement_condition': ['None'], 'form': ['None']}
+                        'num_stages': ['1'], 'subject': 'Some subject', 'time_window': ['-1'], 'advancement_condition': ['None'], 'form': ['None']}
         response = create_pipeline(request)
         assert response.status_code == 200
         content = json.loads(response.content)

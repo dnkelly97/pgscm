@@ -50,12 +50,12 @@ def create_pipeline(request):
         #     return JsonResponse({'success': False, 'message': 'While creating this pipeline a problem occurred with Dispatch.'})
         stages = Stage.objects.filter(pipeline=pipeline.id)
         for i in range(1, len(stages)):
-            fields = {'name': post['name'][i - 1], 'stage_number': i, 'time_window': post['time_window'][i - 1],
+            fields = {'name': post['name'][i - 1], 'subject': post['subject'][i - 1], 'stage_number': i, 'time_window': post['time_window'][i - 1],
                       'advancement_condition': post['advancement_condition'][i - 1], 'form': post['form'][i - 1], 'pipeline': pipeline.id}
             stage_form = UpdateStageForm(fields, instance=stages[i])
             if stage_form.is_valid():
                 obj = stage_form.save()
-                response = dispatch_communication_post(pipeline.id, obj.id, obj.name, obj.placeholders, obj.template_url)
+                response = dispatch_communication_post(pipeline.id, post['subject'][i], obj.id, obj.name, obj.placeholders, obj.template_url)
                 # if response.status_code != 201:
                 #     pipeline.delete()
                 #     return JsonResponse({'success': False, 'message': 'While creating this pipeline a problem occurred with Dispatch.'})

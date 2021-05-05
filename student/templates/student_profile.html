@@ -121,7 +121,9 @@
                                         <small class="float-sm-left">
                                             <form method="post" action="{% url 'student_profile' student.id %}">
                                                 {% csrf_token %}
-                                                <button id="submit_student_email_button" name="form1" class="btn btn-sm btn-info" type="submit">Request Update</button>
+                                                <button id="submit_student_email_button" name="form1" class="btn btn-sm btn-info"
+                                                        data-toggle="tooltip" data-placement="bottom" title="Send email to student to ask for updated data"
+                                                        type="submit">Request Update</button>
                                             </form>
                                         </small>
                                     </div>
@@ -162,7 +164,9 @@
                                         <small class="float-sm-left">
                                             <form method="post" action="{% url 'student_profile' student.id %}">
                                                 {% csrf_token %}
-                                                <button id="demographics_email_button" name="form2" class="btn btn-sm btn-info btn-block" type="submit">Request Update</button>
+                                                <button id="demographics_email_button" name="form2" class="btn btn-sm btn-info btn-block"
+                                                        data-toggle="tooltip" data-placement="bottom" title="Send email to student to ask for updated data"
+                                                        type="submit">Request Update</button>
                                             </form>
                                         </small>
                                     </div>

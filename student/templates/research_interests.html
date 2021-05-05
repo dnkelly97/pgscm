@@ -77,7 +77,9 @@
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-append">
-                                <span class="input-group-text">{{form.research_interests.label}}</span>
+                                <span class="input-group-text">{{form.research_interests.label}}
+                                    &nbsp;<i data-content="What sort of research are you interested in?" class="fa fa-question-circle"></i>
+                                </span>
                             </div>
                             {{form.research_interests}}
                         </div>
@@ -89,7 +91,10 @@
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-append">
-                                <span class="input-group-text">{{form.gpa.label}}</span>
+                                <span class="input-group-text">{{form.gpa.label}}
+                                    &nbsp;<i data-content="Please indicate GPA as well as the scale
+                                        it is measured with" class="fa fa-question-circle"></i>
+                                </span>
                             </div>
                             &nbsp;{{form.gpa}} &nbsp; out of &nbsp; {{form.scale}}
                         </div>

@@ -14,25 +14,14 @@ def test_student_portal_valid_form():
     obj = APIKey(
         name="tester",
         email="tester@uiowa.edu",
-
     )
     key = APIKey.objects.assign_key(obj)
     obj.save()
 
+    student = Student.objects.create(email="test@gmail.com", first_name="first", last_name="second")
+    student.save()
+
     length = len(Student.objects.all())
-
-    data = {
-        'email': 'test@gmail.com',
-        'first_name': 'first',
-        'last_name': 'last'
-    }
-
-    request = factory.post(reverse('create_student_form'),
-                 data=data)
-
-    request.META['HTTP_AUTHORIZATION'] = 'Api-Key ' + key
-
-    CreateStudents.form_view(request)
 
     data = {
         'email': 'test@gmail.com',
@@ -48,21 +37,12 @@ def test_student_portal_valid_form():
     response = CreateStudents.form_view(request)
 
     assert response.status_code == 200
-    assert 1 == length + 1
+    assert 1 == length
 
 
 @pytest.mark.django_db
 def test_student_portal_false_api():
     factory = APIRequestFactory()
-
-    data = {
-        'email': 'test@gmail.com',
-        'first_name': 'first',
-        'last_name': 'last'
-    }
-
-    factory.post(reverse('create_student_form'),
-                 data=data)
 
     data = {
         'email': 'test@gmail.com',
@@ -86,15 +66,6 @@ def test_student_portal_no_api():
 
     data = {
         'email': 'test@gmail.com',
-        'first_name': 'first',
-        'last_name': 'last'
-    }
-
-    factory.post(reverse('create_student_form'),
-                           data=data)
-
-    data = {
-        'email': 'test@gmail.com',
         'first_name': 'first1',
         'last_name': 'last1'
     }
@@ -111,10 +82,12 @@ def test_student_portal_no_api():
 @pytest.mark.parametrize(
     'email, first_name, last_name, code', [
         ('test@gmail.com', 'first', 'last', 200),
-        ('hello@gmail.com', 'first', '', 400),
-        ('hello@gmail.com', '', 'last', 400),
-        ('hello3', 'first', 'last', 400),
-        ('', 'first', 'last', 400)
+        ('test@gmail.com', '', 'last', 400),
+        ('test@gmail.com', 'first', '', 400),
+        ('hello@gmail.com', 'first', '', 404),
+        ('hello@gmail.com', '', 'last', 404),
+        ('hello3', 'first', 'last', 404),
+        ('', 'first', 'last', 404)
     ]
 )
 @pytest.mark.django_db
@@ -159,24 +132,16 @@ def test_api_add_student_with_some_extended_fields():
     obj.save()
     client = APIClient()
     client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
-    data = {
-        'email': 'yes@gmail.com',
-        'first_name': 'boz',
-        'last_name': 'scaggs',
-        'school_year': 'SR',
-        'research_interests': ['{AI}'],
-        'normal_gpa': 4.1,
-        'military': True
-    }
-
-    client.post(reverse('create_student_form'), data)
+    student = Student.objects.create(email="yes@gmail.com", first_name="boz", last_name="scaggs",
+                                     school_year='SR', research_interests=['AI'], normal_gpa=4.1, military=True)
+    student.save()
 
     data = {
         'email': 'yes@gmail.com',
         'first_name': 'bozy',
         'last_name': 'saggs',
         'school_year': 'SR',
-        'research_interests': ['{AI, Machine Learning}'],
+        'research_interests': ['AI', 'Machine Learning'],
         'university': 'University of Iowa',
         'degree': 'Electrical Engineering',
         'gender': 'M',
