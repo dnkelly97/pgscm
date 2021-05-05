@@ -1,6 +1,8 @@
 from pipeline.models import Pipeline, Stage, StudentStage
 from pipeline.management.dispatch.dispatch_requests import *
 import json
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 def pipeline_executor():
@@ -33,3 +35,13 @@ def update_batch_with_response_info(batch, batch_response):
                 student_stage.batch_id = batch_id
                 student_stage.member_id = member['id']
                 student_stage.save()
+
+
+def test_task():
+    print('Test task running ...')
+
+
+def deployment_test_task():
+    send_mail(subject="PGSCM rate limit exceeded", message='the person who sent you this... is you from the past',
+              from_email=settings.EMAIL_HOST_USER, recipient_list=['dropthehammer12@gmail.com'], fail_silently=False, auth_user=None,
+              auth_password=None, connection=None, html_message=None)
