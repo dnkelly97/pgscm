@@ -36,8 +36,16 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_api_key',
     'apis.apps.ApisConfig',
-    'storages'
+    'storages',
+    'django_q',
 ]
+
+Q_CLUSTER = {
+    'name': 'pipeline executor',
+    'orm': 'default',
+    'timeout': 500,
+    'retry': 1000,
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

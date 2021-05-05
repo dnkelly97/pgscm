@@ -1,6 +1,9 @@
+ansicon==1.89.0
+arrow==1.1.0
 asgiref==3.3.1
 atomicwrites==1.4.0
 attrs==20.3.0
+blessed==1.18.0
 boto3==1.17.41
 botocore==1.20.55
 certifi==2020.12.5
@@ -10,6 +13,8 @@ coverage==5.4
 Django==3.1.5
 django-countries==7.0
 django-filter==2.4.0
+django-picklefield==3.0.1
+django-q==1.3.5
 django-storages==1.11.1
 djangorestframework==3.12.2
 djangorestframework-api-key==2.0.0
@@ -19,6 +24,7 @@ glob2==0.7
 idna==2.10
 inflection==0.5.1
 iniconfig==1.1.1
+jinxed==1.1.0
 jmespath==0.10.0
 Mako==1.1.4
 MarkupSafe==1.1.1
@@ -27,6 +33,7 @@ parse==1.19.0
 parse-type==0.5.2
 Pillow==8.1.2
 pluggy==0.13.1
+psycopg2==2.8.6
 psycopg2-binary==2.8.6
 py==1.10.0
 pyparsing==2.4.7
@@ -46,5 +53,6 @@ sqlparse==0.4.1
 text-unidecode==1.3
 toml==0.10.2
 urllib3==1.26.3
+wcwidth==0.2.5
 Werkzeug==1.0.1
 whitenoise==5.2.0
