@@ -77,7 +77,7 @@ class Pipeline(models.Model):
         if created:
             Stage.objects.create(name="Stage 0", stage_number=0, pipeline=self, advancement_condition='none', time_window=0)
             for i in range(self.num_stages):
-                Stage.objects.create(name="Stage " + str(i + 1), stage_number=i, pipeline=self,
+                Stage.objects.create(name="Stage " + str(i + 1), stage_number=i+1, pipeline=self,
                                      advancement_condition='none').save()
 
 
