@@ -68,7 +68,7 @@ def click_update_button(logged_in_browser, saved_query):
 
 @then("I should be redirected to the dashboard page")
 def assert_redirect_to_dashboard(logged_in_browser):
-    assert "PGSCM Dashboard" in logged_in_browser.page_source
+    assert "Dashboard | PGSCM" in logged_in_browser.page_source
 
 
 @then("the name of the query should be updated")
