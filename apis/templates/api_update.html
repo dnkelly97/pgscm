@@ -6,56 +6,66 @@
 
 {% extends 'base.html' %}
 {% load static %}
-{% block content %}
 
-    <br>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="card card-body">
-                    <h5 class="card-header">API Keys</h5>
+{% block title %}
+API Portal | PGSCM
+{% endblock title %}
+
+{% block content %}
+<br>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="card card-body">
+                <h5 class="card-header">API Keys</h5>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
                     <table class="table table-sm">
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                        </tr>
-                        {% for key in api_keys %}
+                        <thead>
                             <tr>
-                                <td>{{key.name}}</td>
-                                <td>{{key.email}}</td>
-                                <td><a class="btn btn-sm btn-info" href="{% url 'api_profile' key.prefix %}">View</a></td>
+                                <th>Name</th>
+                                <th>Email</th>
                             </tr>
-                        {% endfor %}
+                        </thead>
+                        <tbody>
+                            {% for key in api_keys %}
+                                <tr>
+                                    <td>{{key.name}}</td>
+                                    <td>{{key.email}}</td>
+                                    <td><a class="btn btn-sm btn-info" href="{% url 'api_profile' key.prefix %}">View</a></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
                     </table>
                 </div>
             </div>
-            <div class="col-md-8">
-                <div class="card card-body" id="id_profile_header">
-                    <h5 class="card-header">Update {{ api_key.name }}</h5><br>
-                    <form method="POST" class="form-group" id="update_api_form">
-                        {% csrf_token %}
-                        <div class="input-group mb-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text">{{form.name.label}}</span>
-                            </div>
-                            {{form.name}}
+        </div>
+        <div class="col-md-8">
+            <div class="card card-body" id="id_profile_header">
+                <h5 class="card-header">Update {{ api_key.name }}</h5><br>
+                <form method="POST" class="form-group" id="update_api_form">
+                    {% csrf_token %}
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text">{{form.name.label}}</span>
                         </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text">{{form.email.label}}</span>
-                            </div>
-                            {{form.email}}
+                        {{form.name}}
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text">{{form.email.label}}</span>
                         </div>
-                        <div class="input-group mb-3">
-                            <div class="input-group-append">
-                                <span class="input-group-text">{{form.expiry_date.label}}</span>
-                            </div>
-                            {{form.expiry_date}}
+                        {{form.email}}
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-append">
+                            <span class="input-group-text">{{form.expiry_date.label}}</span>
                         </div>
-                        <button id="update_api_submit_button" class="btn btn-primary" type="submit">Update</button>
-                    </form>
-                </div>
+                        {{form.expiry_date}}
+                    </div>
+                    <button id="update_api_submit_button" class="btn btn-primary" type="submit">Update</button>
+                </form>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

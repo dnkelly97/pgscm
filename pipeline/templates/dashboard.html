@@ -3,7 +3,7 @@
 {% load static %}
 
 {% block title %}
-PGSCM Dashboard
+Dashboard | PGSCM
 {% endblock title %}
 
 {% block content %}
@@ -22,9 +22,9 @@ PGSCM Dashboard
                         </div>
                     </div>
                 </div>&nbsp;&nbsp;&nbsp;
-                <a href="{% url 'build_pipeline' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_pipeline_button">Create Pipeline</a>
-                <button type="button" class="btn btn-warning" id="edit_pipeline_button" style="margin-top: 1%;">Edit Pipeline</button>
-                <button type="button" class="btn btn-danger" id="delete_pipeline_button" style="margin-top: 1%;">Delete Pipeline</button>
+                <a href="{% url 'build_pipeline' %}" class="btn btn-outline-primary" role="button" style="margin-top: 1%;" id="create_pipeline_button">Create Pipeline</a>
+                <button type="button" class="btn btn-outline-info" id="edit_pipeline_button" style="margin-top: 1%;">Edit Pipeline</button>
+                <button type="button" class="btn btn-outline-danger" id="delete_pipeline_button" style="margin-top: 1%;">Delete Pipeline</button>
                 <button type="button" class="btn btn-outline-dark" id="activate_pipeline_button" style="margin-top: 1%; display:none"></button>
             </div>
             <div class="col-6">
@@ -40,10 +40,10 @@ PGSCM Dashboard
                         </div>
                     </div>
                 </div>&nbsp;&nbsp;&nbsp;
-                <a href="{% url 'student' %}" class="btn btn-primary" role="button" style="margin-top: 1%;" id="create_query_button">Save New Query</a>
-                <button type="button" class="btn btn-warning" id="edit_query_button" style="margin-top: 1%;">Edit Query</button>
-                <button type="button" class="btn btn-danger" id="delete_query_button" style="margin-top: 1%;">Delete Query</button>
-                <button type="button" class="btn btn-dark" id="run_saved_query_button" style="margin-top: 1%; color: #f0ad4e">Run Query</button>
+                <a href="{% url 'student' %}" class="btn btn-outline-primary" role="button" style="margin-top: 1%;" id="create_query_button">Save New Query</a>
+                <button type="button" class="btn btn-outline-info" id="edit_query_button" style="margin-top: 1%;">Edit Query</button>
+                <button type="button" class="btn btn-outline-danger" id="delete_query_button" style="margin-top: 1%;">Delete Query</button>
+                <button type="button" class="btn btn-outline-dark" id="run_saved_query_button" style="margin-top: 1%;">Run Query</button>
             </div>
         </div>
     </div>
