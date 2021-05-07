@@ -17,7 +17,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 
-# Create your views here.
+# Create your views here
 @login_required(login_url='login')
 def createPage(response):
     students = Student.objects.all()
