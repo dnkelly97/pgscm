@@ -1,0 +1,132 @@
+{
+  "paths": {
+    "/api/create_form": {
+      "post": {
+        "tags": [
+          "Create Student From"
+        ],
+        "description": "Return a newly create student and its data.",
+        "operationId": "create-new-student-request",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "student.json#/student"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully Created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "student.json#/student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "invalid_student.json#/student"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "response" : "Invalid credentials."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "response" : "Student with this email already exists."
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Create Student From"
+        ],
+        "description": "Update student information provided a valid email.",
+        "operationId": "create-new-student-request",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "student.json#/student"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "student.json#/student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "invalid_student.json#/student"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "response" : "Invalid credentials."
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "response" : "Student was not found with specified email address."
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "response" : "Student with this email already exists."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
