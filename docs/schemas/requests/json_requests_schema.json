@@ -1,0 +1,134 @@
+{
+  "paths": {
+    "/api/create_json": {
+      "post": {
+        "tags": [
+          "Create Students Batch Using JSON"
+        ],
+        "description": "Return a newly create student and its data.",
+        "operationId": "create-new-student-request",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "../json_data/json_schema.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successfully Created",
+            "content": {
+              "application/json": {
+                "type": "array",
+                "description": "Array of valid students with status codes.",
+                "items": {
+                  "$ref": "../json_data/json_student_valid.json/#student"
+                }
+              }
+            }
+          },
+          "207": {
+            "description": "Mixed Responses",
+            "content": {
+              "application/json": {
+                "type": "array",
+                "description": "Array of mixed status students with status codes.",
+                "items": {
+                  "$ref1": "../json_data/json_student_valid.json/#student",
+                  "$ref2": "../json_data/json_student_invalid.json/#student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "type": "array",
+                "description": "Array of invalid students with status codes.",
+                "items": {
+                  "$ref": "../json_data/json_student_invalid.json/#student"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "response" : "Invalid credentials."
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Create Student From"
+        ],
+        "description": "Update student information provided a valid email.",
+        "operationId": "create-new-student-request",
+        "requestBody": {
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "../student.json#/student"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "type": "array",
+                "description": "Array of valid students with status codes.",
+                "items": {
+                  "$ref": "../json_data/json_student_valid.json/#student"
+                }
+              }
+            }
+          },
+          "207": {
+            "description": "Mixed Responses",
+            "content": {
+              "application/json": {
+                "type": "array",
+                "description": "Array of valid students with status codes.",
+                "items": {
+                  "$ref1": "../json_data/json_student_valid.json/#student",
+                  "$ref2": "../json_data/json_student_invalid.json/#student"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "../invalid_student.json#/student"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Not Authorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "response" : "Invalid credentials."
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

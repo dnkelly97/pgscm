@@ -1,0 +1,21 @@
+{
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "title": "PGSCM JSON Requests",
+   "description": "Populate or update batches of students in a single request.",
+   "type": "object",
+
+   "properties": {
+      "save_valid": {
+         "description": "Save valid information of the students array, and return failing cases.",
+         "type": "boolean",
+         "default": false
+      },
+
+      "students": {
+         "description": "Name of the product",
+         "type": "array",
+         "items": { "$ref": "../student.json#/student" }
+      }
+   },
+   "required": ["students"]
+}
