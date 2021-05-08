@@ -104,7 +104,7 @@ class Stage(models.Model):
         ]
     )
     placeholders = models.JSONField(default=dict)
-    template_url = models.CharField(max_length=55, blank=True)
+    template_url = models.CharField(max_length=400, blank=True)
 
     class ConditionsForAdvancement(models.TextChoices):
         NONE = 'None', _('None')
