@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "",
+  "title": "PGSCM Student Error",
+  "description": "Error for Student Object",
+  "type": "object",
+  "student": {
+    "properties": {
+      "email": {
+        "type": "string",
+        "description": "Invalid email address provided.",
+        "enum": [
+          "This email already exists in the database.",
+          "This is not a valid email address.",
+          "This value is required."
+        ]
+      },
+      "first_name": {
+        "type": "string",
+        "description": "Invalid first name of the student. (Required in POST requests)",
+        "enum": [
+          "This value is required."
+        ]
+      },
+      "last_name": {
+        "type": "string",
+        "description": "Invalid last name of the student. (Required in POST requests)",
+        "enum": [
+          "This value is required."
+        ]
+      },
+      "school_year": {
+        "type": "string",
+        "description": "The school year of the student.(Freshman, Sophomore, Junior, Senior, Graduate, Unknown)",
+        "enum": [
+          "Invalid school year provided."
+        ]
+      },
+      "normal_gpa": {
+        "type": "string",
+        "description": "The name of the vegetable.",
+        "enum": [
+          "gpa cannot be below 0."
+        ]
+      },
+      "ethnicity": {
+        "type": "string",
+        "description": "The ethnicity of the student.",
+        "enum": [
+          "Invalid ethnicity provided."
+        ]
+      },
+      "gender": {
+        "type": "string",
+        "description": "The gender of the student. (Female, Mail, Non-binary, Other, Queer, Trans, Unknown)",
+        "enum": [
+          "Invalid gender provided."
+        ]
+      },
+      "country": {
+        "type": "string",
+        "description": "The country of origin for the student. (Alpha-2)",
+        "enum": [
+          "Invalid country provided."
+        ]
+      },
+      "first_generation": {
+        "type": "boolean",
+        "description": "If the student is a first generation.",
+        "enum": [
+          "This requires a boolean value."
+        ]
+      },
+      "military": {
+        "type": "boolean",
+        "description": "If the student has served in the military.",
+        "enum": [
+          "This requires a boolean value."
+        ]
+      }
+    }
+  }
+}
