@@ -49,30 +49,30 @@ def create_pipeline(request):
         #     pipeline.delete()
         #     return JsonResponse({'success': False, 'message': 'While creating this pipeline a problem occurred with Dispatch.'})
         stages = Stage.objects.filter(pipeline=pipeline.id)
-        for i in range(len(stages)):
-            fields = {'name': post['name'][i], 'subject': post['subject'][i], 'stage_number': i + 1, 'time_window': post['time_window'][i],
-                      'advancement_condition': post['advancement_condition'][i], 'form': post['form'][i], 'pipeline': pipeline.id}
+        for i in range(1, len(stages)):
+            fields = {'name': post['name'][i - 1], 'subject': post['subject'][i - 1], 'stage_number': i, 'time_window': post['time_window'][i - 1],
+                      'advancement_condition': post['advancement_condition'][i - 1], 'form': post['form'][i - 1], 'pipeline': pipeline.id}
             stage_form = UpdateStageForm(fields, instance=stages[i])
             if stage_form.is_valid():
                 obj = stage_form.save()
-                response = dispatch_communication_post(pipeline.id, post['subject'][i], obj.id, obj.name, obj.placeholders, obj.template_url)
+                response = dispatch_communication_post(pipeline.id, post['subject'][i - 1], obj.id, obj.name, obj.placeholders, obj.template_url)
                 # if response.status_code != 201:
                 #     pipeline.delete()
                 #     return JsonResponse({'success': False, 'message': 'While creating this pipeline a problem occurred with Dispatch.'})
-                values = [val for key, val in post.items() if str(i + 1)+'_' in key]
-                keys = [key for key, val in post.items() if str(i + 1)+'_' in key]
+                values = [val for key, val in post.items() if str(i)+'_' in key]
+                keys = [key for key, val in post.items() if str(i)+'_' in key]
                 possible_new_content = jsonify_placeholders(keys, values)
                 if (len(keys) == 0): #check if template was specified
-                    stage_errors+="Stage "+ str(i+1) + " does not have a template selected\n"
+                    stage_errors+="Stage "+ str(i) + " does not have a template selected\n"
                 elif (possible_new_content == "Invalid"): #check if values were valid
-                    stage_errors+="Stage "+ str(i+1) + " does not have it's template content filled out\n"
+                    stage_errors+="Stage "+ str(i) + " does not have it's template content filled out\n"
                 else:
                     obj.placeholders = possible_new_content
                     obj.template_url = get_template_url(keys[0]) #only assign template if template was selected
                     obj.save()
             else:
                 pipeline.delete()
-                return JsonResponse({'success': False, 'message': f'Stage {i + 1} invalid'})
+                return JsonResponse({'success': False, 'message': f'Stage {i} invalid'})
 
         if stage_errors != "": #return stage errors for templates
             pipeline.delete()

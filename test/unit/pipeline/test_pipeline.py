@@ -12,6 +12,7 @@ import json
 from pipeline.management.dispatch.dispatch_requests import *
 from pytest_httpserver import httpserver
 import datetime
+from pipeline.models import StudentStage
 
 
 @pytest.fixture
@@ -27,10 +28,11 @@ def pipeline_with_sources(db):
 
 @pytest.fixture
 def student_stage(db):
-    pipeline = Pipeline.objects.create(name='test_pipeline', num_stages=1)
-    stage = Stage.objects.create(name='test_stage', stage_number=1, pipeline=pipeline)
+    pipeline = Pipeline.objects.create(name='test_pipeline', num_stages=2)
+    stage1 = Stage.objects.create(name='test_stage_1', stage_number=1, pipeline=pipeline)
+    stage2 = Stage.objects.create(name='test_stage_2', stage_number=2, pipeline=pipeline)
     student = Student.objects.create(first_name='harry', last_name='malkovich', email='F@gmail.com')
-    student_stage = StudentStage.objects.create(student=student, stage=stage, date_joined=datetime.date.today())
+    student_stage = StudentStage.objects.create(student=student, stage=stage1, date_joined=datetime.date.today())
     return student_stage
 
 
@@ -228,10 +230,54 @@ class TestPipelineViews:
         assert updated_pipeline.description == 'asdf'
 
 
+@pytest.fixture
+def loadable_pipeline(db):
+    pipeline = Pipeline.objects.create(name="loadable pipeline", num_stages=2)
+    query1 = {'name': 'raphael', 'degree': '', 'gender': '', 'country': '', 'gpa_end': '', 'military': 'unknown',
+              'ethnicity': '', 'gpa_start': '', 'university': '', 'school_year': '', 'us_citizenship': 'unknown',
+              'first_generation': 'unknown', 'research_interests': ''}
+
+    query2 = {'name': 'kellen', 'degree': '', 'gender': '', 'country': '', 'gpa_end': '', 'military': 'unknown',
+              'ethnicity': '', 'gpa_start': '', 'university': '', 'school_year': '', 'us_citizenship': 'unknown',
+              'first_generation': 'unknown', 'research_interests': ''}
+
+    saved_query_1 = SavedQuery.objects.create(query_name='test source 1', query=query1)
+    saved_query_2 = SavedQuery.objects.create(query_name='test source 2', query=query2)
+    pipeline.sources.add(saved_query_1)
+    pipeline.sources.add(saved_query_2)
+    student1 = Student.objects.create(first_name='connor', last_name='mcgregor', email='concon@mma.com')
+    student2 = Student.objects.create(first_name='raphael', last_name='turtle', email='turtle1@tmnt.net')
+    student3 = Student.objects.create(first_name='kellen', last_name="kel", email='kellen.kel@gmail.com')
+    yield pipeline, student1, student2, student3
+
+
 class TestPipelineModel:
 
     def test_name_field(self):
         assert hasattr(Pipeline, 'name')
+
+    def test_load_pipeline(self, loadable_pipeline):
+        pipeline, student1, student2, student3 = loadable_pipeline
+        pipeline.load_pipeline()
+        stage0 = Stage.objects.get(pipeline=pipeline.id, name='Stage 0')
+        try:
+            StudentStage.objects.get(stage=stage0, student=student2)
+            StudentStage.objects.get(stage=stage0, student=student3)
+            assert True
+        except StudentStage.DoesNotExist:
+            assert False
+        try:
+            StudentStage.objects.get(stage=stage0, student=student1)
+            assert False
+        except StudentStage.DoesNotExist:
+            assert True
+
+    def test_load_pipeline_twice(self, loadable_pipeline):
+        pipeline, student1, student2, student3 = loadable_pipeline
+        stage0 = Stage.objects.get(pipeline=pipeline.id, name='Stage 0')
+        pipeline.load_pipeline()
+        pipeline.load_pipeline()
+        assert len(StudentStage.objects.filter(stage=stage0, student=student2)) == 1
 
 
 class TestSavedQueryModel:
@@ -287,18 +333,21 @@ class TestStudentStage:
             student_stage.student.submit_demo = received
         assert student_stage.form_received() == received
 
-    @pytest.mark.parametrize('advancement_condition, form, form_received, email_read, time_window, expected', [
-        ('None', 'None', False, False, 100, False),  # time window failing test
-        ('None', 'None', False, False, 0, True),
-        ('ER', 'None', False, True, 0, True),
-        ('ER', 'None', False, False, 0, False),
-        ('FR', 'RIF', True, False, 0, True),
-        ('FR', 'RIF', False, False, 0, False),
-        ('FR', 'DF', True, False, 0, True),
-        ('FR', 'DF', False, False, 0, False),
+    @pytest.mark.parametrize('advancement_condition, form, form_received, email_read, time_window, last_stage, expected', [
+        ('None', 'None', False, False, 0, True, False),  # last stage test
+        ('None', 'None', False, False, 100, False, False),  # time window failing test
+        ('None', 'None', False, False, 0, False, True),
+        ('ER', 'None', False, True, 0, False, True),
+        ('ER', 'None', False, False, 0, False, False),
+        ('FR', 'RIF', True, False, 0, False, True),
+        ('FR', 'RIF', False, False, 0, False, False),
+        ('FR', 'DF', True, False, 0, False, True),
+        ('FR', 'DF', False, False, 0, False, False),
     ])
     def test_should_advance(self, student_stage, httpserver, authorization_header, advancement_condition, form,
-                            form_received, email_read, time_window, expected):
+                            form_received, email_read, time_window, last_stage, expected):
+        if last_stage:
+            student_stage.stage.stage_number = 2
         student_stage.stage.time_window = time_window
         student_stage.stage.advancement_condition = advancement_condition
         student_stage.stage.form = form
@@ -315,3 +364,39 @@ class TestStudentStage:
             httpserver.expect_request("/messages/" + student_stage.member_id,
                                       headers=authorization_header).respond_with_json(response)
         assert student_stage.should_advance() == expected
+
+    def test_advance_student(self, student_stage):
+        old_stage_id = student_stage.stage.id
+        student_stage.advance_student()
+        assert student_stage.stage.id == old_stage_id + 1
+        # assert student_stage.student.submit_demo
+        # assert student_stage.student.submitted
+
+    def test_advance_student_demo_form(self, student_stage):
+        next_stage = Stage.objects.get(id=student_stage.stage.id + 1)
+        next_stage.advancement_condition = 'FR'
+        next_stage.form = 'DF'
+        next_stage.save()
+        student_stage.advance_student()
+        assert student_stage.stage.id == next_stage.id
+        assert not student_stage.student.submit_demo
+
+    def test_advance_student_research_interests_form(self, student_stage):
+        next_stage = Stage.objects.get(id=student_stage.stage.id + 1)
+        next_stage.advancement_condition = 'FR'
+        next_stage.form = 'RIF'
+        next_stage.save()
+        student_stage.advance_student()
+        assert student_stage.stage.id == next_stage.id
+        assert not student_stage.student.submitted
+
+
+class TestStage:
+
+    @pytest.mark.django_db
+    def test_is_last_stage_in_pipeline(self):
+        pipeline = Pipeline.objects.create(name='test_pipeline', num_stages=2)
+        stage1 = Stage.objects.create(name='test_stage_1', stage_number=1, pipeline=pipeline)
+        stage2 = Stage.objects.create(name='test_stage_2', stage_number=2, pipeline=pipeline)
+        assert not stage1.is_last_stage_in_pipeline()
+        assert stage2.is_last_stage_in_pipeline()

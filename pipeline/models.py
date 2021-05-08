@@ -8,6 +8,7 @@ from django.contrib.postgres.fields import JSONField
 import json
 from pipeline.management.dispatch.dispatch_requests import *
 import datetime
+from student.filters import StudentFilter
 
 
 class SavedQuery(models.Model):
@@ -30,6 +31,29 @@ class Pipeline(models.Model):
     )
     active = models.BooleanField(default=False)
 
+    def load_pipeline(self):
+        '''
+        Loads eligible students into stage 0 of the pipeline. Eligible students are those returned by the pipeline's
+        source queries that are not already somewhere in the pipeline
+        '''
+        stage0 = Stage.objects.get(pipeline=self.id, name='Stage 0')
+        for source in self.sources.all():
+            saved_query = source.query
+            students = Student.objects.all()
+            student_filter = StudentFilter(saved_query, queryset=students)
+            sourced_students = student_filter.qs
+            for student in sourced_students:
+                student_in_pipeline = False
+                for stage in Stage.objects.filter(pipeline=self.id):
+                    try:
+                        StudentStage.objects.get(stage=stage, student=student)
+                        student_in_pipeline = True
+                        break
+                    except StudentStage.DoesNotExist:
+                        pass
+                if not student_in_pipeline:
+                    StudentStage.objects.create(stage=stage0, student=student, date_joined=datetime.date.today())
+
     def add_sources(self, source_list):
         for source_str in source_list:
             self.add_source(int(source_str))
@@ -51,8 +75,9 @@ class Pipeline(models.Model):
         created = not self.pk
         super().save(*args, **kwargs)
         if created:
+            Stage.objects.create(name="Stage 0", stage_number=0, pipeline=self, advancement_condition='none', time_window=0)
             for i in range(self.num_stages):
-                Stage.objects.create(name="Stage " + str(i + 1), stage_number=i, pipeline=self,
+                Stage.objects.create(name="Stage " + str(i + 1), stage_number=i+1, pipeline=self,
                                      advancement_condition='none').save()
 
 
@@ -99,6 +124,10 @@ class Stage(models.Model):
 
     form = models.CharField(max_length=4, choices=FormOptions.choices, default=FormOptions.NONE)
 
+    def is_last_stage_in_pipeline(self):
+        pipeline = Pipeline.objects.get(id=self.pipeline.id)
+        return pipeline.num_stages == self.stage_number
+
 
 class StudentStage(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
@@ -107,7 +136,25 @@ class StudentStage(models.Model):
     batch_id = models.IntegerField(blank=True, null=True)  # if form received is advancement condition, we may not need to use dispatch (?)
     member_id = models.CharField(max_length=100, blank=True)
 
+    def advance_student(self):  # IMPORTANT: This function should only be called if should_advance() has been called and evaluated to True
+        next_stage_id = self.stage.id + 1
+        next_stage = Stage.objects.get(id=next_stage_id)
+        self.stage = next_stage
+        self.member_id = ''
+        self.batch_id = None
+        self.date_joined = datetime.date.today()
+        if self.stage.advancement_condition == 'FR':
+            if self.stage.form == 'DF':
+                self.student.submit_demo = False
+                self.student.save()
+            elif self.stage.form == 'RIF':
+                self.student.submitted = False
+                self.student.save()
+        self.save()
+
     def should_advance(self):
+        if self.stage.is_last_stage_in_pipeline():
+            return False
         if self.time_window_has_passed():
             if self.stage.advancement_condition == 'ER':
                 return self.email_was_read()
