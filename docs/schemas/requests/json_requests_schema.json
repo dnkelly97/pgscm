@@ -11,7 +11,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "json_schema.json"
+                "$ref": "../json_data/json_schema.json"
               }
             }
           }
@@ -24,7 +24,7 @@
                 "type": "array",
                 "description": "Array of valid students with status codes.",
                 "items": {
-                  "$ref": "json_student_valid.json/#student"
+                  "$ref": "../json_data/json_student_valid.json/#student"
                 }
               }
             }
@@ -36,8 +36,8 @@
                 "type": "array",
                 "description": "Array of mixed status students with status codes.",
                 "items": {
-                  "$ref1": "json_student_valid.json/#student",
-                  "$ref2": "json_student_invalid.json/#student"
+                  "$ref1": "../json_data/json_student_valid.json/#student",
+                  "$ref2": "../json_data/json_student_invalid.json/#student"
                 }
               }
             }
@@ -49,7 +49,7 @@
                 "type": "array",
                 "description": "Array of invalid students with status codes.",
                 "items": {
-                  "$ref": "json_student_invalid.json/#student"
+                  "$ref": "../json_data/json_student_invalid.json/#student"
                 }
               }
             }
@@ -76,7 +76,7 @@
           "content": {
             "application/x-www-form-urlencoded": {
               "schema": {
-                "$ref": "student.json#/student"
+                "$ref": "../student.json#/student"
               }
             }
           }
@@ -89,7 +89,7 @@
                 "type": "array",
                 "description": "Array of valid students with status codes.",
                 "items": {
-                  "$ref": "json_student_valid.json/#student"
+                  "$ref": "../json_data/json_student_valid.json/#student"
                 }
               }
             }
@@ -101,8 +101,8 @@
                 "type": "array",
                 "description": "Array of valid students with status codes.",
                 "items": {
-                  "$ref1": "json_student_valid.json/#student",
-                  "$ref2": "json_student_invalid.json/#student"
+                  "$ref1": "../json_data/json_student_valid.json/#student",
+                  "$ref2": "../json_data/json_student_invalid.json/#student"
                 }
               }
             }
@@ -112,7 +112,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "invalid_student.json#/student"
+                  "$ref": "../invalid_student.json#/student"
                 }
               }
             }

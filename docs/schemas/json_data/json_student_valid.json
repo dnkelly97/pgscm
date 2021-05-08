@@ -11,7 +11,7 @@
         "enum": [200,201]
       },
       "student": {
-        "$ref": "student.json#/student"
+        "$ref": "../student.json#/student"
       }
     }
   }

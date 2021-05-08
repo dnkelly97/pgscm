@@ -1,6 +1,5 @@
 {
-   "$schema": "https://json-schema.org/draft/2020-12/schema",
-   "$id": "",
+   "$schema": "https://json-schema.org/draft/2020-12/schema"
    "title": "PGSCM JSON Requests",
    "description": "Populate or update batches of students in a single request.",
    "type": "object",
@@ -15,7 +14,7 @@
       "students": {
          "description": "Name of the product",
          "type": "array",
-         "items": { "$ref": "student.json#/student" }
+         "items": { "$ref": "../student.json#/student" }
       }
    },
    "required": ["students"]

@@ -11,10 +11,10 @@
         "enum": [400,404,409]
       },
       "error": {
-        "$ref": "invalid_student.json#/student"
+        "$ref": "../invalid_student.json#/student"
       },
       "student": {
-        "$ref": "student.json#/student"
+        "$ref": "../student.json#/student"
       }
     }
   }

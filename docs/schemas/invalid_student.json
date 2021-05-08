@@ -65,15 +65,15 @@
         ]
       },
       "first_generation": {
-        "type": "boolean",
-        "description": "If the student is a first generation.",
+        "type": "string",
+        "description": "Error for first generation value.",
         "enum": [
           "This requires a boolean value."
         ]
       },
       "military": {
-        "type": "boolean",
-        "description": "If the student has served in the military.",
+        "type": "string",
+        "description": "Error for invalid military value.",
         "enum": [
           "This requires a boolean value."
         ]
