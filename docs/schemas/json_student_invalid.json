@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PGSCM JSON Array Student Error",
+  "description": "Error for Student Object in array of students for json requests",
+  "type": "object",
+  "student": {
+    "properties": {
+      "status_code": {
+        "type": "number",
+        "description": "That code for that particular student.",
+        "enum": [400,404,409]
+      },
+      "error": {
+        "$ref": "invalid_student.json#/student"
+      },
+      "student": {
+        "$ref": "student.json#/student"
+      }
+    }
+  }
+}
