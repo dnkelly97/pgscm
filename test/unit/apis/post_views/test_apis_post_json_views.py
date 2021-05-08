@@ -299,3 +299,21 @@ def test_multiple_file_upload():
     response = client.post(reverse('create_student_json'), data, format='json')
     assert response.status_code == 400
 
+
+@pytest.mark.django_db
+def test_student_portal_valid():
+    obj = APIKey(
+        name="tester",
+        email="tester@uiowa.edu",
+
+    )
+    key = APIKey.objects.assign_key(obj)
+    obj.save()
+
+    client = APIClient()
+    client.credentials(HTTP_AUTHORIZATION='Api-Key ' + key)
+
+    data = {}
+
+    response = client.put(reverse('execute_pipeline'))
+    assert response.status_code == 200
