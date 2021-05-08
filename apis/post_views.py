@@ -61,7 +61,7 @@ def json_data_formatter(student,status_code, errors=None):
         }
 
 
-@api_view(['PUT'])
+@api_view(['POST', 'PUT'])
 @parser_classes([JSONParser])
 @permission_classes([HasAPIKey])
 @throttle_classes([HundredPerDayThrottle])
