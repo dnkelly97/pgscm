@@ -11,6 +11,7 @@ from student.models import Student
 from rest_framework import status
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import APIView
+from pipeline.tasks import pipeline_executor
 from enum import Enum
 
 
@@ -58,6 +59,16 @@ def json_data_formatter(student,status_code, errors=None):
             "code": status_code,
             "student": student
         }
+
+
+@api_view(['PUT'])
+@parser_classes([JSONParser])
+@permission_classes([HasAPIKey])
+@throttle_classes([HundredPerDayThrottle])
+def execute_pipeline(request):
+    pipeline_executor()
+    return JsonResponse('Pipelines have been executed.', safe=False, status=status.HTTP_200_OK)
+
 
 class CreateStudents(APIView):
 
