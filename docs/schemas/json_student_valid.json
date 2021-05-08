@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PGSCM JSON Array of Valid Student",
+  "description": "Student Objects in array of students for json requests, that are valid with their status codes.",
+  "type": "object",
+  "student": {
+    "properties": {
+      "status_code": {
+        "type": "number",
+        "description": "That code for that particular student.",
+        "enum": [200,201]
+      },
+      "student": {
+        "$ref": "student.json#/student"
+      }
+    }
+  }
+}
