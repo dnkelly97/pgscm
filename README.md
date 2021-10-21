@@ -1,4 +1,5 @@
-### NOTE: The below readme was from the original repository, which was part of the University of Iowa GitHub organization and has since been shut down. As a result the GitHub Wiki and links to the GitHub Wiki below no longer work, and the commit histories have been erased. The website itself has also been taken down form Azure. I am keeping the readme as is though and have added the repository to my personal GitHub to give an idea of what the project was like in its original form.
+### NOTE: This repository in its original form was part of the University of Iowa GitHub organization and has since been taken down. I have added the repository to my personal GitHub to keep a record of the project and make the codebase available. The Wiki was destroyed and its associated links are broken, but the commit history is still available. The website itself has also been taken down from Azure since our sponsored subscription has ended.  
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 [![PGSCM Main CI Workflow](https://github.com/UIOWAjohnsonhj/003_SEP2021/actions/workflows/python-app.yml/badge.svg)](https://github.com/UIOWAjohnsonhj/003_SEP2021/actions/workflows/python-app.yml)
 
